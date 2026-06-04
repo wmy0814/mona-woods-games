@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>夏日抽签 - Mona Woods</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #a8e6cf 0%, #5ec4b6 50%, #3ba99c 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Screen base ── */
+  .screen { display:none; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
+  .screen.active { display:flex; }
+
+  /* ── Logo ── */
+  .logo { width:90px; height:90px; object-fit:contain; margin-bottom:8px; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.12)); }
+  .logo-sm { position:fixed; top:12px; left:12px; width:40px; height:40px; object-fit:contain; z-index:100; opacity:0.6; }
+
+  /* ── Typography ── */
+  .title { font-family:'Fredoka One',cursive; font-size:2.6rem; color:#2d2d2d; text-shadow:3px 3px 0 rgba(255,255,255,0.5); text-align:center; }
+  .subtitle { font-size:1.1rem; color:#2d6b5e; font-weight:700; margin-bottom:22px; text-align:center; }
+
+  /* ── Card ── */
+  .card { background:rgba(255,255,255,0.96); border-radius:28px; padding:28px; max-width:540px; width:100%; box-shadow:0 10px 40px rgba(0,0,0,0.14); }
+
+  /* ── Label ── */
+  .label { font-size:0.95rem; color:#3a7d6f; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+
+  /* ── Textarea ── */
+  textarea {
+    width:100%; height:170px;
+    border:2.5px solid #b2dfdb; border-radius:18px;
+    padding:14px 16px; font-size:1rem; font-family:'Nunito',sans-serif;
+    resize:vertical; outline:none; line-height:1.8;
+    transition:border-color 0.2s; background:#f5fffe;
+  }
+  textarea:focus { border-color:#5ec4b6; }
+  textarea::placeholder { color:#b0c4bc; }
+
+  .hint { font-size:0.78rem; color:#aaa; margin-top:6px; text-align:right; }
+
+  /* ── Buttons ── */
+  .btn-row { display:flex; gap:12px; margin:18px 0 22px; }
+  .btn {
+    font-family:'Fredoka One',cursive; font-size:1.3rem;
+    padding:13px 0; border:none; border-radius:50px;
+    cursor:pointer; transition:all 0.2s;
+    box-shadow:0 5px 0 rgba(0,0,0,0.1);
+    flex:1;
+  }
+  .btn:hover { transform:translateY(-3px); box-shadow:0 8px 0 rgba(0,0,0,0.1); }
+  .btn:active { transform:translateY(2px); box-shadow:0 2px 0 rgba(0,0,0,0.1); }
+  .btn-start { background:#FFD93D; color:#6B4226; }
+  .btn-reset { background:#f0f0f0; color:#888; }
+
+  /* ── Result area ── */
+  .result-area { min-height:60px; background:#f5fffe; border-radius:18px; padding:18px; border:2px dashed #b2dfdb; }
+  .result-empty { text-align:center; color:#b0c4bc; font-size:0.95rem; padding:16px 0; }
+
+  .result-list { list-style:none; }
+  .result-list li {
+    display:flex; align-items:center;
+    padding:11px 14px; margin-bottom:8px; border-radius:14px;
+    font-size:1.05rem; font-weight:600; color:#2d6b5e;
+    transition:all 0.3s; background:rgba(255,255,255,0.7);
+  }
+  .result-list li:last-child { margin-bottom:0; }
+
+  .order-badge {
+    width:32px; height:32px; border-radius:50%;
+    background:linear-gradient(135deg,#FFD93D,#ffb347);
+    color:#6B4226; font-family:'Fredoka One',cursive;
+    font-size:1rem; display:flex; align-items:center; justify-content:center;
+    margin-right:12px; flex-shrink:0;
+    box-shadow:0 3px 0 rgba(0,0,0,0.1);
+  }
+
+  .name-text { flex:1; }
+
+  .shuffle-anim { animation:bounceIn 0.4s ease both; }
+  @keyframes bounceIn {
+    0% { transform:scale(0.8) translateY(10px); opacity:0; }
+    60% { transform:scale(1.04) translateY(-2px); }
+    100% { transform:scale(1) translateY(0); opacity:1; }
+  }
+
+  .total-badge {
+    display:inline-block; background:#e8f8f5;
+    color:#3a7d6f; font-size:0.78rem; padding:2px 10px;
+    border-radius:20px; margin-left:10px; font-weight:700;
+    border:1.5px solid #b2dfdb;
+  }
+
+  /* ── Decorative emojis ── */
+  .deco { font-size:1.4rem; text-align:center; margin-bottom:6px; }
+
+  /* ── Mobile ── */
+  @media (max-width:480px) {
+    .title { font-size:2rem; }
+    .card { padding:20px 16px; }
+    textarea { height:140px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Logo -->
+<img src="https://agent-cdn.minimax.io/matrix_agent/20260604/image_tool/output/144238_4b33/agent/7625832208233742619/用户上传/logo定稿_1780475493187_0_63sw.png" class="logo-sm" alt="logo">
+
+<!-- Main Screen -->
+<div class="screen active" id="screen">
+  <img src="https://agent-cdn.minimax.io/matrix_agent/20260604/image_tool/output/144238_4b33/agent/7625832208233742619/用户上传/logo定稿_1780475493187_0_63sw.png" class="logo" alt="Mona Woods">
+
+  <div class="deco">🌴 🎲 🌞</div>
+  <div class="title">夏日抽签</div>
+  <div class="subtitle">随机排列 · 公平公正</div>
+
+  <div class="card">
+    <div class="label">📋 参赛名单</div>
+    <textarea id="namesInput" placeholder="输入名单，每行一个名字，例如：
+小明
+小红
+小强
+小丽
+..."></textarea>
+    <div class="hint">支持粘贴或直接输入，人数不限</div>
+
+    <div class="btn-row">
+      <button class="btn btn-reset" onclick="clearAll()">🗑️ 清空</button>
+      <button class="btn btn-start" onclick="doShuffle()">🎲 开始抽签</button>
+    </div>
+
+    <div class="label">✨ 出场顺序 <span id="totalBadge" class="total-badge" style="display:none"></span></div>
+    <div class="result-area" id="resultArea">
+      <div class="result-empty">点击「开始抽签」随机排列名单</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let lastOrder = [];
+
+function doShuffle() {
+  const raw = document.getElementById('namesInput').value.trim();
+  if (!raw) { alert('请先输入名单！'); return; }
+
+  const lines = raw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+  if (lines.length < 2) { alert('名单至少需要2人！'); return; }
+
+  // Fisher-Yates shuffle
+  const arr = [...lines];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  lastOrder = arr;
+
+  const area = document.getElementById('resultArea');
+  area.innerHTML = `<ul class="result-list" id="resultList"></ul>`;
+  const ul = document.getElementById('resultList');
+
+  arr.forEach((name, idx) => {
+    const li = document.createElement('li');
+    li.className = 'shuffle-anim';
+    li.style.animationDelay = (idx * 0.05) + 's';
+    li.innerHTML = `<span class="order-badge">${idx + 1}</span><span class="name-text">${escapeHtml(name)}</span>`;
+    ul.appendChild(li);
+  });
+
+  const badge = document.getElementById('totalBadge');
+  badge.textContent = `共 ${arr.length} 人`;
+  badge.style.display = 'inline-block';
+}
+
+function clearAll() {
+  document.getElementById('namesInput').value = '';
+  document.getElementById('resultArea').innerHTML = '<div class="result-empty">点击「开始抽签」随机排列名单</div>';
+  document.getElementById('totalBadge').style.display = 'none';
+  lastOrder = [];
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+</script>
+</body>
+</html>
