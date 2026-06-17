@@ -1706,7 +1706,7 @@ if (!state.userProfile) {
 }
 
 // === PEP 期末复习 同步模块 ===
-const SYNC_API_URL = 'https://mona-woods-games.netlify.app/.netlify/functions/sync';
+const SYNC_API_URL = window.location.origin + '/api/sync';
 const SYNC_API_KEY = 'pep-exam-2026';
 const GAME_NAME = 'PEP五下期末';
 const ALLOWED_CLASSES = ['PU1班', 'PU2班', 'PU3班', 'PU4班', 'NCE1班'];
