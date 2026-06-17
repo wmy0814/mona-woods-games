@@ -782,6 +782,7 @@ let state = {
   currentWordIndex: 0,
   currentOptions: [],
   userAnswer: '',
+  usedPositions: [],
   correctCount: 0,
   wrongCount: 0,
   dayWordsCompleted: 0,
@@ -821,6 +822,7 @@ function resetState() {
     currentWordIndex: 0,
     currentOptions: [],
     userAnswer: '',
+    usedPositions: [],
     correctCount: 0,
     wrongCount: 0,
     dayWordsCompleted: 0
@@ -946,9 +948,9 @@ function getEnglishOptions(correctWord, allWords, count = 4) {
 }
 
 function getLetterButtons(word) {
-  const letters = word.en.toUpperCase().split('');
+  const letters = word.en.toLowerCase().split('');
   const distractorCount = Math.max(3, Math.floor(letters.length * 0.5));
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
   const shuffledAlpha = shuffleArray(alphabet.split(''));
   
   let distractors = [];
@@ -1209,9 +1211,9 @@ function renderGame() {
         </div>
         <div class="letter-buttons">
           ${state.currentLetters.map((letter, i) => {
-            const isUsed = state.userAnswer.toUpperCase().includes(letter);
-            return `<button class="letter-btn ${isUsed ? 'used' : ''}" 
-                    onclick="clickLetter('${letter}')" 
+            const isUsed = state.usedPositions.includes(i);
+            return `<button class="letter-btn ${isUsed ? 'used' : ''}"
+                    onclick="clickLetter(${i})"
                     ${isUsed ? 'disabled' : ''}>${letter}</button>`;
           }).join('')}
         </div>
@@ -1444,6 +1446,7 @@ function startGame(level) {
   state.currentWordIndex = 0;
   state.currentLetters = null;
   state.userAnswer = '';
+  state.usedPositions = [];
   saveState();
   render();
   
@@ -1516,13 +1519,16 @@ function speakWord(word) {
   speak(word, 'en-US');
 }
 
-function clickLetter(letter) {
-  state.userAnswer += letter;
+function clickLetter(i) {
+  if (state.usedPositions.includes(i)) return;
+  state.usedPositions.push(i);
+  state.userAnswer += state.currentLetters[i];
   render();
 }
 
 function clearAnswer() {
   state.userAnswer = '';
+  state.usedPositions = [];
   render();
 }
 
@@ -1532,7 +1538,7 @@ function submitAnswer() {
   
   const word = todayWords[state.currentWordIndex];
   const wordKey = word.en.toLowerCase();
-  const isCorrect = state.userAnswer.toUpperCase() === word.en.toUpperCase();
+  const isCorrect = state.userAnswer.toLowerCase() === word.en.toLowerCase();
   
   if (isCorrect) {
     state.correctCount++;
@@ -1605,6 +1611,7 @@ function goHome() {
   state.currentWordIndex = 0;
   state.currentLetters = null;
   state.userAnswer = '';
+  state.usedPositions = [];
   saveState();
   render();
 }
