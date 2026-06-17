@@ -826,6 +826,12 @@ function loadState() {
     if (saved) {
       const parsed = JSON.parse(saved);
       state = { ...state, ...parsed };
+      // 守护：旧版本 state 缺字段时补全（手机 X5 内核对 undefined.includes 零容错）
+      if (!Array.isArray(state.usedPositions)) state.usedPositions = [];
+      if (!Array.isArray(state.wrongWords)) state.wrongWords = [];
+      if (!Array.isArray(state.masteredWords)) state.masteredWords = [];
+      if (!Array.isArray(state.currentOptions)) state.currentOptions = [];
+      if (!state.wordProgress || typeof state.wordProgress !== 'object') state.wordProgress = {};
     }
   } catch (e) {
     console.log('Failed to load state');
