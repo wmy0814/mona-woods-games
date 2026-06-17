@@ -993,13 +993,15 @@ function getLetterButtons(word) {
 }
 
 function speak(text, lang = 'en-US') {
-  if ('speechSynthesis' in window) {
+  if (typeof window === 'undefined' || !window.speechSynthesis) return;
+  try {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = lang;
     utterance.rate = 0.8;
     
-    const voices = window.speechSynthesis.getVoices();
+    const voices = (typeof window.speechSynthesis.getVoices === 'function')
+      ? window.speechSynthesis.getVoices() : [];
     const preferredVoice = voices.find(v => 
       v.lang.includes('en') && (v.name.includes('Ana') || v.name.includes('Female') || v.name.includes('Samantha'))
     ) || voices.find(v => v.lang.includes('en'));
@@ -1009,6 +1011,8 @@ function speak(text, lang = 'en-US') {
     }
     
     window.speechSynthesis.speak(utterance);
+  } catch (e) {
+    // 静默忽略 TTS 错误（小米/微信 X5 内核偶发）
   }
 }
 
@@ -1704,11 +1708,6 @@ function createCelebration() {
   
   document.body.appendChild(celebration);
 }
-
-window.speechSynthesis.getVoices();
-window.speechSynthesis.onvoiceschanged = () => {
-  window.speechSynthesis.getVoices();
-};
 
 // === PEP 期末复习 同步模块 ===  必须在 loadState/render 之前声明
 const SYNC_API_URL = window.location.origin + '/api/sync';
