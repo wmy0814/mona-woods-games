@@ -978,39 +978,46 @@ function getLetterButtons(word) {
 }
 
 function speak(text, lang = 'en-US') {
-  if (typeof window === 'undefined' || !window.speechSynthesis) return;
+  // 双轨制：audio + 后端 TTS 优先（X5/微信/小米可靠），Web Speech 兜底
+  // 解决：X5 内核默认不开放 Web Speech API
+  const ttsUrl = window.location.origin + '/api/tts?text=' + encodeURIComponent(text) + '&type=0';
 
-  function pickVoice() {
-    if (typeof window.speechSynthesis.getVoices !== 'function') return null;
-    const voices = window.speechSynthesis.getVoices();
-    return voices.find(v =>
-      v.lang.includes('en') && (v.name.includes('Ana') || v.name.includes('Female') || v.name.includes('Samantha'))
-    ) || voices.find(v => v.lang.includes('en')) || null;
-  }
-
-  function _speak() {
+  function tryWebSpeech() {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
     try {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = lang;
       utterance.rate = 0.8;
-      const voice = pickVoice();
-      if (voice) utterance.voice = voice;
+      if (typeof window.speechSynthesis.getVoices === 'function') {
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = voices.find(v =>
+          v.lang.includes('en') && (v.name.includes('Ana') || v.name.includes('Female') || v.name.includes('Samantha'))
+        ) || voices.find(v => v.lang.includes('en'));
+        if (preferredVoice) utterance.voice = preferredVoice;
+      }
       window.speechSynthesis.speak(utterance);
     } catch (e) {
       // 静默忽略
     }
   }
 
-  _speak();
-
-  // 兼容小米 X5：第一次进入页面时 voices 还没准备好
-  // 用 onvoiceschanged 监听到后，把缓存标好（不再重 speak，避免重复）
-  if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined' && !window._ttsVoicesBound) {
-    window.speechSynthesis.onvoiceschanged = function() {
-      window._ttsVoicesBound = true;
-      window.speechSynthesis.onvoiceschanged = null;
-    };
+  // 优先：audio + 后端 TTS
+  try {
+    const audio = new Audio();
+    audio.src = ttsUrl;
+    audio.preload = 'auto';
+    audio.volume = 1.0;
+    const p = audio.play();
+    if (p && typeof p.catch === 'function') {
+      p.catch(() => {
+        // audio 失败才 Web Speech 兜底
+        tryWebSpeech();
+      });
+    }
+  } catch (e) {
+    // 创建 audio 失败，直接 Web Speech
+    tryWebSpeech();
   }
 }
 
