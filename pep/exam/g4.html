@@ -823,6 +823,7 @@ function loadState() {
       if (!Array.isArray(state.masteredWords)) state.masteredWords = [];
       if (!Array.isArray(state.currentOptions)) state.currentOptions = [];
       if (!state.wordProgress || typeof state.wordProgress !== 'object') state.wordProgress = {};
+      if (typeof state.isRetrying !== 'boolean') state.isRetrying = false;
     }
   } catch (e) {
     console.log('Failed to load state');
