@@ -55,8 +55,14 @@ function buildFields(body) {
     if (key === 'classCode' && !ALLOWED_CLASSES.includes(value)) {
       throw new Error('非法班级: ' + value);
     }
-    if (key === 'wrongWords' && typeof value === 'string' && value.length > 5000) {
-      value = value.slice(0, 5000);
+    if (key === 'wrongWords') {
+      // 前端传数组时 join 成字符串（飞书 text 字段不接数组）
+      if (Array.isArray(value)) {
+        value = value.join(',');
+      }
+      if (typeof value === 'string' && value.length > 5000) {
+        value = value.slice(0, 5000);
+      }
     }
     fields[target] = value;
   }
