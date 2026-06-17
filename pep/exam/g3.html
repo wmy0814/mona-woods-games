@@ -979,25 +979,38 @@ function getLetterButtons(word) {
 
 function speak(text, lang = 'en-US') {
   if (typeof window === 'undefined' || !window.speechSynthesis) return;
-  try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = lang;
-    utterance.rate = 0.8;
-    
-    const voices = (typeof window.speechSynthesis.getVoices === 'function')
-      ? window.speechSynthesis.getVoices() : [];
-    const preferredVoice = voices.find(v => 
+
+  function pickVoice() {
+    if (typeof window.speechSynthesis.getVoices !== 'function') return null;
+    const voices = window.speechSynthesis.getVoices();
+    return voices.find(v =>
       v.lang.includes('en') && (v.name.includes('Ana') || v.name.includes('Female') || v.name.includes('Samantha'))
-    ) || voices.find(v => v.lang.includes('en'));
-    
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
+    ) || voices.find(v => v.lang.includes('en')) || null;
+  }
+
+  function _speak() {
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      utterance.rate = 0.8;
+      const voice = pickVoice();
+      if (voice) utterance.voice = voice;
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      // 静默忽略
     }
-    
-    window.speechSynthesis.speak(utterance);
-  } catch (e) {
-    // 静默忽略 TTS 错误（小米/微信 X5 内核偶发）
+  }
+
+  _speak();
+
+  // 兼容小米 X5：第一次进入页面时 voices 还没准备好
+  // 用 onvoiceschanged 监听到后，把缓存标好（不再重 speak，避免重复）
+  if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined' && !window._ttsVoicesBound) {
+    window.speechSynthesis.onvoiceschanged = function() {
+      window._ttsVoicesBound = true;
+      window.speechSynthesis.onvoiceschanged = null;
+    };
   }
 }
 
@@ -1203,9 +1216,14 @@ function renderGame() {
             <div class="option" onclick="selectOption(3, '${opt.replace(/'/g, "\\'")}')">${opt}</div>
           `).join('')}
         </div>
-        <button class="btn btn-secondary btn-small" onclick="speakWord('${word.en.replace(/'/g, "\\'")}')" style="margin-top:12px">
-          再听一遍
-        </button>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+          <button class="btn btn-secondary btn-small" onclick="speakWord('${word.en.replace(/'/g, "\\'")}')">
+            &#128266; 再听一遍
+          </button>
+          <button class="btn btn-warning btn-small" onclick="skipWord()" style="background:#FFA500;color:white">
+            不会&#8594;看答案
+          </button>
+        </div>
       `;
       setTimeout(() => speakWord(word.en), 500);
       break;
@@ -1234,8 +1252,11 @@ function renderGame() {
                     ${isUsed ? 'disabled' : ''}>${letter}</button>`;
           }).join('')}
         </div>
-        <div style="display:flex;gap:8px;justify-content:center">
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
           <button class="btn btn-outline btn-small" onclick="clearAnswer()">清除</button>
+          <button class="btn btn-warning btn-small" onclick="skipWord()" style="background:#FFA500;color:white">
+            不会&#8594;看答案
+          </button>
           <button class="btn btn-primary btn-small" onclick="submitAnswer()" ${state.userAnswer.length !== word.en.length ? 'disabled style="opacity:0.5"' : ''}>确定</button>
         </div>
       `;
@@ -1409,11 +1430,13 @@ function renderWrongList() {
 }
 
 function showResultOverlay(isCorrect, correctAnswer) {
-  const overlay = document.createElement('div');
-  overlay.className = 'result-overlay';
-  overlay.id = 'resultOverlay';
-  
+  const todayWords = getTodayWords();
+  const word = todayWords[state.currentWordIndex];
+
   if (isCorrect) {
+    const overlay = document.createElement('div');
+    overlay.className = 'result-overlay';
+    overlay.id = 'resultOverlay';
     overlay.innerHTML = `
       <div class="result-card">
         <div class="result-icon">&#9989;</div>
@@ -1421,23 +1444,25 @@ function showResultOverlay(isCorrect, correctAnswer) {
         <div class="result-subtitle">继续加油</div>
       </div>
     `;
+    document.body.appendChild(overlay);
+    setTimeout(closeResult, 800);
+  } else if (state.currentLevel === 4) {
+    // 拼写关答错：看一次再试一次
+    showAnswerThenRetry(word);
   } else {
+    // 选择关答错：显示答案+继续
+    const overlay = document.createElement('div');
+    overlay.className = 'result-overlay';
+    overlay.id = 'resultOverlay';
     overlay.innerHTML = `
       <div class="result-card">
         <div class="result-icon">&#10060;</div>
         <div class="result-title">回答错误</div>
         <div class="result-subtitle">正确答案是: ${correctAnswer}</div>
-        <button class="btn btn-primary modal-btn" onclick="closeResult()">
-          继续
-        </button>
+        <button class="btn btn-primary modal-btn" onclick="closeResult()">继续</button>
       </div>
     `;
-  }
-  
-  document.body.appendChild(overlay);
-  
-  if (isCorrect) {
-    setTimeout(closeResult, 800);
+    document.body.appendChild(overlay);
   }
 }
 
@@ -1553,39 +1578,80 @@ function clearAnswer() {
 function submitAnswer() {
   const todayWords = getTodayWords();
   if (state.currentWordIndex >= todayWords.length) return;
-  
+
   const word = todayWords[state.currentWordIndex];
   const wordKey = word.en.toLowerCase();
   const isCorrect = state.userAnswer.toLowerCase() === word.en.toLowerCase();
-  
+
   if (isCorrect) {
     state.correctCount++;
     state.wordProgress[wordKey] = (state.wordProgress[wordKey] || 0) + 1;
-    
+
     if (state.wordProgress[wordKey] >= 2) {
       if (!state.masteredWords.includes(wordKey)) {
         state.masteredWords.push(wordKey);
       }
       state.wrongWords = state.wrongWords.filter(w => w.toLowerCase() !== wordKey);
     }
+
+    saveState();
+    showResultOverlay(true, word.en);
+
+    setTimeout(() => {
+      state.currentWordIndex++;
+      state.currentLetters = null;
+      state.userAnswer = '';
+      state.usedPositions = [];
+      render();
+    }, 1000);
   } else {
+    // 答错：标一次 progress，但不直接加 wrongWords
+    // 由"再试"决定：再试对就 OK，再试错才加 wrongWords
     state.wrongCount++;
     state.wordProgress[wordKey] = (state.wordProgress[wordKey] || 0) + 1;
-    if (!state.wrongWords.includes(word.en)) {
-      state.wrongWords.push(word.en);
-    }
+    saveState();
+    showResultOverlay(false, word.en);
   }
-  
-  saveState();
-  showResultOverlay(isCorrect, word.en);
-  
+}
+function showAnswerThenRetry(word) {
+  const old = document.getElementById('resultOverlay');
+  if (old) old.remove();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'result-overlay';
+  overlay.id = 'resultOverlay';
+  overlay.innerHTML = `
+    <div class="result-card">
+      <div class="result-icon">&#128214;</div>
+      <div class="result-title">看一次，再试一次</div>
+      <div class="result-answer" style="font-size:28px;color:#FF6B6B;font-weight:bold;margin:8px 0">${word.en}</div>
+      <div class="result-subtitle" style="color:#666">${word.cn}</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // 朗读正确答案
+  speak(word.en, 'en-US');
+
+  // 1.8秒后关弹窗 + 重置拼写区（让孩子再试）
   setTimeout(() => {
-    state.currentWordIndex++;
-    state.currentLetters = null;
-    state.userAnswer = '';
-    state.usedPositions = [];
-    render();
-  }, isCorrect ? 1000 : 1500);
+    closeResult();
+    if (state.currentLevel === 4) {
+      state.currentLetters = getLetterButtons(word);
+      state.userAnswer = '';
+      state.usedPositions = [];
+      render();
+    } else if (state.currentLevel === 3) {
+      // case 3 听音选词：重听一遍 + 让孩子再选
+      setTimeout(() => speakWord(word.en), 200);
+    }
+  }, 1800);
+}
+function skipWord() {
+  const todayWords = getTodayWords();
+  if (state.currentWordIndex >= todayWords.length) return;
+  const word = todayWords[state.currentWordIndex];
+  showAnswerThenRetry(word);
 }
 
 function continueRound() {
