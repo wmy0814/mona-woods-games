@@ -1286,7 +1286,7 @@ function renderGame() {
       </div>
       
       <div class="progress-info">
-        <span>已掌握: ${state.masteredWords.length}</span>
+        <span>已认识 ${state.masteredWords.length} · 已掌握 ${countMastered()} ⭐</span>
         <span>答对: ${state.correctCount} / 答错: ${state.wrongCount}</span>
       </div>
       
@@ -1543,15 +1543,17 @@ function selectOption(level, answer) {
 
   if (isCorrect) {
     state.correctCount++;
-    state.wordProgress[wordKey] = (state.wordProgress[wordKey] || 0) + 1;
+    state.wordProgress[wordKey] = state.wordProgress[wordKey] || {};
+    state.wordProgress[wordKey][state.currentLevel] = (state.wordProgress[wordKey][state.currentLevel] || 0) + 1;
+    const totalCorrect = Object.values(state.wordProgress[wordKey]).reduce((a, b) => a + b, 0);
 
-    if (state.wordProgress[wordKey] >= 2) {
-      if (!state.masteredWords.includes(wordKey)) {
-        state.masteredWords.push(wordKey);
-      }
+    if (totalCorrect >= 1 && !state.masteredWords.includes(wordKey)) {
+      state.masteredWords.push(wordKey);
+    }
+    if (state.wordProgress[wordKey][state.currentLevel] >= 2) {
       state.wrongWords = state.wrongWords.filter(w => w.toLowerCase() !== wordKey);
     } else if (wasRetrying) {
-      // 重试答对但 progress < 2：从 wrongWords 移除（算基本掌握）
+      // 重试答对：从 wrongWords 移除
       state.wrongWords = state.wrongWords.filter(w => w.toLowerCase() !== wordKey);
     }
 
@@ -1564,7 +1566,12 @@ function selectOption(level, answer) {
       state.currentLetters = null;
       state.userAnswer = '';
       state.usedPositions = [];
-      render();
+      const todayWords = getTodayWords();
+      if (state.currentWordIndex >= todayWords.length) {
+        checkLevelComplete();
+      } else {
+        render();
+      }
     }, 1000);
   } else {
     state.wrongCount++;
@@ -1614,15 +1621,17 @@ function submitAnswer() {
 
   if (isCorrect) {
     state.correctCount++;
-    state.wordProgress[wordKey] = (state.wordProgress[wordKey] || 0) + 1;
+    state.wordProgress[wordKey] = state.wordProgress[wordKey] || {};
+    state.wordProgress[wordKey][state.currentLevel] = (state.wordProgress[wordKey][state.currentLevel] || 0) + 1;
+    const totalCorrect = Object.values(state.wordProgress[wordKey]).reduce((a, b) => a + b, 0);
 
-    if (state.wordProgress[wordKey] >= 2) {
-      if (!state.masteredWords.includes(wordKey)) {
-        state.masteredWords.push(wordKey);
-      }
+    if (totalCorrect >= 1 && !state.masteredWords.includes(wordKey)) {
+      state.masteredWords.push(wordKey);
+    }
+    if (state.wordProgress[wordKey][state.currentLevel] >= 2) {
       state.wrongWords = state.wrongWords.filter(w => w.toLowerCase() !== wordKey);
     } else if (wasRetrying) {
-      // 重试答对但 progress < 2：从 wrongWords 移除（算基本掌握）
+      // 重试答对：从 wrongWords 移除
       state.wrongWords = state.wrongWords.filter(w => w.toLowerCase() !== wordKey);
     }
 
@@ -1635,7 +1644,12 @@ function submitAnswer() {
       state.currentLetters = null;
       state.userAnswer = '';
       state.usedPositions = [];
-      render();
+      const todayWords = getTodayWords();
+      if (state.currentWordIndex >= todayWords.length) {
+        checkLevelComplete();
+      } else {
+        render();
+      }
     }, 1000);
   } else {
     state.wrongCount++;
@@ -1730,7 +1744,8 @@ function skipWord() {
     state.wrongWords.push(word.en);
   }
   state.wrongCount++;
-  state.wordProgress[wordKey] = (state.wordProgress[wordKey] || 0) + 1;
+  state.wordProgress[wordKey] = state.wordProgress[wordKey] || {};
+    state.wordProgress[wordKey][state.currentLevel] = (state.wordProgress[wordKey][state.currentLevel] || 0) + 1;
   saveState();
 
   // 弹窗+朗读+重置拼写区让孩子再试 1 次
@@ -1844,6 +1859,84 @@ function createCelebration() {
   document.body.appendChild(celebration);
 }
 
+
+function checkLevelComplete() {
+  const dayKey = 'day' + state.currentDay;
+  const todayWords = getTodayWords();
+  const completed = state.masteredWords.filter(w => {
+    return todayWords.some(tw => tw.en.toLowerCase() === w.toLowerCase());
+  }).length;
+  state.dayWordsCompleted[dayKey] = Math.max(state.dayWordsCompleted[dayKey] || 0, completed);
+  saveState();
+  const level = state.currentLevel;
+  if (level < 4) {
+    const nextLevel = level + 1;
+    const overlay = document.createElement('div');
+    overlay.id = 'levelCompleteOverlay';
+    overlay.className = 'result-overlay';
+    overlay.innerHTML = \`
+      <div class="result-card">
+        <div class="result-icon">&#127881;</div>
+        <div class="result-title">🎉 第 \${level} 关完成！</div>
+        <div class="result-subtitle">太棒了，继续加油！</div>
+        <div style="margin-top:8px;font-size:12px;color:#888">📤 点这里把你的成绩同步给Mona老师吧！</div>
+        <button class="btn btn-primary" onclick="syncProgress();closeLevelCompleteOverlay();" style="margin-top:10px;background:#70AD47">📤 同步给Mona老师</button>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-outline" onclick="closeLevelCompleteOverlay();goHome();" style="flex:1">返回</button>
+          <button class="btn btn-primary" onclick="closeLevelCompleteOverlay();startGame(\${nextLevel})" style="flex:1">下一关（第\${nextLevel}关）</button>
+        </div>
+      </div>
+    \`;
+    document.body.appendChild(overlay);
+  } else {
+    const overlay = document.createElement('div');
+    overlay.id = 'levelCompleteOverlay';
+    overlay.className = 'result-overlay';
+    overlay.innerHTML = \`
+      <div class="result-card">
+        <div class="result-icon">&#127942;</div>
+        <div class="result-title">今日单词任务全部完成啦！</div>
+        <div class="result-subtitle">你真棒👍</div>
+        <div style="margin-top:8px;font-size:12px;color:#888">📤 点这里把你的成绩同步给Mona老师吧！</div>
+        <button class="btn btn-primary" onclick="syncProgress();closeLevelCompleteOverlay();" style="margin-top:10px;background:#70AD47">📤 同步给Mona老师</button>
+        <button class="btn btn-primary" onclick="closeLevelCompleteOverlay();startNextDayEarly();" style="margin-top:10px">提前学下一天</button>
+        <button class="btn btn-outline" onclick="closeLevelCompleteOverlay();goHome();" style="margin-top:10px">返回主页</button>
+      </div>
+    \`;
+    document.body.appendChild(overlay);
+  }
+}
+
+function closeLevelCompleteOverlay() {
+  const overlay = document.getElementById('levelCompleteOverlay');
+  if (overlay) overlay.remove();
+}
+
+function startNextDayEarly() {
+  state.currentDay++;
+  state.currentWordIndex = 0;
+  state.currentRound = 1;
+  state.correctCount = 0;
+  state.wrongCount = 0;
+  if (state.currentDay > TOTAL_DAYS) {
+    state.phase = 'consolidation';
+    state.currentDay = TOTAL_DAYS;
+  }
+  saveState();
+  render();
+}
+
+function countMastered() {
+  let count = 0;
+  for (const wordKey in state.wordProgress) {
+    const levels = state.wordProgress[wordKey];
+    if (Object.values(levels).some(v => v >= 2)) {
+      count++;
+    }
+  }
+  return count;
+}
+
 // === PEP 期末复习 同步模块 ===  必须在 loadState/render 之前声明
 const SYNC_API_URL = window.location.origin + '/api/sync';
 const SYNC_API_KEY = 'pep-exam-2026';
@@ -1895,6 +1988,7 @@ function showProfileDialog(force) {
         <option value="PU3班" ${clsVal === 'PU3班' ? 'selected' : ''}>PU3班</option>
         <option value="PU4班" ${clsVal === 'PU4班' ? 'selected' : ''}>PU4班</option>
         <option value="NCE1班" ${clsVal === 'NCE1班' ? 'selected' : ''}>NCE1班</option>
+        <option value="无班级" ${clsVal === '无班级' ? 'selected' : ''}>我没有班级</option>
       </select>
       <div class="error-msg" id="class-err">请选择班级</div>
       <div class="modal-actions">
@@ -1913,7 +2007,7 @@ function showProfileDialog(force) {
     const ne = overlay.querySelector('#nickname-err');
     const ce = overlay.querySelector('#class-err');
     if (!nick) { ne.style.display='block'; ok=false; } else { ne.style.display='none'; }
-    if (!cls) { ce.style.display='block'; ok=false; } else { ce.style.display='none'; }
+    // 班级非必选
     if (!ok) return;
     state.userProfile = { nickname: nick, classCode: cls };
     saveUserProfile();
@@ -1937,7 +2031,7 @@ function syncProgress() {
     .filter((v, i, a) => a.indexOf(v) === i);
   const payload = {
     nickname: state.userProfile.nickname,
-    classCode: state.userProfile.classCode,
+    classCode: state.userProfile.classCode === "无班级" ? "" : state.userProfile.classCode,
     gameName: GAME_NAME,
     currentLevel: state.currentLevel || 1,
     score: (state.masteredWords && state.masteredWords.length) || 0,
@@ -1972,7 +2066,7 @@ function renderUserBar() {
       <div class="user-info">
         <span>👤</span>
         <span class="user-nickname" title="${state.userProfile.nickname}">${state.userProfile.nickname}</span>
-        <span class="user-class" style="background:${color}">${state.userProfile.classCode}</span>
+        <span class="user-class" style="background:${state.userProfile.classCode === '无班级' ? '#999' : color}">${state.userProfile.classCode || '无班级'}</span>
         <button class="edit-btn" onclick="showProfileDialog(true)" title="修改">✏️</button>
       </div>
       <button class="sync-btn" onclick="syncProgress()">🔄 同步进度</button>
