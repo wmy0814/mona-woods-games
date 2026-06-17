@@ -841,19 +841,19 @@ function getAllWords() {
 }
 
 function getWordsPerDay() {
-  const totalFourSkills = getAllFourSkills().length;
-  return Math.ceil(totalFourSkills / TOTAL_DAYS);
+  const totalWords = getAllFourSkills().length + getAllThreeSkills().length;
+  return Math.ceil(totalWords / TOTAL_DAYS);
 }
 
 function getTodayWords() {
-  const fourSkills = getAllFourSkills();
+  const allWords = [...getAllFourSkills(), ...getAllThreeSkills()];
   const wordsPerDay = getWordsPerDay();
   const startIdx = (state.currentDay - 1) * wordsPerDay;
-  const endIdx = Math.min(startIdx + wordsPerDay, fourSkills.length);
+  const endIdx = Math.min(startIdx + wordsPerDay, allWords.length);
   
   let todayFourSkills = [];
-  if (startIdx < fourSkills.length) {
-    todayFourSkills = fourSkills.slice(startIdx, endIdx);
+  if (startIdx < allWords.length) {
+    todayFourSkills = allWords.slice(startIdx, endIdx);
   }
   
   const wrongWordObjs = state.wrongWords
