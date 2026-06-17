@@ -838,6 +838,8 @@ function saveState() {
 }
 
 function resetState() {
+  // 保留 userProfile（不删昵称和班级），只清游戏进度
+  const savedProfile = state.userProfile;
   state = {
     currentDay: 1,
     currentRound: 1,
@@ -853,7 +855,8 @@ function resetState() {
     usedPositions: [],
     correctCount: 0,
     wrongCount: 0,
-    dayWordsCompleted: 0
+    dayWordsCompleted: 0,
+    userProfile: savedProfile  // 保留用户档案
   };
   saveState();
 }
@@ -1705,19 +1708,19 @@ window.speechSynthesis.onvoiceschanged = () => {
   window.speechSynthesis.getVoices();
 };
 
+// === PEP 期末复习 同步模块 ===  必须在 loadState/render 之前声明
+const SYNC_API_URL = window.location.origin + '/api/sync';
+const SYNC_API_KEY = 'pep-exam-2026';
+const GAME_NAME = 'PEP五下期末';
+const ALLOWED_CLASSES = ['PU1班', 'PU2班', 'PU3班', 'PU4班', 'NCE1班'];
+const CLASS_COLORS = { 'PU1班':'#5B9BD5', 'PU2班':'#70AD47', 'PU3班':'#ED7D31', 'PU4班':'#9B59B6', 'NCE1班':'#E74C3C' };
+
 loadState();
 loadUserProfile();
 render();
 if (!state.userProfile) {
   setTimeout(() => showProfileDialog(false), 300);
 }
-
-// === PEP 期末复习 同步模块 ===
-const SYNC_API_URL = window.location.origin + '/api/sync';
-const SYNC_API_KEY = 'pep-exam-2026';
-const GAME_NAME = 'PEP五下期末';
-const ALLOWED_CLASSES = ['PU1班', 'PU2班', 'PU3班', 'PU4班', 'NCE1班'];
-const CLASS_COLORS = { 'PU1班':'#5B9BD5', 'PU2班':'#70AD47', 'PU3班':'#ED7D31', 'PU4班':'#9B59B6', 'NCE1班':'#E74C3C' };
 
 function loadUserProfile() {
   try {
