@@ -363,7 +363,68 @@ body { padding-bottom: 52px; }
   background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
   color: #2E7D32;
 }
+
+.level-nodes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+.level-node {
+  text-align: center;
+  padding: 10px 4px;
+  background: linear-gradient(135deg, #F0F0F0, #E0E0E0);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  user-select: none;
+}
+.level-node:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.level-node-current {
+  background: linear-gradient(135deg, #FFE4B5, #FFB6C1);
+  border-color: #FF6B6B;
+  box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+.level-node-done {
+  background: linear-gradient(135deg, #C8E6C9, #A5D6A7);
+  border-color: #70AD47;
+}
+.level-node-todo {
+  background: linear-gradient(135deg, #F8F9FA, #E9ECEF);
+  opacity: 0.85;
+}
+.level-node-locked {
+  background: linear-gradient(135deg, #ECEFF1, #CFD8DC);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.level-node-name {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4px;
+}
+.level-node-stars {
+  font-size: 10px;
+  color: #FFC107;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.level-node-current .level-node-stars { color: #FF9800; }
+.level-node-done .level-node-stars { color: #F57C00; }
+.level-node-todo .level-node-stars { color: #999; }
+.level-node-locked .level-node-stars { color: #BDBDBD; }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 4px 12px rgba(255,107,107,0.3); }
+  50% { box-shadow: 0 4px 20px rgba(255,107,107,0.5); }
+}
 .stats-grid {
+
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
@@ -790,7 +851,10 @@ let state = {
   wrongCount: 0,
   dayWordsCompleted: 0,
   userProfile: null,
-  isRetrying: false
+  isRetrying: false,
+  // === 关卡星数改造 ===
+  dayStars: {},   // {1: {1:5,2:4,3:3,4:5}, 2: {...}, ...}
+  viewDay: 1      // 当前主界面查看的天数（默认 = currentDay）
 };
 
 function loadState() {
@@ -806,6 +870,8 @@ function loadState() {
       if (!Array.isArray(state.currentOptions)) state.currentOptions = [];
       if (!state.wordProgress || typeof state.wordProgress !== 'object') state.wordProgress = {};
       if (typeof state.isRetrying !== 'boolean') state.isRetrying = false;
+      if (!state.dayStars || typeof state.dayStars !== 'object') state.dayStars = {};
+      if (typeof state.viewDay !== 'number' || state.viewDay < 1) state.viewDay = state.currentDay || 1;
     }
   } catch (e) {
     console.log('Failed to load state');
@@ -839,7 +905,10 @@ function resetState() {
     correctCount: 0,
     wrongCount: 0,
     dayWordsCompleted: 0,
-    userProfile: savedProfile  // 保留用户档案
+    userProfile: savedProfile,  // 保留用户档案
+    // === 关卡星数改造 ===
+    dayStars: {},
+    viewDay: 1
   };
   saveState();
 }
@@ -1023,6 +1092,85 @@ function speak(text, lang = 'en-US') {
   }
 }
 
+// === 关卡星数计算（关卡星数改造） ===
+function getStarsByPercentage(pct) {
+  if (pct >= 100) return 5;
+  if (pct >= 90) return 4;
+  if (pct >= 80) return 3;
+  return 0;
+}
+
+function calcLevelStars(day, level) {
+  // 临时切到那一天计算（只读），算完还原
+  const oldDay = state.currentDay;
+  state.currentDay = day;
+  const todayWords = getTodayWords();
+  const total = todayWords.length || 1;
+  let correct = 0;
+  for (const w of todayWords) {
+    const key = w.en.toLowerCase();
+    const lvl = state.wordProgress[key] && state.wordProgress[key][level];
+    if (lvl && lvl >= 1) correct++;
+  }
+  state.currentDay = oldDay;
+  const pct = Math.round((correct / total) * 100);
+  return getStarsByPercentage(pct);
+}
+
+function getDayStars(day) {
+  return (state.dayStars && state.dayStars[day]) || {};
+}
+
+function dayTotalStars(day) {
+  const s = getDayStars(day);
+  return (s[1]||0) + (s[2]||0) + (s[3]||0) + (s[4]||0);
+}
+
+function dayCompleted(day) {
+  const s = getDayStars(day);
+  return (s[1]||0) >= 3 && (s[2]||0) >= 3 && (s[3]||0) >= 3 && (s[4]||0) >= 3;
+}
+
+function getMaxUnlockedDay() {
+  let max = state.currentDay || 1;
+  if (state.currentDay < TOTAL_DAYS && dayCompleted(state.currentDay)) {
+    max = state.currentDay + 1;
+  }
+  return Math.min(max, TOTAL_DAYS);
+}
+
+function switchViewDay(d) {
+  state.viewDay = d;
+  state.gameMode = 'home';
+  state.currentLevel = 1;
+  state.currentWordIndex = 0;
+  saveState();
+  render();
+}
+
+function unlockNextDay() {
+  // 完成当天 12 颗星后，解锁下一天
+  state.currentDay++;
+  state.viewDay = state.currentDay;
+  state.currentLevel = 1;
+  state.currentWordIndex = 0;
+  state.currentRound = 1;
+  state.correctCount = 0;
+  state.wrongCount = 0;
+  state.currentLetters = null;
+  state.userAnswer = '';
+  state.usedPositions = [];
+  saveState();
+  render();
+}
+
+function renderStars(stars) {
+  // 渲染 5 颗星（亮 ★ + 空 ☆）
+  let s = '';
+  for (let i = 0; i < 5; i++) s += i < stars ? '★' : '☆';
+  return s;
+}
+
 function getProgress() {
   const allFourSkills = getAllFourSkills();
   const total = allFourSkills.length;
@@ -1069,12 +1217,57 @@ function render() {
 
 function renderHome() {
   const progress = getProgress();
-  const dayProgress = getDayProgress();
   const phaseLabel = state.phase === 'learning' ? '集中学习' : '错词巩固';
-  
-  let wrongCount = state.wrongWords.length;
-  let masteredCount = state.masteredWords.length;
-  
+  const wrongCount = state.wrongWords.length;
+  const masteredCount = state.masteredWords.length;
+
+  const viewDay = state.viewDay || state.currentDay || 1;  // 当前主界面查看的天
+  const maxUnlocked = getMaxUnlockedDay();
+  const isViewingCurrent = viewDay === state.currentDay;
+
+  // 关卡节点数据
+  const levels = [
+    { id: 1, name: '关卡一', desc: '英译中' },
+    { id: 2, name: '关卡二', desc: '中译英' },
+    { id: 3, name: '关卡三', desc: '听音选词' },
+    { id: 4, name: '关卡四', desc: '拼写单词' }
+  ];
+  const dayStars = getDayStars(viewDay);
+  const levelNodes = levels.map(L => {
+    const stars = dayStars[L.id] || 0;
+    const isCurrent = isViewingCurrent && state.currentLevel === L.id;
+    const isDone = stars > 0;
+    const isLocked = viewDay > state.currentDay;
+    let statusClass = 'level-node';
+    if (isLocked) statusClass += ' level-node-locked';
+    else if (isCurrent) statusClass += ' level-node-current';
+    else if (isDone) statusClass += ' level-node-done';
+    else statusClass += ' level-node-todo';
+    const starHtml = renderStars(stars);
+    const onclick = isLocked ? '' : `onclick="startGame(${L.id})"`;
+    return `<div class="${statusClass}" ${onclick}>
+      <div class="level-node-name">${L.name}</div>
+      <div class="level-node-stars">${starHtml}</div>
+    </div>`;
+  }).join('');
+
+  // 跨天下拉
+  let dayOptions = '';
+  if (maxUnlocked > 1) {
+    for (let d = 1; d <= maxUnlocked; d++) {
+      const completed = dayCompleted(d);
+      const stars = dayTotalStars(d);
+      const isCurrentDay = d === state.currentDay;
+      let label = `第 ${d} / ${TOTAL_DAYS} 天`;
+      if (completed) label += ' ✅';
+      if (isCurrentDay) label += ' ⏵';
+      dayOptions += `<option value="${d}" ${d === viewDay ? 'selected' : ''}>${label}</option>\n`;
+    }
+  }
+
+  // 解锁下一天按钮
+  const showUnlock = isViewingCurrent && state.currentDay < TOTAL_DAYS && dayCompleted(state.currentDay);
+
   return `
     ${renderUserBar()}
     <div class="header">
@@ -1085,32 +1278,36 @@ function renderHome() {
         <div class="progress-fill" style="width:${progress.percentage}%"></div>
       </div>
     </div>
-    
+
     <div class="card">
       <div class="phase-title">
         <span class="phase-badge">${phaseLabel}</span>
-        <br>第 ${state.currentDay} / ${TOTAL_DAYS} 天
+        <br>第 ${viewDay} / ${TOTAL_DAYS} 天 ${isViewingCurrent ? '' : '<span style="font-size:12px;color:#999">（查看历史）</span>'}
       </div>
-      
-      <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-value">${wrongCount}</div>
-          <div class="stat-label">待巩固</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value">${masteredCount}</div>
-          <div class="stat-label">已掌握</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value">${dayProgress.completed}/${dayProgress.total}</div>
-          <div class="stat-label">今日进度</div>
-        </div>
+
+      ${maxUnlocked > 1 ? `
+      <div style="margin-bottom:12px">
+        <select class="day-selector" onchange="switchViewDay(parseInt(this.value))" style="width:100%;padding:8px;border-radius:8px;border:1px solid #ddd;font-size:14px;background:white">
+          ${dayOptions}
+        </select>
       </div>
-      
+      ` : ''}
+
+      <div class="level-nodes-grid">
+        ${levelNodes}
+      </div>
+
+      ${showUnlock ? `
+      <button class="btn btn-primary" onclick="unlockNextDay()" style="background:linear-gradient(135deg,#70AD47,#5e9439);margin-top:12px">
+        🎉 恭喜完成第 ${state.currentDay} 天！<br>开始第 ${state.currentDay + 1} 天 →
+      </button>
+      ` : `
       <button class="btn btn-primary" onclick="startLevelSelect()">
         开始闯关
       </button>
-      
+      `}
+
+      ${!showUnlock && isViewingCurrent ? `
       <div style="display:flex;gap:8px;margin-top:10px">
         <button class="btn btn-outline" onclick="showWrongList()" style="flex:1">
           错词本 (${wrongCount})
@@ -1119,24 +1316,33 @@ function renderHome() {
           重置进度
         </button>
       </div>
+      ` : ''}
+
+      ${!isViewingCurrent ? `
+      <button class="btn btn-outline" onclick="switchViewDay(${state.currentDay})">
+        ← 回到第 ${state.currentDay} 天（当前进度）
+      </button>
+      ` : ''}
     </div>
-    
+
     <div class="card">
       <div style="font-size:14px;color:#666;line-height:1.6">
         <strong>学习规则</strong><br>
         - 每天学习一组新词 + 历史错词<br>
-        - 每词出现2次，答对2次即可掌握<br>
-        - 答错或跳过 +1次出现机会<br>
+        - 每关答对 80% 以上才能拿到星星<br>
+        - 全天 4 关拿满 12 颗星才能解锁下一天<br>
+        - 5 颗星=全对 100% / 4 颗星=90% / 3 颗星=80%<br>
         - ${TOTAL_DAYS}天后进入错词循环模式
       </div>
     </div>
-    
+
     <div class="footer">
       词库: ${getAllFourSkills().length} 四会词 + ${getAllThreeSkills().length} 三会词
     </div>
     ${BRAND_FOOTER}
   `;
 }
+
 
 function renderLevelSelect() {
   const levels = [
@@ -1483,6 +1689,9 @@ function closeResult() {
 }
 
 function startLevelSelect() {
+  if (state.viewDay && state.viewDay !== state.currentDay) {
+    state.currentDay = state.viewDay;
+  }
   state.gameMode = 'levelSelect';
   state.currentRound++;
   state.correctCount = 0;
@@ -1492,6 +1701,10 @@ function startLevelSelect() {
 }
 
 function startGame(level) {
+  // 如果从历史天点进来，临时切 currentDay 到 viewDay
+  if (state.viewDay && state.viewDay !== state.currentDay) {
+    state.currentDay = state.viewDay;
+  }
   state.gameMode = 'game';
   state.currentLevel = level;
   state.currentWordIndex = 0;
@@ -1869,6 +2082,12 @@ function checkLevelComplete() {
   state.dayWordsCompleted[dayKey] = Math.max(state.dayWordsCompleted[dayKey] || 0, completed);
   saveState();
   const level = state.currentLevel;
+  // 记录该关星数（取最高分）
+  const newStars = calcLevelStars(state.currentDay, level);
+  state.dayStars[state.currentDay] = state.dayStars[state.currentDay] || {};
+  const oldStars = state.dayStars[state.currentDay][level] || 0;
+  state.dayStars[state.currentDay][level] = Math.max(oldStars, newStars);
+  saveState();
   if (level < 4) {
     const nextLevel = level + 1;
     const overlay = document.createElement('div');
