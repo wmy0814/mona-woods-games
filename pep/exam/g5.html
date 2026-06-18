@@ -1896,25 +1896,25 @@ function checkLevelComplete() {
     const overlay = document.createElement('div');
     overlay.id = 'levelCompleteOverlay';
     overlay.className = 'result-overlay';
-    overlay.innerHTML = \`
+    overlay.innerHTML = `
       <div class="result-card">
         <div class="result-icon">&#127881;</div>
-        <div class="result-title">🎉 第 \${level} 关完成！</div>
+        <div class="result-title">🎉 第 ${level} 关完成！</div>
         <div class="result-subtitle">太棒了，继续加油！</div>
         <div style="margin-top:8px;font-size:12px;color:#888">📤 点这里把你的成绩同步给Mona老师吧！</div>
         <button class="btn btn-primary" onclick="syncProgress();closeLevelCompleteOverlay();" style="margin-top:10px;background:#70AD47">📤 同步给Mona老师</button>
         <div style="display:flex;gap:8px;margin-top:10px">
           <button class="btn btn-outline" onclick="closeLevelCompleteOverlay();goHome();" style="flex:1">返回</button>
-          <button class="btn btn-primary" onclick="closeLevelCompleteOverlay();startGame(\${nextLevel})" style="flex:1">下一关（第\${nextLevel}关）</button>
+          <button class="btn btn-primary" onclick="closeLevelCompleteOverlay();startGame(${nextLevel})" style="flex:1">下一关（第${nextLevel}关）</button>
         </div>
       </div>
-    \`;
+    `;
     document.body.appendChild(overlay);
   } else {
     const overlay = document.createElement('div');
     overlay.id = 'levelCompleteOverlay';
     overlay.className = 'result-overlay';
-    overlay.innerHTML = \`
+    overlay.innerHTML = `
       <div class="result-card">
         <div class="result-icon">&#127942;</div>
         <div class="result-title">今日单词任务全部完成啦！</div>
@@ -1924,7 +1924,7 @@ function checkLevelComplete() {
         <button class="btn btn-primary" onclick="closeLevelCompleteOverlay();startNextDayEarly();" style="margin-top:10px">提前学下一天</button>
         <button class="btn btn-outline" onclick="closeLevelCompleteOverlay();goHome();" style="margin-top:10px">返回主页</button>
       </div>
-    \`;
+    `;
     document.body.appendChild(overlay);
   }
 }
