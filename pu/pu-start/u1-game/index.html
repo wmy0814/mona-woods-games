@@ -103,11 +103,11 @@ body {
 .match-item.correct { border-color: var(--mw-success); background: #E0F2F1; animation: popCorrect .4s ease; pointer-events: none; opacity: 0.7; }
 .match-item.wrong { border-color: var(--mw-error); animation: shake .4s ease; }
 .match-item .item-image {
-  width: 48px; height: 48px; border-radius: 8px; object-fit: contain;
+  width: 64px; height: 64px; border-radius: 10px; object-fit: contain;
   display: flex; align-items: center; justify-content: center; font-size: 32px;
-  background: var(--mw-pale);
+  background: var(--mw-pale); overflow: hidden;
 }
-.match-item .item-image img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+.match-item .item-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
 .match-item .item-label { font-size: 20px; color: var(--mw-dark); }
 
 /* ===== Level 2: Spelling ===== */
@@ -261,7 +261,7 @@ body {
   <div class="level-cards">
     <div class="level-card" onclick="startLevel(1)">
       <div class="tag">第 1 关</div>
-      <div class="icon"></div>
+      <div class="icon">️</div>
       <div class="title">图片配对</div>
       <div class="desc">把单词和对应的图片连起来</div>
     </div>
@@ -342,19 +342,19 @@ body {
    DATA
    ============================================================ */
 
-// Level 1: Vocabulary words with emoji placeholders (replace with images)
+// Level 1: Vocabulary words with images
 const VOCAB_WORDS = [
-  { word: 'dad',     emoji: '',    hint: '爸爸' },
-  { word: 'mum',     emoji: '',    hint: '妈妈' },
-  { word: 'sister',  emoji: '',    hint: '姐妹' },
-  { word: 'brother', emoji: '',    hint: '兄弟' },
-  { word: 'grandma', emoji: '',    hint: '奶奶/外婆' },
-  { word: 'grandpa', emoji: '',    hint: '爷爷/外公' },
-  { word: 'man',     emoji: '🧔',    hint: '男人' },
-  { word: 'woman',   emoji: '💃',    hint: '女人' },
-  { word: 'boy',     emoji: '',    hint: '男孩' },
-  { word: 'girl',    emoji: '',    hint: '女孩' },
-  { word: 'family',  emoji: '👨‍👩‍‍👦', hint: '家庭' },
+  { word: 'dad',     image: 'images/dad.png',     hint: '爸爸' },
+  { word: 'mum',     image: 'images/mum.png',     hint: '妈妈' },
+  { word: 'sister',  image: 'images/sister.png',  hint: '姐妹' },
+  { word: 'brother', image: 'images/brother.png', hint: '兄弟' },
+  { word: 'grandma', image: 'images/grandma.png', hint: '奶奶/外婆' },
+  { word: 'grandpa', image: 'images/grandpa.png', hint: '爷爷/外公' },
+  { word: 'man',     image: 'images/man.png',     hint: '男人' },
+  { word: 'woman',   image: 'images/woman.png',   hint: '女人' },
+  { word: 'boy',     image: 'images/boy.png',     hint: '男孩' },
+  { word: 'girl',    image: 'images/girl.png',    hint: '女孩' },
+  { word: 'family',  image: 'images/family.png',  hint: '家庭' },
 ];
 
 // Level 2: Spelling words
@@ -432,7 +432,7 @@ function initLevel1() {
     div.dataset.word = item.word;
     div.dataset.type = 'image';
     // Use emoji as placeholder; replace with <img src="images/xxx.png"> when images available
-    div.innerHTML = `<span class="item-image">${item.emoji}</span>`;
+    div.innerHTML = `<span class="item-image"><img src="${item.image}" alt="${item.word}"></span>`;
     div.onclick = () => onMatchClick(div);
     imgCol.appendChild(div);
   });
