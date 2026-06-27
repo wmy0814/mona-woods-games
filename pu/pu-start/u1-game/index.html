@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PU Start · U1 Family Fun</title>
+<style>
+/* ===== Mona Woods Theme ===== */
+:root {
+  --mw-dark: #1B3A4A;
+  --mw-mid: #5BA88A;
+  --mw-light: #B8E0D2;
+  --mw-pale: #E8F5F0;
+  --mw-accent: #F4A261;
+  --mw-success: #2A9D8F;
+  --mw-error: #E76F51;
+  --mw-white: #FFFFFF;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  background: linear-gradient(160deg, var(--mw-pale) 0%, #f0f9f5 50%, #e0f2ec 100%);
+  min-height: 100vh;
+  color: var(--mw-dark);
+  overflow-x: hidden;
+}
+.container { max-width: 900px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ===== Navigation ===== */
+.nav-bar {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+.btn-back {
+  padding: 8px 18px; background: var(--mw-white); border: 2px solid var(--mw-light);
+  border-radius: 20px; color: var(--mw-dark); font-size: 14px; cursor: pointer;
+  text-decoration: none; transition: all .2s;
+}
+.btn-back:hover { background: var(--mw-light); }
+.level-badge {
+  margin-left: auto; padding: 6px 16px; background: var(--mw-mid); color: white;
+  border-radius: 20px; font-size: 14px; font-weight: 600;
+}
+
+/* ===== Screens ===== */
+.screen { display: none; flex: 1; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ===== Select Screen ===== */
+.select-header {
+  text-align: center; padding: 30px 0 10px;
+}
+.select-header h1 {
+  font-size: 36px; color: var(--mw-dark); margin-bottom: 6px;
+}
+.select-header .subtitle {
+  font-size: 16px; color: var(--mw-mid); margin-bottom: 20px;
+}
+.logo-circle {
+  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px;
+  background: var(--mw-light); display: flex; align-items: center; justify-content: center;
+  font-size: 36px; box-shadow: 0 4px 12px rgba(27,58,74,0.12);
+}
+.level-cards {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px; margin-top: 10px;
+}
+.level-card {
+  background: var(--mw-white); border-radius: 16px; padding: 24px 20px;
+  cursor: pointer; transition: all .25s; border: 3px solid transparent;
+  box-shadow: 0 3px 10px rgba(27,58,74,0.08); position: relative; overflow: hidden;
+}
+.level-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(27,58,74,0.14); border-color: var(--mw-light); }
+.level-card .icon { font-size: 36px; margin-bottom: 10px; }
+.level-card .title { font-size: 20px; font-weight: 700; color: var(--mw-dark); margin-bottom: 4px; }
+.level-card .desc { font-size: 13px; color: var(--mw-mid); line-height: 1.5; }
+.level-card .tag {
+  position: absolute; top: 12px; right: 12px; padding: 3px 10px;
+  background: var(--mw-light); color: var(--mw-dark); border-radius: 10px; font-size: 11px; font-weight: 600;
+}
+.level-card.locked { opacity: 0.5; cursor: not-allowed; }
+.level-card.locked:hover { transform: none; box-shadow: 0 3px 10px rgba(27,58,74,0.08); border-color: transparent; }
+
+/* ===== Level 1: Matching ===== */
+.match-instruction {
+  text-align: center; font-size: 18px; color: var(--mw-mid); margin-bottom: 16px; font-weight: 600;
+}
+.match-area {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1;
+}
+.match-column { display: flex; flex-direction: column; gap: 10px; }
+.match-column-title {
+  text-align: center; font-size: 14px; color: var(--mw-mid); font-weight: 600; margin-bottom: 4px;
+}
+.match-item {
+  background: var(--mw-white); border-radius: 12px; padding: 12px 16px;
+  cursor: pointer; transition: all .2s; border: 3px solid var(--mw-light);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 64px; font-size: 18px; font-weight: 600;
+  box-shadow: 0 2px 6px rgba(27,58,74,0.06);
+}
+.match-item:hover { border-color: var(--mw-mid); transform: scale(1.02); }
+.match-item.selected { border-color: var(--mw-accent); background: #FFF3E0; transform: scale(1.05); box-shadow: 0 4px 12px rgba(244,162,97,0.3); }
+.match-item.correct { border-color: var(--mw-success); background: #E0F2F1; animation: popCorrect .4s ease; pointer-events: none; opacity: 0.7; }
+.match-item.wrong { border-color: var(--mw-error); animation: shake .4s ease; }
+.match-item .item-image {
+  width: 48px; height: 48px; border-radius: 8px; object-fit: contain;
+  display: flex; align-items: center; justify-content: center; font-size: 32px;
+  background: var(--mw-pale);
+}
+.match-item .item-image img { width: 100%; height: 100%; object-fit: contain; border-radius: 8px; }
+.match-item .item-label { font-size: 20px; color: var(--mw-dark); }
+
+/* ===== Level 2: Spelling ===== */
+.spell-progress {
+  text-align: center; font-size: 15px; color: var(--mw-mid); margin-bottom: 12px;
+}
+.spell-word-display {
+  text-align: center; margin-bottom: 10px;
+}
+.spell-target {
+  font-size: 28px; font-weight: 700; color: var(--mw-dark); letter-spacing: 2px;
+  min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.spell-target .letter-slot {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 48px; border-bottom: 4px solid var(--mw-mid);
+  font-size: 28px; font-weight: 700; color: var(--mw-dark);
+  transition: all .2s;
+}
+.spell-target .letter-slot.filled { border-color: var(--mw-success); color: var(--mw-success); }
+.spell-target .letter-slot.wrong { border-color: var(--mw-error); color: var(--mw-error); animation: shake .3s; }
+.spell-hint {
+  font-size: 14px; color: var(--mw-mid); margin-bottom: 16px; text-align: center;
+}
+.letter-pool {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px;
+}
+.letter-tile {
+  width: 52px; height: 56px; background: var(--mw-white); border: 3px solid var(--mw-light);
+  border-radius: 12px; font-size: 24px; font-weight: 700; color: var(--mw-dark);
+  cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(27,58,74,0.08);
+}
+.letter-tile:hover { border-color: var(--mw-mid); transform: translateY(-2px); }
+.letter-tile:active { transform: scale(0.95); }
+.letter-tile.used { opacity: 0.3; pointer-events: none; transform: scale(0.9); }
+.letter-tile.flash-wrong { animation: flashWrong .4s; }
+
+/* ===== Level 3: Word Order ===== */
+.sentence-progress {
+  text-align: center; font-size: 15px; color: var(--mw-mid); margin-bottom: 12px;
+}
+.slots-area {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 24px;
+  min-height: 70px; padding: 16px; background: var(--mw-white); border-radius: 16px;
+  border: 3px dashed var(--mw-light);
+}
+.slot {
+  width: 100px; height: 56px; background: var(--mw-pale); border: 3px solid var(--mw-light);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 600; color: var(--mw-dark); cursor: pointer;
+  transition: all .2s;
+}
+.slot.filled { background: var(--mw-white); border-color: var(--mw-mid); }
+.slot.correct { background: #E0F2F1; border-color: var(--mw-success); }
+.slot.wrong { background: #FFF0ED; border-color: var(--mw-error); animation: shake .3s; }
+.slot.drag-over { border-color: var(--mw-accent); background: #FFF3E0; transform: scale(1.05); }
+.word-bank {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px;
+}
+.word-chip {
+  padding: 10px 18px; background: var(--mw-white); border: 3px solid var(--mw-light);
+  border-radius: 12px; font-size: 18px; font-weight: 600; color: var(--mw-dark);
+  cursor: grab; transition: all .15s; box-shadow: 0 2px 6px rgba(27,58,74,0.08);
+  user-select: none;
+}
+.word-chip:hover { border-color: var(--mw-mid); transform: translateY(-2px); }
+.word-chip:active { cursor: grabbing; transform: scale(0.95); }
+.word-chip.used { opacity: 0.3; pointer-events: none; }
+.word-chip.dragging { opacity: 0.5; }
+.word-chip.punctuation { background: var(--mw-accent); color: white; border-color: #E8903A; font-size: 22px; width: 48px; text-align: center; }
+
+.check-btn {
+  display: block; margin: 0 auto; padding: 12px 40px; background: var(--mw-mid); color: white;
+  border: none; border-radius: 24px; font-size: 18px; font-weight: 700; cursor: pointer;
+  transition: all .2s; box-shadow: 0 4px 12px rgba(91,168,138,0.3);
+}
+.check-btn:hover { background: var(--mw-success); transform: translateY(-2px); }
+.check-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.next-btn {
+  display: none; margin: 12px auto 0; padding: 10px 32px; background: var(--mw-accent); color: white;
+  border: none; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer;
+  transition: all .2s;
+}
+.next-btn:hover { background: #E8903A; }
+.next-btn.visible { display: block; }
+
+/* ===== Result Overlay ===== */
+.result-overlay {
+  position: fixed; inset: 0; background: rgba(27,58,74,0.5); display: none;
+  align-items: center; justify-content: center; z-index: 100;
+}
+.result-overlay.show { display: flex; }
+.result-card {
+  background: var(--mw-white); border-radius: 20px; padding: 36px 48px; text-align: center;
+  box-shadow: 0 12px 40px rgba(27,58,74,0.2); animation: popIn .3s ease;
+}
+.result-card .emoji { font-size: 56px; margin-bottom: 12px; }
+.result-card .msg { font-size: 22px; font-weight: 700; color: var(--mw-dark); margin-bottom: 20px; }
+.result-card .btn {
+  padding: 10px 32px; background: var(--mw-mid); color: white; border: none;
+  border-radius: 20px; font-size: 16px; cursor: pointer; transition: all .2s;
+}
+.result-card .btn:hover { background: var(--mw-success); }
+
+/* ===== Animations ===== */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+@keyframes popCorrect {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes flashWrong {
+  0%,100% { background: var(--mw-white); }
+  50% { background: #FFE0E0; }
+}
+@keyframes confetti {
+  0% { transform: translateY(0) rotate(0); opacity: 1; }
+  100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  .match-area { grid-template-columns: 1fr; }
+  .level-cards { grid-template-columns: 1fr; }
+  .select-header h1 { font-size: 28px; }
+  .slot { width: 80px; height: 48px; font-size: 15px; }
+  .letter-tile { width: 44px; height: 48px; font-size: 20px; }
+  .word-chip { padding: 8px 14px; font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== LEVEL SELECT ===================== -->
+<div class="container">
+<div id="screen-select" class="screen active">
+  <div class="select-header">
+    <div class="logo-circle">🐙</div>
+    <h1>U1 Family Fun</h1>
+    <div class="subtitle">Power Up Start · Unit 1 · 家庭与朋友</div>
+  </div>
+  <div class="level-cards">
+    <div class="level-card" onclick="startLevel(1)">
+      <div class="tag">第 1 关</div>
+      <div class="icon"></div>
+      <div class="title">图片配对</div>
+      <div class="desc">把单词和对应的图片连起来</div>
+    </div>
+    <div class="level-card" onclick="startLevel(2)">
+      <div class="tag">第 2 关</div>
+      <div class="icon">🔤</div>
+      <div class="title">字母拼读</div>
+      <div class="desc">从打乱的字母中选出正确的拼出单词</div>
+    </div>
+    <div class="level-card" onclick="startLevel(3)">
+      <div class="tag">第 3 关</div>
+      <div class="icon"></div>
+      <div class="title">连词成句</div>
+      <div class="desc">把打乱的单词拖到正确的位置组成句子</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LEVEL 1: MATCHING ===================== -->
+<div id="screen-level1" class="screen">
+  <div class="nav-bar">
+    <button class="btn-back" onclick="goSelect()">← 返回</button>
+    <div class="level-badge">第 1 关 · 图片配对</div>
+  </div>
+  <div class="match-instruction" id="match-instruction">点击一个图片，再点击对应的单词</div>
+  <div class="match-area">
+    <div class="match-column" id="match-images-col">
+      <div class="match-column-title">📷 图片</div>
+    </div>
+    <div class="match-column" id="match-words-col">
+      <div class="match-column-title">📝 单词</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LEVEL 2: SPELLING ===================== -->
+<div id="screen-level2" class="screen">
+  <div class="nav-bar">
+    <button class="btn-back" onclick="goSelect()">← 返回</button>
+    <div class="level-badge">第 2 关 · 字母拼读</div>
+  </div>
+  <div class="spell-progress" id="spell-progress">1 / 11</div>
+  <div class="spell-word-display">
+    <div class="spell-target" id="spell-target"></div>
+  </div>
+  <div class="spell-hint" id="spell-hint"></div>
+  <div class="letter-pool" id="letter-pool"></div>
+  <div style="text-align:center; margin-top: 10px;">
+    <button class="btn-back" onclick="spellClear()" style="font-size:13px; padding: 6px 16px;">🔄 重新拼写</button>
+  </div>
+</div>
+
+<!-- ===================== LEVEL 3: WORD ORDER ===================== -->
+<div id="screen-level3" class="screen">
+  <div class="nav-bar">
+    <button class="btn-back" onclick="goSelect()">← 返回</button>
+    <div class="level-badge">第 3 关 · 连词成句</div>
+  </div>
+  <div class="sentence-progress" id="sentence-progress">1 / 8</div>
+  <div class="slots-area" id="slots-area"></div>
+  <div class="word-bank" id="word-bank"></div>
+  <button class="check-btn" id="check-btn" onclick="checkSentence()">✅ 检查</button>
+  <button class="next-btn" id="next-btn" onclick="nextSentence()">下一句 →</button>
+</div>
+</div>
+
+<!-- ===================== RESULT OVERLAY ===================== -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-card">
+    <div class="emoji" id="result-emoji">🎉</div>
+    <div class="msg" id="result-msg">太棒了！</div>
+    <button class="btn" id="result-btn" onclick="closeResult()">继续</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+
+// Level 1: Vocabulary words with emoji placeholders (replace with images)
+const VOCAB_WORDS = [
+  { word: 'dad',     emoji: '',    hint: '爸爸' },
+  { word: 'mum',     emoji: '',    hint: '妈妈' },
+  { word: 'sister',  emoji: '',    hint: '姐妹' },
+  { word: 'brother', emoji: '',    hint: '兄弟' },
+  { word: 'grandma', emoji: '',    hint: '奶奶/外婆' },
+  { word: 'grandpa', emoji: '',    hint: '爷爷/外公' },
+  { word: 'man',     emoji: '🧔',    hint: '男人' },
+  { word: 'woman',   emoji: '💃',    hint: '女人' },
+  { word: 'boy',     emoji: '',    hint: '男孩' },
+  { word: 'girl',    emoji: '',    hint: '女孩' },
+  { word: 'family',  emoji: '👨‍👩‍‍👦', hint: '家庭' },
+];
+
+// Level 2: Spelling words
+const SPELL_WORDS = [
+  { word: 'dad',     hint: '爸爸' },
+  { word: 'mum',     hint: '妈妈' },
+  { word: 'man',     hint: '男人' },
+  { word: 'boy',     hint: '男孩' },
+  { word: 'girl',    hint: '女孩' },
+  { word: 'woman',   hint: '女人' },
+  { word: 'family',  hint: '家庭' },
+  { word: 'sister',  hint: '姐妹' },
+  { word: 'brother', hint: '兄弟' },
+  { word: 'grandma', hint: '奶奶' },
+  { word: 'grandpa', hint: '爷爷' },
+];
+
+// Level 3: Sentences for word ordering
+const SENTENCES = [
+  { words: ["Who's", "he", "?"], display: "Who's he?" },
+  { words: ["He's", "my", "dad", "."], display: "He's my dad." },
+  { words: ["She's", "my", "sister", "."], display: "She's my sister." },
+  { words: ["This", "is", "my", "family", "."], display: "This is my family." },
+  { words: ["Who's", "that", "woman", "?"], display: "Who's that woman?" },
+  { words: ["How", "old", "are", "you", "?"], display: "How old are you?" },
+  { words: ["He's", "my", "brother", "."], display: "He's my brother." },
+  { words: ["She's", "my", "grandma", "."], display: "She's my grandma." },
+];
+
+/* ============================================================
+   SCREEN MANAGEMENT
+   ============================================================ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goSelect() { showScreen('screen-select'); }
+function startLevel(n) {
+  if (n === 1) initLevel1();
+  else if (n === 2) initLevel2();
+  else if (n === 3) initLevel3();
+}
+
+/* ============================================================
+   LEVEL 1: MATCHING
+   ============================================================ */
+let matchState = { selectedImg: null, matchedCount: 0, total: 0 };
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function initLevel1() {
+  showScreen('screen-level1');
+  matchState = { selectedImg: null, matchedCount: 0, total: VOCAB_WORDS.length };
+  document.getElementById('match-instruction').textContent = `点击一个图片，再点击对应的单词（0/${matchState.total}）`;
+
+  const imgCol = document.getElementById('match-images-col');
+  const wordCol = document.getElementById('match-words-col');
+  // Keep title, remove old items
+  imgCol.querySelectorAll('.match-item').forEach(e => e.remove());
+  wordCol.querySelectorAll('.match-item').forEach(e => e.remove());
+
+  const shuffledImgs = shuffle(VOCAB_WORDS);
+  const shuffledWords = shuffle(VOCAB_WORDS);
+
+  shuffledImgs.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'match-item';
+    div.dataset.word = item.word;
+    div.dataset.type = 'image';
+    // Use emoji as placeholder; replace with <img src="images/xxx.png"> when images available
+    div.innerHTML = `<span class="item-image">${item.emoji}</span>`;
+    div.onclick = () => onMatchClick(div);
+    imgCol.appendChild(div);
+  });
+
+  shuffledWords.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'match-item';
+    div.dataset.word = item.word;
+    div.dataset.type = 'word';
+    div.innerHTML = `<span class="item-label">${item.word}</span>`;
+    div.onclick = () => onMatchClick(div);
+    wordCol.appendChild(div);
+  });
+}
+
+function onMatchClick(el) {
+  if (el.classList.contains('correct')) return;
+  const type = el.dataset.type;
+
+  if (type === 'image') {
+    // Deselect previous image
+    document.querySelectorAll('.match-item[data-type="image"].selected').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchState.selectedImg = el;
+  } else {
+    // Word clicked
+    if (!matchState.selectedImg) {
+      // No image selected, just flash this word
+      el.classList.add('wrong');
+      setTimeout(() => el.classList.remove('wrong'), 400);
+      return;
+    }
+    const imgWord = matchState.selectedImg.dataset.word;
+    const wordVal = el.dataset.word;
+    if (imgWord === wordVal) {
+      // Correct match
+      matchState.selectedImg.classList.remove('selected');
+      matchState.selectedImg.classList.add('correct');
+      el.classList.add('correct');
+      matchState.selectedImg = null;
+      matchState.matchedCount++;
+      document.getElementById('match-instruction').textContent =
+        `点击一个图片，再点击对应的单词（${matchState.matchedCount}/${matchState.total}）`;
+      playTone(600, 0.1);
+      if (matchState.matchedCount === matchState.total) {
+        setTimeout(() => showResult('🎉', '全部配对成功！', () => { goSelect(); }), 500);
+      }
+    } else {
+      // Wrong match
+      el.classList.add('wrong');
+      matchState.selectedImg.classList.remove('selected');
+      matchState.selectedImg.classList.add('wrong');
+      const prevImg = matchState.selectedImg;
+      matchState.selectedImg = null;
+      playTone(200, 0.15);
+      setTimeout(() => {
+        el.classList.remove('wrong');
+        prevImg.classList.remove('wrong');
+      }, 400);
+    }
+  }
+}
+
+/* ============================================================
+   LEVEL 2: SPELLING
+   ============================================================ */
+let spellState = { currentWordIdx: 0, currentLetters: [], targetWord: '', poolLetters: [], usedIndices: new Set() };
+
+function initLevel2() {
+  showScreen('screen-level2');
+  spellState.currentWordIdx = 0;
+  loadSpellWord(0);
+}
+
+function loadSpellWord(idx) {
+  const wordData = SPELL_WORDS[idx];
+  spellState.targetWord = wordData.word.toLowerCase();
+  spellState.currentLetters = [];
+  spellState.usedIndices = new Set();
+
+  document.getElementById('spell-progress').textContent = `${idx + 1} / ${SPELL_WORDS.length}`;
+  document.getElementById('spell-hint').textContent = `中文提示：${wordData.hint}`;
+
+  // Generate letter pool: correct letters + distractors = 10 total
+  const correctLetters = wordData.word.toLowerCase().split('');
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  const distractors = [];
+  const usedInWord = new Set(correctLetters);
+  while (distractors.length < 10 - correctLetters.length) {
+    const letter = alphabet[Math.floor(Math.random() * alphabet.length)];
+    // Avoid too many duplicates of letters already in the word
+    if (!usedInWord.has(letter) || distractors.filter(d => d === letter).length < 2) {
+      distractors.push(letter);
+      usedInWord.add(letter);
+    }
+  }
+  const pool = shuffle([...correctLetters, ...distractors]);
+  spellState.poolLetters = pool;
+
+  // Render target slots
+  const targetEl = document.getElementById('spell-target');
+  targetEl.innerHTML = '';
+  for (let i = 0; i < wordData.word.length; i++) {
+    const slot = document.createElement('span');
+    slot.className = 'letter-slot';
+    slot.id = `slot-${i}`;
+    targetEl.appendChild(slot);
+  }
+
+  // Render letter pool
+  const poolEl = document.getElementById('letter-pool');
+  poolEl.innerHTML = '';
+  pool.forEach((letter, i) => {
+    const tile = document.createElement('div');
+    tile.className = 'letter-tile';
+    tile.textContent = letter;
+    tile.dataset.index = i;
+    tile.dataset.letter = letter;
+    tile.onclick = () => onLetterClick(tile, i, letter);
+    poolEl.appendChild(tile);
+  });
+}
+
+function onLetterClick(tile, idx, letter) {
+  if (spellState.usedIndices.has(idx)) return;
+  const pos = spellState.currentLetters.length;
+  const targetChar = spellState.targetWord[pos];
+
+  if (letter === targetChar) {
+    // Correct letter
+    spellState.currentLetters.push(letter);
+    spellState.usedIndices.add(idx);
+    tile.classList.add('used');
+    const slot = document.getElementById(`slot-${pos}`);
+    slot.textContent = letter;
+    slot.classList.add('filled');
+    playTone(500 + pos * 80, 0.08);
+
+    // Check if word complete
+    if (spellState.currentLetters.length === spellState.targetWord.length) {
+      playTone(800, 0.15);
+      setTimeout(() => {
+        spellState.currentWordIdx++;
+        if (spellState.currentWordIdx < SPELL_WORDS.length) {
+          loadSpellWord(spellState.currentWordIdx);
+        } else {
+          showResult('', '全部单词拼写完成！', () => { goSelect(); });
+        }
+      }, 600);
+    }
+  } else {
+    // Wrong letter
+    tile.classList.add('flash-wrong');
+    playTone(200, 0.12);
+    setTimeout(() => tile.classList.remove('flash-wrong'), 400);
+
+    // Also mark the slot as wrong briefly
+    const slot = document.getElementById(`slot-${pos}`);
+    slot.classList.add('wrong');
+    setTimeout(() => slot.classList.remove('wrong'), 300);
+  }
+}
+
+function spellClear() {
+  loadSpellWord(spellState.currentWordIdx);
+}
+
+/* ============================================================
+   LEVEL 3: WORD ORDER
+   ============================================================ */
+let orderState = { currentSentenceIdx: 0, slotValues: [], sentenceData: null, dragData: null };
+
+function initLevel3() {
+  showScreen('screen-level3');
+  orderState.currentSentenceIdx = 0;
+  loadSentence(0);
+}
+
+function loadSentence(idx) {
+  orderState.currentSentenceIdx = idx;
+  const sentence = SENTENCES[idx];
+  orderState.sentenceData = sentence;
+  orderState.slotValues = new Array(sentence.words.length).fill(null);
+
+  document.getElementById('sentence-progress').textContent = `${idx + 1} / ${SENTENCES.length}`;
+  document.getElementById('next-btn').classList.remove('visible');
+  document.getElementById('check-btn').disabled = false;
+  document.getElementById('check-btn').style.display = 'block';
+
+  // Render slots
+  const slotsArea = document.getElementById('slots-area');
+  slotsArea.innerHTML = '';
+  sentence.words.forEach((word, i) => {
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    slot.dataset.slotIdx = i;
+    slot.textContent = '?';
+    // Drop events
+    slot.ondragover = (e) => { e.preventDefault(); slot.classList.add('drag-over'); };
+    slot.ondragleave = () => slot.classList.remove('drag-over');
+    slot.ondrop = (e) => onSlotDrop(e, i, slot);
+    // Click to remove
+    slot.onclick = () => onSlotClick(i, slot);
+    slotsArea.appendChild(slot);
+  });
+
+  // Render word bank (shuffled)
+  const wordBank = document.getElementById('word-bank');
+  wordBank.innerHTML = '';
+  const shuffledWords = sentence.words.map((w, i) => ({ text: w, origIdx: i }));
+  shuffle(shuffledWords).forEach(item => {
+    const chip = document.createElement('div');
+    chip.className = 'word-chip' + (isPunctuation(item.text) ? ' punctuation' : '');
+    chip.textContent = item.text;
+    chip.dataset.wordText = item.text;
+    chip.dataset.origIdx = item.origIdx;
+    chip.draggable = true;
+    chip.ondragstart = (e) => onChipDragStart(e, chip);
+    chip.ondragend = () => chip.classList.remove('dragging');
+    // Click to place
+    chip.onclick = () => onChipClick(chip);
+    wordBank.appendChild(chip);
+  });
+}
+
+function isPunctuation(text) {
+  return ['.', '?', '!', ','].includes(text);
+}
+
+function onChipDragStart(e, chip) {
+  orderState.dragData = { text: chip.dataset.wordText, origIdx: chip.dataset.origIdx, el: chip };
+  chip.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', chip.dataset.wordText);
+}
+
+function onSlotDrop(e, slotIdx, slotEl) {
+  e.preventDefault();
+  slotEl.classList.remove('drag-over');
+  if (!orderState.dragData) return;
+  placeWordInSlot(orderState.dragData.text, orderState.dragData.origIdx, slotIdx, slotEl, orderState.dragData.el);
+  orderState.dragData = null;
+}
+
+function onChipClick(chip) {
+  // Find first empty slot
+  const emptyIdx = orderState.slotValues.findIndex(v => v === null);
+  if (emptyIdx === -1) return;
+  const slotEl = document.getElementById('slots-area').children[emptyIdx];
+  placeWordInSlot(chip.dataset.wordText, chip.dataset.origIdx, emptyIdx, slotEl, chip);
+}
+
+function onSlotClick(slotIdx, slotEl) {
+  // Return word to bank
+  const wordText = orderState.slotValues[slotIdx];
+  if (!wordText) return;
+  orderState.slotValues[slotIdx] = null;
+  slotEl.textContent = '?';
+  slotEl.classList.remove('filled', 'correct', 'wrong');
+  // Re-enable the chip in the bank
+  const bankChips = document.querySelectorAll('.word-bank .word-chip');
+  bankChips.forEach(chip => {
+    if (chip.dataset.wordText === wordText && chip.classList.contains('used')) {
+      chip.classList.remove('used');
+      // Only re-enable one
+      return;
+    }
+  });
+  // More precise: find the chip by origIdx stored in slot
+  const usedChip = [...bankChips].find(c => c.dataset.wordText === wordText && c.classList.contains('used'));
+  if (usedChip) usedChip.classList.remove('used');
+}
+
+function placeWordInSlot(text, origIdx, slotIdx, slotEl, chipEl) {
+  // If slot already filled, return that word to bank
+  if (orderState.slotValues[slotIdx] !== null) {
+    const bankChips = document.querySelectorAll('.word-bank .word-chip');
+    const prevChip = [...bankChips].find(c => c.dataset.wordText === orderState.slotValues[slotIdx] && c.classList.contains('used'));
+    if (prevChip) prevChip.classList.remove('used');
+  }
+  orderState.slotValues[slotIdx] = text;
+  slotEl.textContent = text;
+  slotEl.classList.add('filled');
+  slotEl.classList.remove('correct', 'wrong');
+  chipEl.classList.add('used');
+  playTone(400, 0.06);
+}
+
+function checkSentence() {
+  const sentence = orderState.sentenceData;
+  // Check if all slots filled
+  if (orderState.slotValues.includes(null)) {
+    // Flash unfilled slots
+    document.querySelectorAll('.slot').forEach((slot, i) => {
+      if (!orderState.slotValues[i]) {
+        slot.classList.add('wrong');
+        setTimeout(() => slot.classList.remove('wrong'), 400);
+      }
+    });
+    return;
+  }
+  // Check correctness
+  const isCorrect = sentence.words.every((word, i) => orderState.slotValues[i] === word);
+  if (isCorrect) {
+    document.querySelectorAll('.slot').forEach(slot => slot.classList.add('correct'));
+    document.getElementById('check-btn').disabled = true;
+    document.getElementById('next-btn').classList.add('visible');
+    playTone(800, 0.2);
+  } else {
+    // Show which are wrong
+    document.querySelectorAll('.slot').forEach((slot, i) => {
+      if (orderState.slotValues[i] !== sentence.words[i]) {
+        slot.classList.add('wrong');
+      } else {
+        slot.classList.add('correct');
+      }
+    });
+    playTone(200, 0.15);
+    // Clear wrong marks after a moment
+    setTimeout(() => {
+      document.querySelectorAll('.slot').forEach(slot => {
+        slot.classList.remove('wrong');
+      });
+    }, 800);
+  }
+}
+
+function nextSentence() {
+  orderState.currentSentenceIdx++;
+  if (orderState.currentSentenceIdx < SENTENCES.length) {
+    loadSentence(orderState.currentSentenceIdx);
+  } else {
+    showResult('', '全部句子完成！你真棒！', () => { goSelect(); });
+  }
+}
+
+/* ============================================================
+   RESULT OVERLAY
+   ============================================================ */
+let resultCallback = null;
+function showResult(emoji, msg, callback) {
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-msg').textContent = msg;
+  document.getElementById('result-overlay').classList.add('show');
+  resultCallback = callback;
+  playTone(800, 0.1);
+  setTimeout(() => playTone(1000, 0.15), 120);
+}
+function closeResult() {
+  document.getElementById('result-overlay').classList.remove('show');
+  if (resultCallback) { resultCallback(); resultCallback = null; }
+}
+
+/* ============================================================
+   AUDIO (Web Audio API - simple tones)
+   ============================================================ */
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playTone(freq, duration) {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = freq;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  } catch(e) {}
+}
+</script>
+</body>
+</html>
