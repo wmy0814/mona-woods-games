@@ -268,6 +268,54 @@ body {
 .spell-next-btn:hover { background: #E8903A; }
 .spell-next-btn.visible { display: block; }
 
+
+/* ===== Level 1: Quiz Mode ===== */
+.quiz-progress {
+  text-align: center; font-size: 15px; color: var(--mw-mid); margin-bottom: 12px;
+}
+.quiz-image-area {
+  text-align: center; margin-bottom: 16px;
+}
+.quiz-image-area img {
+  width: 240px; height: 240px; border-radius: 20px; object-fit: cover;
+  border: 4px solid var(--mw-light); box-shadow: 0 4px 16px rgba(27,58,74,0.12);
+  background: var(--mw-pale);
+}
+.quiz-instruction {
+  text-align: center; font-size: 18px; color: var(--mw-mid); font-weight: 600; margin-bottom: 16px;
+}
+.quiz-options {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 500px; margin: 0 auto 16px;
+}
+.quiz-option {
+  padding: 14px 20px; background: var(--mw-white); border: 3px solid var(--mw-light);
+  border-radius: 14px; font-size: 20px; font-weight: 700; color: var(--mw-dark);
+  cursor: pointer; transition: all .2s; text-align: center;
+  box-shadow: 0 2px 8px rgba(27,58,74,0.06);
+}
+.quiz-option:hover { border-color: var(--mw-mid); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(91,168,138,0.2); }
+.quiz-option:active { transform: scale(0.97); }
+.quiz-option.correct {
+  border-color: var(--mw-success); background: #E0F2F1; color: var(--mw-success);
+  animation: popCorrect .4s ease;
+}
+.quiz-option.wrong {
+  border-color: var(--mw-error); background: #FFF0ED; color: var(--mw-error);
+  animation: shake .4s ease;
+}
+.quiz-option.disabled { pointer-events: none; opacity: 0.6; }
+.quiz-feedback {
+  text-align: center; font-size: 20px; font-weight: 700; min-height: 30px; margin-bottom: 8px;
+}
+.quiz-feedback.correct-text { color: var(--mw-success); }
+.quiz-feedback.wrong-text { color: var(--mw-error); }
+.quiz-restart-btn {
+  display: block; margin: 12px auto 0; padding: 14px 40px; background: var(--mw-accent); color: white;
+  border: none; border-radius: 24px; font-size: 18px; font-weight: 700; cursor: pointer;
+  transition: all .2s; box-shadow: 0 4px 12px rgba(244,162,97,0.3);
+}
+.quiz-restart-btn:hover { background: #E8903A; transform: translateY(-2px); }
+
 </style>
 </head>
 <body>
@@ -306,17 +354,16 @@ body {
 <div id="screen-level1" class="screen">
   <div class="nav-bar">
     <button class="btn-back" onclick="goSelect()">← 返回</button>
-    <div class="level-badge">第 1 关 · 图片配对</div>
+    <div class="level-badge">第 1 关 · 看图选词</div>
   </div>
-  <div class="match-instruction" id="match-instruction">点击一个图片，再点击对应的单词</div>
-  <div class="match-area">
-    <div class="match-column" id="match-images-col">
-      <div class="match-column-title">📷 图片</div>
-    </div>
-    <div class="match-column" id="match-words-col">
-      <div class="match-column-title">📝 单词</div>
-    </div>
+  <div class="quiz-progress" id="quiz-progress">1 / 11</div>
+  <div class="quiz-image-area">
+    <img id="quiz-image" src="" alt="看图选词">
   </div>
+  <div class="quiz-instruction" id="quiz-instruction">选出正确的单词 👇</div>
+  <div class="quiz-options" id="quiz-options"></div>
+  <div class="quiz-feedback" id="quiz-feedback"></div>
+  <button class="quiz-restart-btn" id="quiz-restart-btn" onclick="restartLevel1()" style="display:none;">🔄 重新开始</button>
 </div>
 
 <!-- ===================== LEVEL 2: SPELLING ===================== -->
@@ -427,9 +474,9 @@ function startLevel(n) {
 }
 
 /* ============================================================
-   LEVEL 1: MATCHING
+   LEVEL 1: QUIZ MODE (看图选词)
    ============================================================ */
-let matchState = { selectedImg: null, matchedCount: 0, total: 0 };
+let quizState = { order: [], currentIdx: 0, score: 0, total: 0, locked: false };
 
 function shuffle(arr) {
   const a = [...arr];
@@ -440,88 +487,133 @@ function shuffle(arr) {
   return a;
 }
 
+function generateQuizOrder() {
+  // Create a random order of indices [0..10]
+  const indices = Array.from({length: VOCAB_WORDS.length}, (_, i) => i);
+  return shuffle(indices);
+}
+
 function initLevel1() {
   showScreen('screen-level1');
-  matchState = { selectedImg: null, matchedCount: 0, total: VOCAB_WORDS.length };
-  document.getElementById('match-instruction').textContent = `点击一个图片，再点击对应的单词（0/${matchState.total}）`;
+  quizState.order = generateQuizOrder();
+  quizState.currentIdx = 0;
+  quizState.score = 0;
+  quizState.total = VOCAB_WORDS.length;
+  quizState.locked = false;
+  document.getElementById('quiz-restart-btn').style.display = 'none';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  loadQuizQuestion();
+}
 
-  const imgCol = document.getElementById('match-images-col');
-  const wordCol = document.getElementById('match-words-col');
-  // Keep title, remove old items
-  imgCol.querySelectorAll('.match-item').forEach(e => e.remove());
-  wordCol.querySelectorAll('.match-item').forEach(e => e.remove());
-
-  const shuffledImgs = shuffle(VOCAB_WORDS);
-  const shuffledWords = shuffle(VOCAB_WORDS);
-
-  shuffledImgs.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'match-item';
-    div.dataset.word = item.word;
-    div.dataset.type = 'image';
-    // Use emoji as placeholder; replace with <img src="images/xxx.png"> when images available
-    div.innerHTML = `<span class="item-image"><img src="${item.image}" alt="${item.word}"></span>`;
-    div.onclick = () => onMatchClick(div);
-    imgCol.appendChild(div);
-  });
-
-  shuffledWords.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'match-item';
-    div.dataset.word = item.word;
-    div.dataset.type = 'word';
-    div.innerHTML = `<span class="item-label">${item.word}</span>`;
-    div.onclick = () => onMatchClick(div);
-    wordCol.appendChild(div);
+function loadQuizQuestion() {
+  const wordIdx = quizState.order[quizState.currentIdx];
+  const wordData = VOCAB_WORDS[wordIdx];
+  
+  // Update progress
+  document.getElementById('quiz-progress').textContent = `${quizState.currentIdx + 1} / ${quizState.total}`;
+  document.getElementById('quiz-instruction').textContent = '选出正确的单词 👇';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  quizState.locked = false;
+  
+  // Show image
+  document.getElementById('quiz-image').src = wordData.image;
+  
+  // Generate 4 options: 1 correct + 3 distractors
+  const correctWord = wordData.word;
+  const otherWords = VOCAB_WORDS.filter((_, i) => i !== wordIdx).map(w => w.word);
+  const distractors = shuffle(otherWords).slice(0, 3);
+  const options = shuffle([correctWord, ...distractors]);
+  
+  // Render options
+  const optionsEl = document.getElementById('quiz-options');
+  optionsEl.innerHTML = '';
+  options.forEach(word => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = word;
+    btn.dataset.word = word;
+    btn.onclick = () => onQuizOptionClick(btn, word, correctWord);
+    optionsEl.appendChild(btn);
   });
 }
 
-function onMatchClick(el) {
-  if (el.classList.contains('correct')) return;
-  const type = el.dataset.type;
-
-  if (type === 'image') {
-    // Deselect previous image
-    document.querySelectorAll('.match-item[data-type="image"].selected').forEach(e => e.classList.remove('selected'));
-    el.classList.add('selected');
-    matchState.selectedImg = el;
-  } else {
-    // Word clicked
-    if (!matchState.selectedImg) {
-      // No image selected, just flash this word
-      el.classList.add('wrong');
-      setTimeout(() => el.classList.remove('wrong'), 400);
-      return;
-    }
-    const imgWord = matchState.selectedImg.dataset.word;
-    const wordVal = el.dataset.word;
-    if (imgWord === wordVal) {
-      // Correct match
-      matchState.selectedImg.classList.remove('selected');
-      matchState.selectedImg.classList.add('correct');
-      el.classList.add('correct');
-      matchState.selectedImg = null;
-      matchState.matchedCount++;
-      document.getElementById('match-instruction').textContent =
-        `点击一个图片，再点击对应的单词（${matchState.matchedCount}/${matchState.total}）`;
-      playTone(600, 0.1);
-      if (matchState.matchedCount === matchState.total) {
-        setTimeout(() => showResult('🎉', '全部配对成功！', () => { goSelect(); }), 500);
+function onQuizOptionClick(btn, selected, correct) {
+  if (quizState.locked) return;
+  
+  if (selected === correct) {
+    // Correct!
+    quizState.locked = true;
+    btn.classList.add('correct');
+    // Disable all options
+    document.querySelectorAll('.quiz-option').forEach(b => b.classList.add('disabled'));
+    
+    const feedback = document.getElementById('quiz-feedback');
+    feedback.textContent = '✓ 正确！';
+    feedback.className = 'quiz-feedback correct-text';
+    playTone(600, 0.12);
+    quizState.score++;
+    
+    // Auto advance after 800ms, or show restart if last question
+    setTimeout(() => {
+      quizState.currentIdx++;
+      if (quizState.currentIdx < quizState.total) {
+        loadQuizQuestion();
+      } else {
+        // All done!
+        showQuizComplete();
       }
-    } else {
-      // Wrong match
-      el.classList.add('wrong');
-      matchState.selectedImg.classList.remove('selected');
-      matchState.selectedImg.classList.add('wrong');
-      const prevImg = matchState.selectedImg;
-      matchState.selectedImg = null;
-      playTone(200, 0.15);
-      setTimeout(() => {
-        el.classList.remove('wrong');
-        prevImg.classList.remove('wrong');
-      }, 400);
-    }
+    }, 800);
+  } else {
+    // Wrong!
+    btn.classList.add('wrong');
+    const feedback = document.getElementById('quiz-feedback');
+    feedback.textContent = '✗ 再想想~';
+    feedback.className = 'quiz-feedback wrong-text';
+    playTone(200, 0.15);
+    
+    // Disable this wrong option, but let user try again
+    btn.classList.add('disabled');
+    
+    // Clear wrong feedback after 600ms
+    setTimeout(() => {
+      feedback.textContent = '';
+      feedback.className = 'quiz-feedback';
+    }, 600);
   }
+}
+
+function showQuizComplete() {
+  document.getElementById('quiz-progress').textContent = `全部完成！ ${quizState.score}/${quizState.total}`;
+  document.getElementById('quiz-image').src = '';
+  document.getElementById('quiz-options').innerHTML = '';
+  document.getElementById('quiz-instruction').textContent = '🎉 太棒了！全部选对！';
+  document.getElementById('quiz-feedback').textContent = '';
+  
+  const restartBtn = document.getElementById('quiz-restart-btn');
+  restartBtn.style.display = 'block';
+  
+  playTone(800, 0.15);
+  setTimeout(() => playTone(1000, 0.2), 150);
+}
+
+function restartLevel1() {
+  // Generate new random order (different from last time)
+  let newOrder;
+  do {
+    newOrder = generateQuizOrder();
+  } while (JSON.stringify(newOrder) === JSON.stringify(quizState.order) && VOCAB_WORDS.length > 1);
+  
+  quizState.order = newOrder;
+  quizState.currentIdx = 0;
+  quizState.score = 0;
+  quizState.locked = false;
+  
+  document.getElementById('quiz-restart-btn').style.display = 'none';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  loadQuizQuestion();
 }
 
 /* ============================================================
