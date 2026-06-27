@@ -246,6 +246,28 @@ body {
   .letter-tile { width: 44px; height: 48px; font-size: 20px; }
   .word-chip { padding: 8px 14px; font-size: 15px; }
 }
+
+/* ===== Level 2: Spell Image ===== */
+.spell-image-area {
+  text-align: center; margin-bottom: 12px;
+}
+.spell-image-area img {
+  width: 120px; height: 120px; border-radius: 16px; object-fit: cover;
+  border: 3px solid var(--mw-light); box-shadow: 0 3px 10px rgba(27,58,74,0.1);
+}
+.spell-correct-msg {
+  text-align: center; font-size: 22px; font-weight: 700; color: var(--mw-success);
+  margin: 10px 0 4px; display: none;
+}
+.spell-correct-msg.show { display: block; animation: popIn .3s ease; }
+.spell-next-btn {
+  display: none; margin: 8px auto 0; padding: 10px 32px; background: var(--mw-accent); color: white;
+  border: none; border-radius: 24px; font-size: 16px; font-weight: 600; cursor: pointer;
+  transition: all .2s;
+}
+.spell-next-btn:hover { background: #E8903A; }
+.spell-next-btn.visible { display: block; }
+
 </style>
 </head>
 <body>
@@ -304,13 +326,18 @@ body {
     <div class="level-badge">第 2 关 · 字母拼读</div>
   </div>
   <div class="spell-progress" id="spell-progress">1 / 11</div>
+  <div class="spell-image-area" id="spell-image-area">
+    <img id="spell-image" src="" alt="拼词图片">
+  </div>
   <div class="spell-word-display">
     <div class="spell-target" id="spell-target"></div>
   </div>
+  <div class="spell-correct-msg" id="spell-correct-msg">✓ 拼对了！</div>
   <div class="spell-hint" id="spell-hint"></div>
   <div class="letter-pool" id="letter-pool"></div>
   <div style="text-align:center; margin-top: 10px;">
     <button class="btn-back" onclick="spellClear()" style="font-size:13px; padding: 6px 16px;">🔄 重新拼写</button>
+    <button class="spell-next-btn" id="spell-next-btn" onclick="nextSpellWord()">下一词 →</button>
   </div>
 </div>
 
@@ -321,6 +348,7 @@ body {
     <div class="level-badge">第 3 关 · 连词成句</div>
   </div>
   <div class="sentence-progress" id="sentence-progress">1 / 8</div>
+  <div id="sentence-meaning" style="text-align:center; font-size:20px; color:var(--mw-accent); font-weight:700; margin-bottom:12px;"></div>
   <div class="slots-area" id="slots-area"></div>
   <div class="word-bank" id="word-bank"></div>
   <button class="check-btn" id="check-btn" onclick="checkSentence()">✅ 检查</button>
@@ -344,44 +372,44 @@ body {
 
 // Level 1: Vocabulary words with images
 const VOCAB_WORDS = [
-  { word: 'dad',     image: 'images/dad.png',     hint: '爸爸' },
-  { word: 'mum',     image: 'images/mum.png',     hint: '妈妈' },
-  { word: 'sister',  image: 'images/sister.png',  hint: '姐妹' },
-  { word: 'brother', image: 'images/brother.png', hint: '兄弟' },
-  { word: 'grandma', image: 'images/grandma.png', hint: '奶奶/外婆' },
-  { word: 'grandpa', image: 'images/grandpa.png', hint: '爷爷/外公' },
-  { word: 'man',     image: 'images/man.png',     hint: '男人' },
-  { word: 'woman',   image: 'images/woman.png',   hint: '女人' },
-  { word: 'boy',     image: 'images/boy.png',     hint: '男孩' },
-  { word: 'girl',    image: 'images/girl.png',    hint: '女孩' },
-  { word: 'family',  image: 'images/family.png',  hint: '家庭' },
+  { word: 'dad',     image: 'images/dad.jpg',     hint: '爸爸' },
+  { word: 'mum',     image: 'images/mum.jpg',     hint: '妈妈' },
+  { word: 'sister',  image: 'images/sister.jpg',  hint: '姐妹' },
+  { word: 'brother', image: 'images/brother.jpg', hint: '兄弟' },
+  { word: 'grandma', image: 'images/grandma.jpg', hint: '奶奶/外婆' },
+  { word: 'grandpa', image: 'images/grandpa.jpg', hint: '爷爷/外公' },
+  { word: 'man',     image: 'images/man.jpg',     hint: '男人' },
+  { word: 'woman',   image: 'images/woman.jpg',   hint: '女人' },
+  { word: 'boy',     image: 'images/boy.jpg',     hint: '男孩' },
+  { word: 'girl',    image: 'images/girl.jpg',    hint: '女孩' },
+  { word: 'family',  image: 'images/family.jpg',  hint: '家庭' },
 ];
 
 // Level 2: Spelling words
 const SPELL_WORDS = [
-  { word: 'dad',     hint: '爸爸' },
-  { word: 'mum',     hint: '妈妈' },
-  { word: 'man',     hint: '男人' },
-  { word: 'boy',     hint: '男孩' },
-  { word: 'girl',    hint: '女孩' },
-  { word: 'woman',   hint: '女人' },
-  { word: 'family',  hint: '家庭' },
-  { word: 'sister',  hint: '姐妹' },
-  { word: 'brother', hint: '兄弟' },
-  { word: 'grandma', hint: '奶奶' },
-  { word: 'grandpa', hint: '爷爷' },
+  { word: 'dad',     image: 'images/dad.jpg',     hint: '爸爸' },
+  { word: 'mum',     image: 'images/mum.jpg',     hint: '妈妈' },
+  { word: 'man',     image: 'images/man.jpg',     hint: '男人' },
+  { word: 'boy',     image: 'images/boy.jpg',     hint: '男孩' },
+  { word: 'girl',    image: 'images/girl.jpg',    hint: '女孩' },
+  { word: 'woman',   image: 'images/woman.jpg',   hint: '女人' },
+  { word: 'family',  image: 'images/family.jpg',  hint: '家庭' },
+  { word: 'sister',  image: 'images/sister.jpg',  hint: '姐妹' },
+  { word: 'brother', image: 'images/brother.jpg', hint: '兄弟' },
+  { word: 'grandma', image: 'images/grandma.jpg', hint: '奶奶' },
+  { word: 'grandpa', image: 'images/grandpa.jpg', hint: '爷爷' },
 ];
 
 // Level 3: Sentences for word ordering
 const SENTENCES = [
-  { words: ["Who's", "he", "?"], display: "Who's he?" },
-  { words: ["He's", "my", "dad", "."], display: "He's my dad." },
-  { words: ["She's", "my", "sister", "."], display: "She's my sister." },
-  { words: ["This", "is", "my", "family", "."], display: "This is my family." },
-  { words: ["Who's", "that", "woman", "?"], display: "Who's that woman?" },
-  { words: ["How", "old", "are", "you", "?"], display: "How old are you?" },
-  { words: ["He's", "my", "brother", "."], display: "He's my brother." },
-  { words: ["She's", "my", "grandma", "."], display: "She's my grandma." },
+  { words: ["Who's", "he", "?"], display: "Who's he?", meaning: "他是谁？" },
+  { words: ["He's", "my", "dad", "."], display: "He's my dad.", meaning: "他是我爸爸。" },
+  { words: ["She's", "my", "sister", "."], display: "She's my sister.", meaning: "她是我姐姐/妹妹。" },
+  { words: ["This", "is", "my", "family", "."], display: "This is my family.", meaning: "这是我的家庭。" },
+  { words: ["Who's", "that", "woman", "?"], display: "Who's that woman?", meaning: "那个女人是谁？" },
+  { words: ["How", "old", "are", "you", "?"], display: "How old are you?", meaning: "你几岁了？" },
+  { words: ["He's", "my", "brother", "."], display: "He's my brother.", meaning: "他是我哥哥/弟弟。" },
+  { words: ["She's", "my", "grandma", "."], display: "She's my grandma.", meaning: "她是我奶奶/外婆。" },
 ];
 
 /* ============================================================
@@ -515,6 +543,14 @@ function loadSpellWord(idx) {
 
   document.getElementById('spell-progress').textContent = `${idx + 1} / ${SPELL_WORDS.length}`;
   document.getElementById('spell-hint').textContent = `中文提示：${wordData.hint}`;
+  // Show image
+  document.getElementById('spell-image').src = wordData.image;
+  // Hide correct message and next button
+  document.getElementById('spell-correct-msg').classList.remove('show');
+  document.getElementById('spell-next-btn').classList.remove('visible');
+  // Re-enable letter pool
+  document.getElementById('letter-pool').style.pointerEvents = '';
+  document.getElementById('letter-pool').style.opacity = '';
 
   // Generate letter pool: correct letters + distractors = 10 total
   const correctLetters = wordData.word.toLowerCase().split('');
@@ -574,14 +610,21 @@ function onLetterClick(tile, idx, letter) {
     // Check if word complete
     if (spellState.currentLetters.length === spellState.targetWord.length) {
       playTone(800, 0.15);
-      setTimeout(() => {
-        spellState.currentWordIdx++;
-        if (spellState.currentWordIdx < SPELL_WORDS.length) {
-          loadSpellWord(spellState.currentWordIdx);
-        } else {
+      // Show correct message and next button instead of auto-advancing
+      document.getElementById('spell-correct-msg').classList.add('show');
+      if (spellState.currentWordIdx < SPELL_WORDS.length - 1) {
+        document.getElementById('spell-next-btn').classList.add('visible');
+      } else {
+        // Last word - show completion after a short delay
+        document.getElementById('spell-next-btn').textContent = '🎉 完成！';
+        document.getElementById('spell-next-btn').classList.add('visible');
+        document.getElementById('spell-next-btn').onclick = () => {
           showResult('', '全部单词拼写完成！', () => { goSelect(); });
-        }
-      }, 600);
+        };
+      }
+      // Disable further letter input
+      document.getElementById('letter-pool').style.pointerEvents = 'none';
+      document.getElementById('letter-pool').style.opacity = '0.5';
     }
   } else {
     // Wrong letter
@@ -597,6 +640,15 @@ function onLetterClick(tile, idx, letter) {
 }
 
 function spellClear() {
+  loadSpellWord(spellState.currentWordIdx);
+}
+
+function nextSpellWord() {
+  spellState.currentWordIdx++;
+  // Reset next button text and handler
+  const nextBtn = document.getElementById('spell-next-btn');
+  nextBtn.textContent = '下一词 →';
+  nextBtn.onclick = () => nextSpellWord();
   loadSpellWord(spellState.currentWordIdx);
 }
 
@@ -618,6 +670,7 @@ function loadSentence(idx) {
   orderState.slotValues = new Array(sentence.words.length).fill(null);
 
   document.getElementById('sentence-progress').textContent = `${idx + 1} / ${SENTENCES.length}`;
+  document.getElementById('sentence-meaning').textContent = sentence.meaning || '';
   document.getElementById('next-btn').classList.remove('visible');
   document.getElementById('check-btn').disabled = false;
   document.getElementById('check-btn').style.display = 'block';
