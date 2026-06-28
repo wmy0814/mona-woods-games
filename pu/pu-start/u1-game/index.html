@@ -517,6 +517,8 @@ function loadQuizQuestion() {
   document.getElementById('quiz-feedback').className = 'quiz-feedback';
   quizState.locked = false;
   
+  // Show image area
+  document.getElementById('quiz-image-area').style.display = '';
   // Show image
   document.getElementById('quiz-image').src = wordData.image;
   
@@ -586,7 +588,7 @@ function onQuizOptionClick(btn, selected, correct) {
 
 function showQuizComplete() {
   document.getElementById('quiz-progress').textContent = `全部完成！ ${quizState.score}/${quizState.total}`;
-  document.getElementById('quiz-image').src = '';
+  document.getElementById('quiz-image-area').style.display = 'none';
   document.getElementById('quiz-options').innerHTML = '';
   document.getElementById('quiz-instruction').textContent = '🎉 太棒了！全部选对！';
   document.getElementById('quiz-feedback').textContent = '';
