@@ -252,7 +252,7 @@ body {
   text-align: center; margin-bottom: 12px;
 }
 .spell-image-area img {
-  width: 120px; height: 120px; border-radius: 16px; object-fit: cover;
+  width: 200px; height: 200px; border-radius: 16px; object-fit: cover;
   border: 3px solid var(--mw-light); box-shadow: 0 3px 10px rgba(27,58,74,0.1);
 }
 .spell-correct-msg {
@@ -324,7 +324,7 @@ body {
 <div class="container">
 <div id="screen-select" class="screen active">
   <div class="select-header">
-    <div class="logo-circle">🐙</div>
+    <div class="logo-circle"><img src="images/logo.jpg" alt="Mona Woods" style="width:72px;height:72px;object-fit:contain;border-radius:50%;"></div>
     <h1>U1 Family Fun</h1>
     <div class="subtitle">Power Up Start · Unit 1 · 家庭与朋友</div>
   </div>
@@ -765,6 +765,9 @@ function loadSentence(idx) {
 
   document.getElementById('sentence-progress').textContent = `${idx + 1} / ${SENTENCES.length}`;
   document.getElementById('sentence-meaning').textContent = sentence.meaning || '';
+  // Reset meaning display
+  document.getElementById('sentence-meaning').textContent = sentence.meaning || '';
+  document.getElementById('sentence-meaning').style.color = '';
   document.getElementById('next-btn').classList.remove('visible');
   document.getElementById('check-btn').disabled = false;
   document.getElementById('check-btn').style.display = 'block';
@@ -776,7 +779,7 @@ function loadSentence(idx) {
     const slot = document.createElement('div');
     slot.className = 'slot';
     slot.dataset.slotIdx = i;
-    slot.textContent = '?';
+    slot.textContent = '';
     // Drop events
     slot.ondragover = (e) => { e.preventDefault(); slot.classList.add('drag-over'); };
     slot.ondragleave = () => slot.classList.remove('drag-over');
@@ -887,23 +890,32 @@ function checkSentence() {
     document.querySelectorAll('.slot').forEach(slot => slot.classList.add('correct'));
     document.getElementById('check-btn').disabled = true;
     document.getElementById('next-btn').classList.add('visible');
+    // Show "太棒了" feedback
+    document.getElementById('sentence-meaning').textContent = '✓ 太棒了！';
+    document.getElementById('sentence-meaning').style.color = 'var(--mw-success)';
     playTone(800, 0.2);
   } else {
-    // Show which are wrong
-    document.querySelectorAll('.slot').forEach((slot, i) => {
-      if (orderState.slotValues[i] !== sentence.words[i]) {
-        slot.classList.add('wrong');
-      } else {
-        slot.classList.add('correct');
-      }
-    });
+    // Wrong - clear all slots and retry
     playTone(200, 0.15);
-    // Clear wrong marks after a moment
+    const feedback = document.getElementById('quiz-feedback');
+    // Clear all slots
+    orderState.slotValues.fill(null);
+    document.querySelectorAll('.slot').forEach(slot => {
+      slot.textContent = '';
+      slot.classList.remove('filled', 'correct', 'wrong');
+    });
+    // Re-enable all word chips
+    document.querySelectorAll('.word-bank .word-chip').forEach(chip => {
+      chip.classList.remove('used');
+    });
+    // Flash wrong feedback
+    const meaningEl = document.getElementById('sentence-meaning');
+    const origMeaning = meaningEl.textContent;
+    meaningEl.textContent = '✗ 再想想~ 已清空，重新排！';
+    meaningEl.style.color = 'var(--mw-error)';
     setTimeout(() => {
-      document.querySelectorAll('.slot').forEach(slot => {
-        slot.classList.remove('wrong');
-      });
-    }, 800);
+      // Will be reset when next loadSentence is called
+    }, 1000);
   }
 }
 
