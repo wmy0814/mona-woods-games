@@ -61,24 +61,38 @@ body {
   font-size: 36px; box-shadow: 0 4px 12px rgba(27,58,74,0.12);
 }
 .level-cards {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px; margin-top: 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 10px;
 }
-.level-card {
-  background: var(--mw-white); border-radius: 16px; padding: 24px 20px;
+.level-btn {
+  display: flex; align-items: center; gap: 14px; width: 85%; max-width: 360px;
+  background: var(--mw-white); border-radius: 16px; padding: 16px 22px;
   cursor: pointer; transition: all .25s; border: 3px solid transparent;
-  box-shadow: 0 3px 10px rgba(27,58,74,0.08); position: relative; overflow: hidden;
+  box-shadow: 0 3px 10px rgba(27,58,74,0.08); position: relative;
 }
-.level-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(27,58,74,0.14); border-color: var(--mw-light); }
-.level-card .icon { font-size: 36px; margin-bottom: 10px; }
-.level-card .title { font-size: 20px; font-weight: 700; color: var(--mw-dark); margin-bottom: 4px; }
-.level-card .desc { font-size: 13px; color: var(--mw-mid); line-height: 1.5; }
-.level-card .tag {
-  position: absolute; top: 12px; right: 12px; padding: 3px 10px;
-  background: var(--mw-light); color: var(--mw-dark); border-radius: 10px; font-size: 11px; font-weight: 600;
+.level-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,58,74,0.14); border-color: var(--mw-light); }
+.level-btn:active { transform: scale(0.98); }
+.level-btn .emoji { font-size: 32px; flex-shrink: 0; }
+.level-btn .level-content { flex: 1; }
+.level-btn .level-content .title { font-size: 18px; font-weight: 700; color: var(--mw-dark); margin-bottom: 2px; }
+.level-btn .level-content .desc { font-size: 12px; color: var(--mw-mid); line-height: 1.4; }
+.level-btn .tag {
+  padding: 3px 10px; background: var(--mw-light); color: var(--mw-dark);
+  border-radius: 10px; font-size: 11px; font-weight: 600; flex-shrink: 0;
 }
-.level-card.locked { opacity: 0.5; cursor: not-allowed; }
-.level-card.locked:hover { transform: none; box-shadow: 0 3px 10px rgba(27,58,74,0.08); border-color: transparent; }
+
+/* ===== Footer ===== */
+.page-footer {
+  text-align: center; padding: 20px 0 16px; margin-top: auto;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.page-footer .footer-logo {
+  width: 32px; height: 32px; border-radius: 50%; object-fit: contain;
+  opacity: 0.6;
+}
+.page-footer .footer-text {
+  font-size: 12px; color: var(--mw-mid); opacity: 0.7;
+  letter-spacing: 0.5px;
+}
 
 /* ===== Level 1: Matching ===== */
 .match-instruction {
@@ -240,7 +254,8 @@ body {
 /* ===== Responsive ===== */
 @media (max-width: 600px) {
   .match-area { grid-template-columns: 1fr; }
-  .level-cards { grid-template-columns: 1fr; }
+  .level-btn { width: 92%; padding: 14px 16px; }
+  .level-btn .emoji { font-size: 26px; }
   .select-header h1 { font-size: 28px; }
   .slot { width: 80px; height: 48px; font-size: 15px; }
   .letter-tile { width: 44px; height: 48px; font-size: 20px; }
@@ -329,24 +344,34 @@ body {
     <div class="subtitle">Power Up Start · Unit 1 · 家庭与朋友</div>
   </div>
   <div class="level-cards">
-    <div class="level-card" onclick="startLevel(1)">
+    <div class="level-btn" onclick="startLevel(1)">
+      <div class="emoji">️</div>
+      <div class="level-content">
+        <div class="title">图片配对</div>
+        <div class="desc">把单词和对应的图片连起来</div>
+      </div>
       <div class="tag">第 1 关</div>
-      <div class="icon">️</div>
-      <div class="title">图片配对</div>
-      <div class="desc">把单词和对应的图片连起来</div>
     </div>
-    <div class="level-card" onclick="startLevel(2)">
+    <div class="level-btn" onclick="startLevel(2)">
+      <div class="emoji"></div>
+      <div class="level-content">
+        <div class="title">字母拼读</div>
+        <div class="desc">从打乱的字母中选出正确的拼出单词</div>
+      </div>
       <div class="tag">第 2 关</div>
-      <div class="icon">🔤</div>
-      <div class="title">字母拼读</div>
-      <div class="desc">从打乱的字母中选出正确的拼出单词</div>
     </div>
-    <div class="level-card" onclick="startLevel(3)">
+    <div class="level-btn" onclick="startLevel(3)">
+      <div class="emoji">📝</div>
+      <div class="level-content">
+        <div class="title">连词成句</div>
+        <div class="desc">把打乱的单词拖到正确的位置组成句子</div>
+      </div>
       <div class="tag">第 3 关</div>
-      <div class="icon"></div>
-      <div class="title">连词成句</div>
-      <div class="desc">把打乱的单词拖到正确的位置组成句子</div>
     </div>
+  </div>
+  <div class="page-footer">
+    <img class="footer-logo" src="images/logo.jpg" alt="Mona Woods">
+    <div class="footer-text">Provided by Mona Woods</div>
   </div>
 </div>
 
@@ -364,6 +389,10 @@ body {
   <div class="quiz-options" id="quiz-options"></div>
   <div class="quiz-feedback" id="quiz-feedback"></div>
   <button class="quiz-restart-btn" id="quiz-restart-btn" onclick="restartLevel1()" style="display:none;">🔄 重新开始</button>
+  <div class="page-footer">
+    <img class="footer-logo" src="images/logo.jpg" alt="Mona Woods">
+    <div class="footer-text">Provided by Mona Woods</div>
+  </div>
 </div>
 
 <!-- ===================== LEVEL 2: SPELLING ===================== -->
@@ -386,6 +415,10 @@ body {
     <button class="btn-back" onclick="spellClear()" style="font-size:13px; padding: 6px 16px;">🔄 重新拼写</button>
     <button class="spell-next-btn" id="spell-next-btn" onclick="nextSpellWord()">下一词 →</button>
   </div>
+  <div class="page-footer">
+    <img class="footer-logo" src="images/logo.jpg" alt="Mona Woods">
+    <div class="footer-text">Provided by Mona Woods</div>
+  </div>
 </div>
 
 <!-- ===================== LEVEL 3: WORD ORDER ===================== -->
@@ -400,6 +433,10 @@ body {
   <div class="word-bank" id="word-bank"></div>
   <button class="check-btn" id="check-btn" onclick="checkSentence()">✅ 检查</button>
   <button class="next-btn" id="next-btn" onclick="nextSentence()">下一句 →</button>
+  <div class="page-footer">
+    <img class="footer-logo" src="images/logo.jpg" alt="Mona Woods">
+    <div class="footer-text">Provided by Mona Woods</div>
+  </div>
 </div>
 </div>
 
@@ -934,40 +971,4 @@ function nextSentence() {
 let resultCallback = null;
 function showResult(emoji, msg, callback) {
   document.getElementById('result-emoji').textContent = emoji;
-  document.getElementById('result-msg').textContent = msg;
-  document.getElementById('result-overlay').classList.add('show');
-  resultCallback = callback;
-  playTone(800, 0.1);
-  setTimeout(() => playTone(1000, 0.15), 120);
-}
-function closeResult() {
-  document.getElementById('result-overlay').classList.remove('show');
-  if (resultCallback) { resultCallback(); resultCallback = null; }
-}
-
-/* ============================================================
-   AUDIO (Web Audio API - simple tones)
-   ============================================================ */
-let audioCtx = null;
-function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-function playTone(freq, duration) {
-  try {
-    const ctx = getAudioCtx();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.frequency.value = freq;
-    osc.type = 'sine';
-    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + duration);
-  } catch(e) {}
-}
-</script>
-</body>
-</html>
+  document.getElementById('r
