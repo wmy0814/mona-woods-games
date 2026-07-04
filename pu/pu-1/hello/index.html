@@ -526,12 +526,12 @@ function updateStarDisplay() {
   }
 }
 
-// ============ 发音功能（预生成音频，全设备兼容） ============
-const AUDIO_BASE = './audio/';
+// ============ 发音功能（有道在线发音，全设备兼容） ============
+const YOUDAO_URL = 'https://dict.youdao.com/dictvoice?type=1&audio=';
 
 function playWordAudio(word) {
   try {
-    const audio = new Audio(AUDIO_BASE + 'word_' + word + '.mp3');
+    const audio = new Audio(YOUDAO_URL + encodeURIComponent(word));
     audio.play().catch(e => console.log('Audio play error:', e));
   } catch (e) {
     console.log('Audio error:', e);
@@ -540,7 +540,8 @@ function playWordAudio(word) {
 
 function playSentenceAudio(index) {
   try {
-    const audio = new Audio(AUDIO_BASE + 'sent_' + index + '.mp3');
+    const text = sentences[index].answer;
+    const audio = new Audio(YOUDAO_URL + encodeURIComponent(text));
     audio.play().catch(e => console.log('Audio play error:', e));
   } catch (e) {
     console.log('Audio error:', e);
