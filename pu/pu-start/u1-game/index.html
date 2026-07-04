@@ -299,6 +299,15 @@ body {
 .quiz-instruction {
   text-align: center; font-size: 18px; color: var(--mw-mid); font-weight: 600; margin-bottom: 16px;
 }
+.audio-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 20px; background: var(--mw-pale); border: 2px solid var(--mw-light);
+  border-radius: 20px; font-size: 16px; font-weight: 600; color: var(--mw-mid);
+  cursor: pointer; transition: all .2s;
+  margin-bottom: 12px;
+}
+.audio-btn:hover { background: var(--mw-light); color: var(--mw-dark); transform: scale(1.05); }
+.audio-btn:active { transform: scale(0.97); }
 .quiz-options {
   display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 500px; margin: 0 auto 16px;
 }
@@ -385,6 +394,9 @@ body {
   <div class="quiz-image-area" id="quiz-image-area">
     <img id="quiz-image" src="" alt="看图选词">
   </div>
+  <div style="text-align:center;">
+    <button class="audio-btn" id="quiz-audio-btn">🔊 听单词</button>
+  </div>
   <div class="quiz-instruction" id="quiz-instruction">选出正确的单词 👇</div>
   <div class="quiz-options" id="quiz-options"></div>
   <div class="quiz-feedback" id="quiz-feedback"></div>
@@ -404,6 +416,9 @@ body {
   <div class="spell-progress" id="spell-progress">1 / 11</div>
   <div class="spell-image-area" id="spell-image-area">
     <img id="spell-image" src="" alt="拼词图片">
+  </div>
+  <div style="text-align:center;">
+    <button class="audio-btn" id="spell-audio-btn">🔊 听单词</button>
   </div>
   <div class="spell-word-display">
     <div class="spell-target" id="spell-target"></div>
@@ -428,7 +443,10 @@ body {
     <div class="level-badge">第 3 关 · 连词成句</div>
   </div>
   <div class="sentence-progress" id="sentence-progress">1 / 8</div>
-  <div id="sentence-meaning" style="text-align:center; font-size:20px; color:var(--mw-accent); font-weight:700; margin-bottom:12px;"></div>
+  <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:12px;">
+    <div id="sentence-meaning" style="font-size:20px; color:var(--mw-accent); font-weight:700;"></div>
+    <button class="audio-btn" id="sentence-audio-btn" style="margin-bottom:0; font-size:14px; padding:6px 14px;">🔊 听句子</button>
+  </div>
   <div class="slots-area" id="slots-area"></div>
   <div class="word-bank" id="word-bank"></div>
   <button class="check-btn" id="check-btn" onclick="checkSentence()">✅ 检查</button>
@@ -484,17 +502,57 @@ const SPELL_WORDS = [
   { word: 'grandpa', image: 'images/grandpa.jpg', hint: '爷爷' },
 ];
 
-// Level 3: Sentences for word ordering
+// Level 3: Sentences for word ordering (按句型从易到难排布)
 const SENTENCES = [
+  // 基础问答
   { words: ["Who's", "he", "?"], display: "Who's he?", meaning: "他是谁？" },
+  { words: ["Who's", "she", "?"], display: "Who's she?", meaning: "她是谁？" },
   { words: ["He's", "my", "dad", "."], display: "He's my dad.", meaning: "他是我爸爸。" },
-  { words: ["She's", "my", "sister", "."], display: "She's my sister.", meaning: "她是我姐姐/妹妹。" },
+  { words: ["She's", "my", "mum", "."], display: "She's my mum.", meaning: "她是我妈妈。" },
+
+  // This is my... 介绍家人
+  { words: ["This", "is", "my", "dad", "."], display: "This is my dad.", meaning: "这是我爸爸。" },
+  { words: ["This", "is", "my", "mum", "."], display: "This is my mum.", meaning: "这是我妈妈。" },
+  { words: ["This", "is", "my", "brother", "."], display: "This is my brother.", meaning: "这是我哥哥/弟弟。" },
+  { words: ["This", "is", "my", "sister", "."], display: "This is my sister.", meaning: "这是我姐姐/妹妹。" },
+  { words: ["This", "is", "my", "grandpa", "."], display: "This is my grandpa.", meaning: "这是我爷爷/外公。" },
+  { words: ["This", "is", "my", "grandma", "."], display: "This is my grandma.", meaning: "这是我奶奶/外婆。" },
   { words: ["This", "is", "my", "family", "."], display: "This is my family.", meaning: "这是我的家庭。" },
+
+  // Who's that...? 远处指认
+  { words: ["Who's", "that", "man", "?"], display: "Who's that man?", meaning: "那个男人是谁？" },
   { words: ["Who's", "that", "woman", "?"], display: "Who's that woman?", meaning: "那个女人是谁？" },
+  { words: ["Who's", "that", "boy", "?"], display: "Who's that boy?", meaning: "那个男孩是谁？" },
+  { words: ["Who's", "that", "girl", "?"], display: "Who's that girl?", meaning: "那个女孩是谁？" },
+
+  // with a + 颜色 + 物品 拓展
+  { words: ["Who's", "that", "man", "with", "a", "red", "bus", "?"], display: "Who's that man with a red bus?", meaning: "那个开红色公交车的男人是谁？" },
+  { words: ["Who's", "that", "girl", "with", "a", "pink", "boat", "?"], display: "Who's that girl with a pink boat?", meaning: "那个坐粉色小船的女孩是谁？" },
+  { words: ["Who's", "that", "boy", "with", "a", "yellow", "bird", "?"], display: "Who's that boy with a yellow bird?", meaning: "那个有黄色小鸟的男孩是谁？" },
+  { words: ["Who's", "that", "woman", "with", "a", "black", "cat", "?"], display: "Who's that woman with a black cat?", meaning: "那个有黑色猫咪的女人是谁？" },
+
+  // 拓展问答
   { words: ["How", "old", "are", "you", "?"], display: "How old are you?", meaning: "你几岁了？" },
-  { words: ["He's", "my", "brother", "."], display: "He's my brother.", meaning: "他是我哥哥/弟弟。" },
-  { words: ["She's", "my", "grandma", "."], display: "She's my grandma.", meaning: "她是我奶奶/外婆。" },
 ];
+
+/* ============================================================
+   AUDIO (有道在线发音)
+   ============================================================ */
+const YOUDAO_URL = 'https://dict.youdao.com/dictvoice?type=1&audio=';
+
+function playWordAudio(word) {
+  try {
+    const audio = new Audio(YOUDAO_URL + encodeURIComponent(word));
+    audio.play().catch(e => console.log('Audio error:', e));
+  } catch (e) { console.log('Audio error:', e); }
+}
+
+function playSentenceAudio(text) {
+  try {
+    const audio = new Audio(YOUDAO_URL + encodeURIComponent(text));
+    audio.play().catch(e => console.log('Audio error:', e));
+  } catch (e) { console.log('Audio error:', e); }
+}
 
 /* ============================================================
    SCREEN MANAGEMENT
@@ -558,6 +616,11 @@ function loadQuizQuestion() {
   document.getElementById('quiz-image-area').style.display = '';
   // Show image
   document.getElementById('quiz-image').src = wordData.image;
+
+  // Set up audio button
+  const audioBtn = document.getElementById('quiz-audio-btn');
+  audioBtn.onclick = () => playWordAudio(wordData.word);
+  quizState.currentWord = wordData.word;
   
   // Generate 4 options: 1 correct + 3 distractors
   const correctWord = wordData.word;
@@ -592,6 +655,7 @@ function onQuizOptionClick(btn, selected, correct) {
     feedback.textContent = '✓ 正确！';
     feedback.className = 'quiz-feedback correct-text';
     playTone(600, 0.12);
+    playWordAudio(correct);
     quizState.score++;
     
     // Auto advance after 800ms, or show restart if last question
@@ -676,6 +740,11 @@ function loadSpellWord(idx) {
   document.getElementById('spell-hint').textContent = `中文提示：${wordData.hint}`;
   // Show image
   document.getElementById('spell-image').src = wordData.image;
+  // Set up audio button & auto-play
+  const spellAudioBtn = document.getElementById('spell-audio-btn');
+  spellAudioBtn.onclick = () => playWordAudio(wordData.word);
+  setTimeout(() => playWordAudio(wordData.word), 300);
+  spellState.currentWord = wordData.word;
   // Hide correct message and next button
   document.getElementById('spell-correct-msg').classList.remove('show');
   document.getElementById('spell-next-btn').classList.remove('visible');
@@ -802,9 +871,10 @@ function loadSentence(idx) {
 
   document.getElementById('sentence-progress').textContent = `${idx + 1} / ${SENTENCES.length}`;
   document.getElementById('sentence-meaning').textContent = sentence.meaning || '';
-  // Reset meaning display
-  document.getElementById('sentence-meaning').textContent = sentence.meaning || '';
   document.getElementById('sentence-meaning').style.color = '';
+  // Set up audio button
+  const sentAudioBtn = document.getElementById('sentence-audio-btn');
+  sentAudioBtn.onclick = () => playSentenceAudio(sentence.display);
   document.getElementById('next-btn').classList.remove('visible');
   document.getElementById('check-btn').disabled = false;
   document.getElementById('check-btn').style.display = 'block';
@@ -931,6 +1001,7 @@ function checkSentence() {
     document.getElementById('sentence-meaning').textContent = '✓ 太棒了！';
     document.getElementById('sentence-meaning').style.color = 'var(--mw-success)';
     playTone(800, 0.2);
+    playSentenceAudio(sentence.display);
   } else {
     // Wrong - clear all slots and retry
     playTone(200, 0.15);
