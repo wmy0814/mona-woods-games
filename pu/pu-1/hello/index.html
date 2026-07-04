@@ -485,16 +485,16 @@ const allWords = [...numberWords, ...colorWords]; // 21个词
 // ============ 句型（连词成句）===========
 // 人名用课文出现过的：Jim, Jenny, Rocky, Shelly
 const sentences = [
-  { hint: '你叫什么名字？', words: ['What\'s', 'your', 'name?'], answer: 'What\'s your name?' },
-  { hint: '我叫吉姆', words: ['My', 'name', 'is', 'Jim.'], answer: 'My name is Jim.' },
-  { hint: '我是珍妮', words: ['I', 'am', 'Jenny.'], answer: 'I am Jenny.' },
-  { hint: '你多大了？', words: ['How', 'old', 'are', 'you?'], answer: 'How old are you?' },
-  { hint: '我七岁了', words: ['I\'m', 'seven', 'years', 'old.'], answer: 'I\'m seven years old.' },
-  { hint: '我十岁了', words: ['I\'m', 'ten', 'years', 'old.'], answer: 'I\'m ten years old.' },
-  { hint: '它是什么颜色的？', words: ['What', 'colour', 'is', 'it?'], answer: 'What colour is it?' },
-  { hint: '它是红色的', words: ['It', 'is', 'red.'], answer: 'It is red.' },
-  { hint: '它是蓝色的', words: ['It', 'is', 'blue.'], answer: 'It is blue.' },
-  { hint: '它是黄色和绿色的', words: ['It\'s', 'yellow', 'and', 'green.'], answer: 'It\'s yellow and green.' }
+  { hint: '你叫什么名字？', words: ['What\'s', 'your', 'name?'], answer: 'What\'s your name?', audioIndex: 0 },
+  { hint: '我叫吉姆', words: ['My', 'name', 'is', 'Jim.'], answer: 'My name is Jim.', audioIndex: 1 },
+  { hint: '我是珍妮', words: ['I', 'am', 'Jenny.'], answer: 'I am Jenny.', audioIndex: 2 },
+  { hint: '你多大了？', words: ['How', 'old', 'are', 'you?'], answer: 'How old are you?', audioIndex: 3 },
+  { hint: '我七岁了', words: ['I\'m', 'seven', 'years', 'old.'], answer: 'I\'m seven years old.', audioIndex: 4 },
+  { hint: '我十岁了', words: ['I\'m', 'ten', 'years', 'old.'], answer: 'I\'m ten years old.', audioIndex: 5 },
+  { hint: '它是什么颜色的？', words: ['What', 'colour', 'is', 'it?'], answer: 'What colour is it?', audioIndex: 6 },
+  { hint: '它是红色的', words: ['It', 'is', 'red.'], answer: 'It is red.', audioIndex: 7 },
+  { hint: '它是蓝色的', words: ['It', 'is', 'blue.'], answer: 'It is blue.', audioIndex: 8 },
+  { hint: '它是黄色和绿色的', words: ['It\'s', 'yellow', 'and', 'green.'], answer: 'It\'s yellow and green.', audioIndex: 9 }
 ];
 
 // ============ 游戏状态 ============
@@ -526,62 +526,25 @@ function updateStarDisplay() {
   }
 }
 
-// ============ 发音功能 ============
-// ============ 发音功能（移动端兼容增强） ============
-let availableVoices = [];
-let voiceReady = false;
+// ============ 发音功能（预生成音频，全设备兼容） ============
+const AUDIO_BASE = './audio/';
 
-function loadVoices() {
-  if ('speechSynthesis' in window) {
-    availableVoices = window.speechSynthesis.getVoices();
-    voiceReady = availableVoices.length > 0;
-  }
-}
-
-// 预加载语音列表
-if ('speechSynthesis' in window) {
-  loadVoices();
-  window.speechSynthesis.onvoiceschanged = loadVoices;
-}
-
-function getEnglishVoice() {
-  if (!availableVoices || availableVoices.length === 0) return null;
-  // 优先找美音
-  let voice = availableVoices.find(v => v.lang === 'en-US' && v.name.includes('Female'));
-  if (!voice) voice = availableVoices.find(v => v.lang === 'en-US');
-  if (!voice) voice = availableVoices.find(v => v.lang.startsWith('en'));
-  return voice;
-}
-
-function speak(text, rate = 0.8) {
-  if (!('speechSynthesis' in window)) return;
-  
+function playWordAudio(word) {
   try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    utterance.rate = rate;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-    
-    const voice = getEnglishVoice();
-    if (voice) utterance.voice = voice;
-    
-    window.speechSynthesis.speak(utterance);
+    const audio = new Audio(AUDIO_BASE + 'word_' + word + '.mp3');
+    audio.play().catch(e => console.log('Audio play error:', e));
   } catch (e) {
-    console.log('Speech error:', e);
+    console.log('Audio error:', e);
   }
 }
 
-// 移动端语音预热（在用户点击时触发，解锁音频）
-function warmupSpeech() {
-  if (!('speechSynthesis' in window)) return;
+function playSentenceAudio(index) {
   try {
-    // 播放一个极短的静音来解锁移动端语音合成
-    const u = new SpeechSynthesisUtterance('');
-    u.volume = 0;
-    window.speechSynthesis.speak(u);
-  } catch (e) {}
+    const audio = new Audio(AUDIO_BASE + 'sent_' + index + '.mp3');
+    audio.play().catch(e => console.log('Audio play error:', e));
+  } catch (e) {
+    console.log('Audio error:', e);
+  }
 }
 
 // ============ 工具函数 ============
@@ -601,7 +564,6 @@ function pickRandom(arr, n, exclude = []) {
 
 // ============ 开始游戏 ============
 function startGame(level) {
-  warmupSpeech(); // 移动端语音预热
   currentLevel = level;
   currentQuestion = 0;
   score = 0;
@@ -625,12 +587,12 @@ function startGame(level) {
 }
 
 // ============ 显示题目 ============
-// 当前题文本缓存（用于手动发音）
-let currentSpeakText = '';
+// 当前题音频缓存（用于手动发音）
+let currentAudioWord = '';
 
 function speakCurrent() {
-  if (currentSpeakText) {
-    speak(currentSpeakText);
+  if (currentAudioWord) {
+    playWordAudio(currentAudioWord);
   }
 }
 
@@ -642,15 +604,14 @@ function showQuestion() {
   document.getElementById('progressFill').style.width = progress + '%';
   document.getElementById('questionCounter').textContent = `第 ${currentQuestion + 1} 题 / 共 ${totalQuestions} 题`;
   document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('speakBtn').style.display = 'none';
   answered = false;
-  currentSpeakText = '';
+  currentAudioWord = '';
   
   if (currentLevel === 1) {
     // 看中文选英文
     content.innerHTML = `
       <div class="word-display cn">${q.cn}</div>
-      <button class="speak-btn" onclick="speak('${q.en.replace(/'/g, "\\'")}')">🔊</button>
+      <button class="speak-btn" onclick="playWordAudio('${q.en.replace(/'/g, "\\'")}')">🔊</button>
       <div class="options-grid" id="optionsGrid"></div>
     `;
     const correct = q;
@@ -667,7 +628,7 @@ function showQuestion() {
   } else if (currentLevel === 2) {
     // 看英文选中文
     content.innerHTML = `
-      <button class="speak-btn" onclick="speak('${q.en.replace(/'/g, "\\'")}')">🔊</button>
+      <button class="speak-btn" onclick="playWordAudio('${q.en.replace(/'/g, "\\'")}')">🔊</button>
       <div class="word-display">${q.en}</div>
       <div class="options-grid" id="optionsGrid"></div>
     `;
@@ -688,6 +649,7 @@ function showQuestion() {
     const shuffledWords = shuffle([...q.words]);
     content.innerHTML = `
       <div class="sentence-target">💡 提示：${q.hint}</div>
+      <button class="speak-btn" onclick="playSentenceAudio(${q.audioIndex})" style="margin-bottom:12px;">🔊 听句子</button>
       <div id="correctAnswerHint" style="display:none; color:#ff6b9d; font-weight:bold; margin-bottom:10px; font-size:0.95rem;"></div>
       <div class="sentence-area" id="sentenceArea"></div>
       <div class="word-pool" id="wordPool"></div>
@@ -719,7 +681,7 @@ function checkAnswer(isCorrect, btn, wordObj) {
   if (isCorrect) {
     btn.classList.add('correct');
     score++;
-    speak(wordObj.en);
+    playWordAudio(wordObj.en);
   } else {
     btn.classList.add('wrong');
     wrongWords.push(wordObj);
@@ -728,7 +690,7 @@ function checkAnswer(isCorrect, btn, wordObj) {
       if (currentLevel === 1 && b.textContent === wordObj.en) b.classList.add('correct');
       if (currentLevel === 2 && b.textContent === wordObj.cn) b.classList.add('correct');
     });
-    speak(wordObj.en);
+    playWordAudio(wordObj.en);
   }
   
   // 显示下一题按钮（不自动跳转）
@@ -782,7 +744,7 @@ function checkSentence() {
     area.style.background = '#c8e6c9';
     area.classList.remove('shake');
     score++;
-    speak(q.answer);
+    playSentenceAudio(q.audioIndex);
     // 移除重试按钮
     const retryBtn = document.getElementById('retryBtn');
     if (retryBtn) retryBtn.remove();
@@ -793,7 +755,7 @@ function checkSentence() {
     area.style.borderColor = '#ff6b9d';
     area.style.background = '#ffebee';
     area.classList.add('shake');
-    speak(q.answer);
+    playSentenceAudio(q.audioIndex);
     
     // 显示正确答案提示
     const hint = document.getElementById('correctAnswerHint');
@@ -932,7 +894,6 @@ function nextLevel() {
 
 function goHome() {
   currentSentence = [];
-  window.speechSynthesis && window.speechSynthesis.cancel();
   document.getElementById('gameScreen').style.display = 'none';
   document.getElementById('resultScreen').style.display = 'none';
   document.getElementById('homeScreen').style.display = 'block';
