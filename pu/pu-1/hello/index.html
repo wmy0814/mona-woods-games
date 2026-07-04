@@ -167,6 +167,9 @@ body {
   25% { transform: translateX(-8px); }
   75% { transform: translateX(8px); }
 }
+.shake {
+  animation: shake 0.4s;
+}
 
 /* 下一题按钮 */
 .next-btn {
@@ -685,6 +688,7 @@ function showQuestion() {
     const shuffledWords = shuffle([...q.words]);
     content.innerHTML = `
       <div class="sentence-target">💡 提示：${q.hint}</div>
+      <div id="correctAnswerHint" style="display:none; color:#ff6b9d; font-weight:bold; margin-bottom:10px; font-size:0.95rem;"></div>
       <div class="sentence-area" id="sentenceArea"></div>
       <div class="word-pool" id="wordPool"></div>
       <div class="action-buttons">
@@ -763,7 +767,6 @@ function removeFromSentence(chip, originalChip) {
 
 function checkSentence() {
   if (answered) return;
-  answered = true;
   
   const q = questionList[currentQuestion];
   const userAnswer = currentSentence.join(' ');
@@ -771,26 +774,73 @@ function checkSentence() {
   
   const area = document.getElementById('sentenceArea');
   const btn = document.getElementById('checkBtn');
-  btn.disabled = true;
   
   if (isCorrect) {
+    answered = true;
+    btn.disabled = true;
     area.style.borderColor = '#56c596';
     area.style.background = '#c8e6c9';
+    area.classList.remove('shake');
     score++;
     speak(q.answer);
+    // 移除重试按钮
+    const retryBtn = document.getElementById('retryBtn');
+    if (retryBtn) retryBtn.remove();
+    // 显示下一题按钮
+    document.getElementById('nextBtn').style.display = 'inline-block';
   } else {
+    // 答错：晃动提示，显示正确答案，允许重试
     area.style.borderColor = '#ff6b9d';
     area.style.background = '#ffebee';
-    wrongWords.push({ en: q.answer, cn: q.hint });
+    area.classList.add('shake');
     speak(q.answer);
-    // 显示正确答案
-    setTimeout(() => {
-      alert('正确答案：\n' + q.answer);
-    }, 400);
+    
+    // 显示正确答案提示
+    const hint = document.getElementById('correctAnswerHint');
+    if (hint) {
+      hint.textContent = '💡 正确答案：' + q.answer;
+      hint.style.display = 'block';
+    }
+    
+    // 加重试按钮（如果还没有）
+    if (!document.getElementById('retryBtn')) {
+      const retryBtn = document.createElement('button');
+      retryBtn.id = 'retryBtn';
+      retryBtn.className = 'btn btn-warning';
+      retryBtn.textContent = '🔄 再试一次';
+      retryBtn.style.marginLeft = '8px';
+      retryBtn.onclick = retrySentence;
+      btn.parentNode.appendChild(retryBtn);
+    }
+    
+    // 记录错题（只记第一次错的）
+    if (!wrongWords.some(w => w.en === q.answer)) {
+      wrongWords.push({ en: q.answer, cn: q.hint });
+    }
   }
+}
+
+function retrySentence() {
+  const q = questionList[currentQuestion];
+  currentSentence = [];
   
-  // 显示下一题按钮（不自动跳转）
-  document.getElementById('nextBtn').style.display = 'inline-block';
+  // 清空句子区
+  const area = document.getElementById('sentenceArea');
+  area.innerHTML = '';
+  area.style.borderColor = '#56c596';
+  area.style.background = '#e8f5e9';
+  area.classList.remove('shake');
+  
+  // 恢复所有词可用
+  const chips = document.querySelectorAll('.word-pool .word-chip');
+  chips.forEach(chip => chip.classList.remove('used'));
+  
+  // 隐藏正确答案提示
+  const hint = document.getElementById('correctAnswerHint');
+  if (hint) hint.style.display = 'none';
+  
+  // 启用检查按钮
+  document.getElementById('checkBtn').disabled = true;
 }
 
 // ============ 下一题 ============
