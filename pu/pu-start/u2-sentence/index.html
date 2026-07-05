@@ -125,10 +125,9 @@ body {
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
 }
 .transform-emoji.multi {
-  font-size: 60px;
   display: grid;
   grid-template-columns: repeat(3, auto);
-  gap: 4px;
+  gap: 8px;
   justify-content: center;
   align-items: center;
 }
@@ -240,10 +239,9 @@ body {
   75% { transform: rotate(5deg); }
 }
 .box-content {
-  font-size: 70px;
   display: grid;
   grid-template-columns: repeat(3, auto);
-  gap: 4px;
+  gap: 8px;
   margin-bottom: 16px;
   min-height: 100px;
   align-items: center;
@@ -291,10 +289,11 @@ body {
 }
 .spell-scene {
   text-align: center;
-  font-size: 80px;
   margin: 16px 0;
   min-height: 100px;
   display: flex; align-items: center; justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 .spell-hint {
   text-align: center; font-size: 14px; color: var(--mw-mid);
@@ -572,25 +571,24 @@ body {
    WORD DATA
    ============================================================ */
 const PLURAL_WORDS = [
-  { singular: 'boy', plural: 'boys', emoji: '👦', cn: '男孩' },
-  { singular: 'girl', plural: 'girls', emoji: '👧', cn: '女孩' },
-  { singular: 'bag', plural: 'bags', emoji: '👜', cn: '书包' },
-  { singular: 'book', plural: 'books', emoji: '📚', cn: '书' },
-  { singular: 'pencil', plural: 'pencils', emoji: '✏️', cn: '铅笔' },
-  { singular: 'bird', plural: 'birds', emoji: '🐦', cn: '鸟' },
-  { singular: 'cat', plural: 'cats', emoji: '🐱', cn: '猫' },
-  { singular: 'boat', plural: 'boats', emoji: '🚤', cn: '船' },
-  { singular: 'bus', plural: 'buses', emoji: '🚌', cn: '公交车' },
-  { singular: 'teacher', plural: 'teachers', emoji: '👩‍🏫', cn: '老师' },
-  { singular: 'classroom', plural: 'classrooms', emoji: '🏫', cn: '教室' }
+  { singular: 'boy', plural: 'boys', image: 'images/boy.jpg', cn: '男孩' },
+  { singular: 'girl', plural: 'girls', image: 'images/girl.jpg', cn: '女孩' },
+  { singular: 'bag', plural: 'bags', image: 'images/bag.jpg', cn: '书包' },
+  { singular: 'book', plural: 'books', image: 'images/book.jpg', cn: '书' },
+  { singular: 'pencil', plural: 'pencils', image: 'images/pencil.jpg', cn: '铅笔' },
+  { singular: 'bird', plural: 'birds', image: 'images/bird.jpg', cn: '鸟' },
+  { singular: 'cat', plural: 'cats', image: 'images/cat.jpg', cn: '猫' },
+  { singular: 'boat', plural: 'boats', image: 'images/boat.jpg', cn: '船' },
+  { singular: 'bus', plural: 'buses', image: 'images/bus.jpg', cn: '公交车' },
+  { singular: 'teacher', plural: 'teachers', image: 'images/teacher.jpg', cn: '老师' },
+  { singular: 'classroom', plural: 'classrooms', image: 'images/classroom.jpg', cn: '教室' }
 ];
 
-function getEmojiDisplay(emoji, count) {
+function getImageGrid(imageSrc, count) {
   let html = '';
-  const rows = count >= 6 ? 3 : (count >= 3 ? 2 : 1);
-  const cols = Math.ceil(count / rows);
+  const size = count >= 6 ? 45 : (count >= 3 ? 60 : 80);
   for (let i = 0; i < count; i++) {
-    html += `<span>${emoji}</span>`;
+    html += `<img src="${imageSrc}" style="width:${size}px;height:${size}px;object-fit:contain;" alt="">`;
   }
   return html;
 }
@@ -706,7 +704,7 @@ function loadTransformWord() {
   
   const emojiEl = document.getElementById('transform-emoji');
   emojiEl.className = 'transform-emoji';
-  emojiEl.textContent = wordData.emoji;
+  emojiEl.innerHTML = `<img src="${wordData.image}" style="width:120px;height:120px;object-fit:contain;" alt="">`;
   
   const sentenceEl = document.getElementById('transform-sentence');
   sentenceEl.innerHTML = `
@@ -756,7 +754,7 @@ function doTransform() {
   // Transform
   setTimeout(() => {
     emojiEl.className = 'transform-emoji multi';
-    emojiEl.innerHTML = getEmojiDisplay(wordData.emoji, 6);
+    emojiEl.innerHTML = getImageGrid(wordData.image, 6);
     
     const sentenceEl = document.getElementById('transform-sentence');
     sentenceEl.innerHTML = `
@@ -887,7 +885,7 @@ function openBox() {
     
     const content = document.getElementById('box-content');
     content.style.display = 'grid';
-    content.innerHTML = getEmojiDisplay(q.correctWord.emoji, 5);
+    content.innerHTML = getImageGrid(q.correctWord.image, 5);
     
     playMagicSound();
     
@@ -971,8 +969,8 @@ function generateSpellSentences() {
   for (let i = 0; i < 4; i++) {
     const w = words[i];
     sentences.push({
-      scene: getEmojiDisplay(w.emoji, 5),
-      sceneDisplay: w.emoji + w.emoji + w.emoji + w.emoji + w.emoji,
+      scene: getImageGrid(w.image, 5),
+      sceneDisplay: getImageGrid(w.image, 5),
       hint: '根据图片，组成问答句',
       words: ['What', 'are', 'they', 'They', 'are', w.plural],
       answer: `What are they? They are ${w.plural}.`,
@@ -984,8 +982,8 @@ function generateSpellSentences() {
   for (let i = 4; i < 7; i++) {
     const w = words[i];
     sentences.push({
-      scene: getEmojiDisplay(w.emoji, 5),
-      sceneDisplay: w.emoji + w.emoji + w.emoji + w.emoji + w.emoji,
+      scene: getImageGrid(w.image, 5),
+      sceneDisplay: getImageGrid(w.image, 5),
       hint: '根据图片，组成问答句（肯定回答）',
       words: ['Are', 'they', w.plural, 'Yes', 'they', 'are'],
       answer: `Are they ${w.plural}? Yes, they are.`,
@@ -999,8 +997,8 @@ function generateSpellSentences() {
     const otherWords = PLURAL_WORDS.filter(x => x.plural !== w.plural);
     const wrongW = shuffle(otherWords)[0];
     sentences.push({
-      scene: getEmojiDisplay(w.emoji, 5),
-      sceneDisplay: w.emoji + w.emoji + w.emoji + w.emoji + w.emoji,
+      scene: getImageGrid(w.image, 5),
+      sceneDisplay: getImageGrid(w.image, 5),
       hint: '根据图片，组成问答句（否定回答）',
       words: ['Are', 'they', wrongW.plural, "No", "they", "aren't"],
       answer: `Are they ${wrongW.plural}? No, they aren't.`,
