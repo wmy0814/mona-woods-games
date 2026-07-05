@@ -20,7 +20,7 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body {
-  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  font-family: "Verdana", "Tahoma", "Comic Sans MS", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
   background: linear-gradient(160deg, #F0E8F5 0%, #E8F5F0 50%, #E0F2EC 100%);
   min-height: 100vh;
   color: var(--mw-dark);
@@ -548,6 +548,7 @@ body {
     <div class="spell-actions">
       <button class="reset-btn" onclick="resetSpell()">🔄 重来</button>
       <button class="check-btn" id="check-btn" onclick="checkSpell()">✓ 检查</button>
+      <button class="next-btn" id="next-btn" onclick="nextSpell()" style="display:none;">下一题 →</button>
     </div>
     <div class="sentence-meaning" id="sentence-meaning"></div>
     
@@ -1034,7 +1035,9 @@ function loadSpellSentence() {
   document.getElementById('spell-scene').innerHTML = s.sceneDisplay;
   document.getElementById('spell-hint').textContent = s.hint;
   document.getElementById('sentence-meaning').textContent = '';
+  document.getElementById('sentence-meaning').style.color = '';
   document.getElementById('check-btn').disabled = false;
+  document.getElementById('next-btn').style.display = 'none';
   spellState.locked = false;
   
   const wordCount = s.words.length;
@@ -1110,6 +1113,15 @@ function resetSpell() {
   loadSpellSentence();
 }
 
+function nextSpell() {
+  spellState.currentIdx++;
+  if (spellState.currentIdx < spellState.sentences.length) {
+    loadSpellSentence();
+  } else {
+    showResult('🏆', '第三关完成！你是魔法大师！', () => { goSelect(); });
+  }
+}
+
 function checkSpell() {
   if (spellState.locked) return;
   
@@ -1148,14 +1160,9 @@ function checkSpell() {
     playCorrectSound();
     speak(s.answerPlain);
     
-    setTimeout(() => {
-      spellState.currentIdx++;
-      if (spellState.currentIdx < spellState.sentences.length) {
-        loadSpellSentence();
-      } else {
-        showResult('🏆', '第三关完成！你是魔法大师！', () => { goSelect(); });
-      }
-    }, 2500);
+    // 显示下一题按钮，不自动跳转
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.style.display = 'inline-block';
   } else {
     // Wrong - shake and clear
     playWrongSound();
