@@ -585,6 +585,9 @@ const PLURAL_WORDS = [
   { singular: 'classroom', plural: 'classrooms', image: 'images/classroom.jpg', cn: '教室' }
 ];
 
+// 非人物词汇（前两关用 What are they? 提问，不用人物）
+const THING_WORDS = PLURAL_WORDS.filter(w => !['boy', 'girl', 'teacher'].includes(w.singular));
+
 function getImageGrid(imageSrc, count) {
   let html = '';
   const size = count >= 6 ? 65 : (count >= 3 ? 90 : 120);
@@ -693,15 +696,15 @@ let transformState = { currentIdx: 0, order: [], transformed: false };
 
 function initLevel1() {
   showScreen('screen-level1');
-  transformState.order = shuffle([...Array(PLURAL_WORDS.length).keys()]);
+  transformState.order = shuffle([...Array(THING_WORDS.length).keys()]);
   transformState.currentIdx = 0;
   transformState.transformed = false;
   loadTransformWord();
 }
 
 function loadTransformWord() {
-  const wordData = PLURAL_WORDS[transformState.order[transformState.currentIdx]];
-  document.getElementById('transform-progress').textContent = `${transformState.currentIdx + 1} / ${PLURAL_WORDS.length}`;
+  const wordData = THING_WORDS[transformState.order[transformState.currentIdx]];
+  document.getElementById('transform-progress').textContent = `${transformState.currentIdx + 1} / ${THING_WORDS.length}`;
   
   const emojiEl = document.getElementById('transform-emoji');
   emojiEl.className = 'transform-emoji';
@@ -731,7 +734,7 @@ function doTransform() {
   if (transformState.transformed) return;
   transformState.transformed = true;
   
-  const wordData = PLURAL_WORDS[transformState.order[transformState.currentIdx]];
+  const wordData = THING_WORDS[transformState.order[transformState.currentIdx]];
   const stage = document.getElementById('transform-stage');
   const emojiEl = document.getElementById('transform-emoji');
   const wandBtn = document.getElementById('wand-btn');
@@ -775,7 +778,7 @@ function doTransform() {
 
 function nextTransform() {
   transformState.currentIdx++;
-  if (transformState.currentIdx < PLURAL_WORDS.length) {
+  if (transformState.currentIdx < THING_WORDS.length) {
     loadTransformWord();
   } else {
     showResult('🎉', '太棒了！第一关完成！', () => { goSelect(); });
@@ -789,13 +792,14 @@ let boxState = { currentIdx: 0, questions: [], opened: false, answered: false };
 
 function generateBoxQuestions() {
   const questions = [];
-  const shuffledWords = shuffle([...Array(PLURAL_WORDS.length).keys()]);
+  const shuffledThingWords = shuffle([...Array(THING_WORDS.length).keys()]);
+  const shuffledAllWords = shuffle([...Array(PLURAL_WORDS.length).keys()]);
   
-  // 5 What are they? questions
+  // 5 What are they? questions - 只用非人物词汇
   for (let i = 0; i < 5; i++) {
-    const correctIdx = shuffledWords[i];
-    const correct = PLURAL_WORDS[correctIdx];
-    const otherWords = PLURAL_WORDS.filter((_, idx) => idx !== correctIdx);
+    const correctIdx = shuffledThingWords[i];
+    const correct = THING_WORDS[correctIdx];
+    const otherWords = THING_WORDS.filter((_, idx) => idx !== correctIdx);
     const distractors = shuffle(otherWords).slice(0, 3);
     const options = shuffle([correct, ...distractors]);
     
@@ -807,8 +811,8 @@ function generateBoxQuestions() {
     });
   }
   
-  // 5 Yes/No questions (3 Yes + 2 No)
-  const yesNoWords = shuffledWords.slice(5, 10);
+  // 5 Yes/No questions (3 Yes + 2 No) - 可以用全部词汇包括人物
+  const yesNoWords = shuffledAllWords.slice(0, 5);
   for (let i = 0; i < 5; i++) {
     const contentIdx = yesNoWords[i];
     const content = PLURAL_WORDS[contentIdx];
@@ -822,7 +826,7 @@ function generateBoxQuestions() {
       askWord = shuffle(others)[0];
     }
     
-    // 4 options: Yes correct / No wrong  or  No correct / Yes wrong + 2 distractors
+    // 2 options: Yes / No
     const options = [
       { text: 'Yes, they are.', correct: isYes },
       { text: "No, they aren't.", correct: !isYes }
@@ -964,45 +968,52 @@ let spellState = {
 
 function generateSpellSentences() {
   const sentences = [];
-  const words = shuffle(PLURAL_WORDS);
+  const thingWords = shuffle(THING_WORDS);
+  const allWords = shuffle(PLURAL_WORDS);
   
-  // 4 "What are they? They are ..." pairs
+  // 4 "What are they? They are ..." pairs - 只用非人物词汇
   for (let i = 0; i < 4; i++) {
-    const w = words[i];
+    const w = thingWords[i];
     sentences.push({
       scene: getImageGrid(w.image, 5),
       sceneDisplay: getImageGrid(w.image, 5),
-      hint: '根据图片，组成问答句',
-      words: ['What', 'are', 'they', 'They', 'are', w.plural],
-      answer: `What are they? They are ${w.plural}.`,
+      hint: `它们是什么？它们是${w.cn}。`,
+      words: shuffle(['What', 'are', 'they', '?', 'They', 'are', w.plural, '.']),
+      answerWords: ['What', 'are', 'they', '?', 'They', 'are', w.plural, '.'],
+      answer: `What are they?\nThey are ${w.plural}.`,
+      answerPlain: `What are they? They are ${w.plural}.`,
       meaning: `它们是什么？它们是${w.cn}。`
     });
   }
   
-  // 3 "Are they...? Yes, they are."
-  for (let i = 4; i < 7; i++) {
-    const w = words[i];
+  // 3 "Are they...? Yes, they are." - 可以用全部词汇包括人物
+  for (let i = 0; i < 3; i++) {
+    const w = allWords[i];
     sentences.push({
       scene: getImageGrid(w.image, 5),
       sceneDisplay: getImageGrid(w.image, 5),
-      hint: '根据图片，组成问答句（肯定回答）',
-      words: ['Are', 'they', w.plural, 'Yes', 'they', 'are'],
-      answer: `Are they ${w.plural}? Yes, they are.`,
+      hint: `它们是${w.cn}吗？是的，它们是。`,
+      words: shuffle(['Are', 'they', w.plural, '?', 'Yes', ',', 'they', 'are', '.']),
+      answerWords: ['Are', 'they', w.plural, '?', 'Yes', ',', 'they', 'are', '.'],
+      answer: `Are they ${w.plural}?\nYes, they are.`,
+      answerPlain: `Are they ${w.plural}? Yes, they are.`,
       meaning: `它们是${w.cn}吗？是的，它们是。`
     });
   }
   
-  // 3 "Are they...? No, they aren't."
-  for (let i = 7; i < 10; i++) {
-    const w = words[i];
+  // 3 "Are they...? No, they aren't." - 可以用全部词汇包括人物
+  for (let i = 3; i < 6; i++) {
+    const w = allWords[i];
     const otherWords = PLURAL_WORDS.filter(x => x.plural !== w.plural);
     const wrongW = shuffle(otherWords)[0];
     sentences.push({
       scene: getImageGrid(w.image, 5),
       sceneDisplay: getImageGrid(w.image, 5),
-      hint: '根据图片，组成问答句（否定回答）',
-      words: ['Are', 'they', wrongW.plural, "No", "they", "aren't"],
-      answer: `Are they ${wrongW.plural}? No, they aren't.`,
+      hint: `它们是${wrongW.cn}吗？不，它们不是。`,
+      words: shuffle(['Are', 'they', wrongW.plural, '?', 'No', ',', 'they', "aren't", '.']),
+      answerWords: ['Are', 'they', wrongW.plural, '?', 'No', ',', 'they', "aren't", '.'],
+      answer: `Are they ${wrongW.plural}?\nNo, they aren't.`,
+      answerPlain: `Are they ${wrongW.plural}? No, they aren't.`,
       meaning: `它们是${wrongW.cn}吗？不，它们不是。`
     });
   }
@@ -1113,13 +1124,12 @@ function checkSpell() {
     return;
   }
   
-  const answerWords = s.answer.replace(/[?.,]/g, '').split(/\s+/);
   const userWords = spellState.slotValues.map(v => v.word);
   
-  // Simple comparison
+  // 严格比较（区分大小写和标点）
   let correct = true;
-  for (let i = 0; i < answerWords.length; i++) {
-    if (userWords[i].toLowerCase().replace(/[?.,]/g, '') !== answerWords[i].toLowerCase()) {
+  for (let i = 0; i < s.answerWords.length; i++) {
+    if (userWords[i] !== s.answerWords[i]) {
       correct = false;
       break;
     }
@@ -1131,11 +1141,12 @@ function checkSpell() {
     document.getElementById('check-btn').disabled = true;
     
     const meaningEl = document.getElementById('sentence-meaning');
-    meaningEl.textContent = `✓ 太棒了！${s.meaning}`;
+    meaningEl.style.whiteSpace = 'pre-line';
+    meaningEl.textContent = `✓ 太棒了！\n${s.answer}\n${s.meaning}`;
     meaningEl.style.color = 'var(--mw-success)';
     
     playCorrectSound();
-    speak(s.answer);
+    speak(s.answerPlain);
     
     setTimeout(() => {
       spellState.currentIdx++;
@@ -1144,7 +1155,7 @@ function checkSpell() {
       } else {
         showResult('🏆', '第三关完成！你是魔法大师！', () => { goSelect(); });
       }
-    }, 1500);
+    }, 2500);
   } else {
     // Wrong - shake and clear
     playWrongSound();
