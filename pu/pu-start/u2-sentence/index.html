@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PU Start · U2 Magic Plurals</title>
+<style>
+/* ===== Mona Woods Theme ===== */
+:root {
+  --mw-dark: #1B3A4A;
+  --mw-mid: #5BA88A;
+  --mw-light: #B8E0D2;
+  --mw-pale: #E8F5F0;
+  --mw-accent: #F4A261;
+  --mw-purple: #8B7EC8;
+  --mw-pink: #E8B4D4;
+  --mw-success: #2A9D8F;
+  --mw-error: #E76F51;
+  --mw-white: #FFFFFF;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  background: linear-gradient(160deg, #F0E8F5 0%, #E8F5F0 50%, #E0F2EC 100%);
+  min-height: 100vh;
+  color: var(--mw-dark);
+  overflow-x: hidden;
+}
+.container { max-width: 900px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ===== Navigation ===== */
+.nav-bar {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+}
+.btn-back {
+  padding: 8px 18px; background: var(--mw-white); border: 2px solid var(--mw-light);
+  border-radius: 20px; color: var(--mw-dark); font-size: 14px; cursor: pointer;
+  text-decoration: none; transition: all .2s;
+}
+.btn-back:hover { background: var(--mw-light); }
+.level-badge {
+  margin-left: auto; padding: 6px 16px; background: var(--mw-purple); color: white;
+  border-radius: 20px; font-size: 14px; font-weight: 600;
+}
+
+/* ===== Screens ===== */
+.screen { display: none; flex: 1; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ===== Select Screen ===== */
+.select-header {
+  text-align: center; padding: 20px 0 10px;
+}
+.select-header h1 {
+  font-size: 32px; color: var(--mw-dark); margin-bottom: 6px;
+}
+.select-header .subtitle {
+  font-size: 16px; color: var(--mw-purple); margin-bottom: 16px; font-weight: 600;
+}
+.logo-circle {
+  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 12px;
+  background: linear-gradient(135deg, var(--mw-purple), var(--mw-pink));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; box-shadow: 0 4px 16px rgba(139,126,200,0.3);
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.level-cards {
+  display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 16px;
+}
+.level-btn {
+  display: flex; align-items: center; gap: 14px; width: 85%; max-width: 380px;
+  background: var(--mw-white); border-radius: 16px; padding: 16px 22px;
+  cursor: pointer; transition: all .25s; border: 3px solid transparent;
+  box-shadow: 0 3px 10px rgba(27,58,74,0.08); position: relative;
+}
+.level-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139,126,200,0.2); border-color: var(--mw-purple); }
+.level-btn:active { transform: scale(0.98); }
+.level-btn .emoji { font-size: 36px; flex-shrink: 0; }
+.level-btn .level-content { flex: 1; }
+.level-btn .level-content .title { font-size: 18px; font-weight: 700; color: var(--mw-dark); margin-bottom: 2px; }
+.level-btn .level-content .desc { font-size: 12px; color: var(--mw-purple); line-height: 1.4; }
+.level-btn .tag {
+  padding: 3px 10px; background: var(--mw-pink); color: var(--mw-dark);
+  border-radius: 10px; font-size: 11px; font-weight: 600; flex-shrink: 0;
+}
+
+/* ===== Footer ===== */
+.page-footer {
+  text-align: center; padding: 20px 0 16px; margin-top: auto;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.page-footer .footer-logo {
+  width: 32px; height: 32px; border-radius: 50%; object-fit: contain;
+  opacity: 0.6;
+}
+.page-footer .footer-text {
+  font-size: 12px; color: var(--mw-mid); opacity: 0.7;
+  letter-spacing: 0.5px;
+}
+
+/* ===== Level 1: Magic Transform ===== */
+.transform-instruction {
+  text-align: center; font-size: 18px; color: var(--mw-purple); margin-bottom: 12px; font-weight: 600;
+}
+.transform-progress {
+  text-align: center; font-size: 14px; color: var(--mw-dark); opacity: 0.7; margin-bottom: 10px;
+}
+.transform-area {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 20px 0; min-height: 280px;
+}
+.transform-stage {
+  width: 200px; height: 200px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  margin-bottom: 20px;
+}
+.transform-emoji {
+  font-size: 100px;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+.transform-emoji.multi {
+  font-size: 60px;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+}
+.transform-emoji.multi span {
+  animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+}
+.transform-emoji.multi span:nth-child(1) { animation-delay: 0.05s; }
+.transform-emoji.multi span:nth-child(2) { animation-delay: 0.15s; }
+.transform-emoji.multi span:nth-child(3) { animation-delay: 0.25s; }
+.transform-emoji.multi span:nth-child(4) { animation-delay: 0.1s; }
+.transform-emoji.multi span:nth-child(5) { animation-delay: 0.2s; }
+.transform-emoji.multi span:nth-child(6) { animation-delay: 0.3s; }
+@keyframes popIn {
+  0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+/* Magic sparkles */
+.sparkle {
+  position: absolute;
+  width: 20px; height: 20px;
+  font-size: 20px;
+  pointer-events: none;
+  animation: sparkleAnim 0.8s ease-out forwards;
+}
+@keyframes sparkleAnim {
+  0% { transform: scale(0) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.5) rotate(180deg); opacity: 1; }
+  100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
+.transform-sentence {
+  text-align: center; font-size: 24px; color: var(--mw-dark);
+  font-weight: 700; margin-bottom: 8px; min-height: 72px;
+  display: flex; flex-direction: column; gap: 4px; align-items: center;
+}
+.transform-sentence .line { line-height: 1.3; }
+.transform-sentence .highlight {
+  color: var(--mw-purple);
+  background: linear-gradient(transparent 60%, rgba(232,180,212,0.5) 60%);
+  padding: 0 4px;
+}
+.transform-meaning {
+  text-align: center; font-size: 14px; color: var(--mw-mid); margin-bottom: 20px;
+}
+
+.wand-btn {
+  padding: 14px 36px;
+  background: linear-gradient(135deg, var(--mw-purple), #A78BFA);
+  color: white; border: none; border-radius: 28px;
+  font-size: 18px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(139,126,200,0.4);
+  transition: all .2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.wand-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(139,126,200,0.5); }
+.wand-btn:active { transform: scale(0.97); }
+.wand-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.next-btn {
+  margin-top: 12px;
+  padding: 10px 28px;
+  background: var(--mw-success);
+  color: white; border: none; border-radius: 22px;
+  font-size: 16px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 3px 10px rgba(42,157,143,0.3);
+  transition: all .2s;
+  display: none;
+}
+.next-btn.visible { display: inline-block; }
+.next-btn:hover { transform: translateY(-1px); }
+
+.audio-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--mw-white);
+  border: 2px solid var(--mw-light);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.audio-btn:hover { background: var(--mw-light); transform: scale(1.05); }
+
+/* ===== Level 2: Mystery Box ===== */
+.box-instruction {
+  text-align: center; font-size: 18px; color: var(--mw-purple); margin-bottom: 12px; font-weight: 600;
+}
+.box-progress {
+  text-align: center; font-size: 14px; color: var(--mw-dark); opacity: 0.7; margin-bottom: 10px;
+}
+.box-area {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 10px 0;
+}
+.mystery-box {
+  font-size: 120px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+}
+.mystery-box.shaking {
+  animation: shake 0.5s ease-in-out;
+}
+@keyframes shake {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+.box-content {
+  font-size: 70px;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 4px;
+  margin-bottom: 16px;
+  min-height: 100px;
+  align-items: center;
+  justify-content: center;
+}
+.box-content span {
+  animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+}
+.box-question {
+  text-align: center; font-size: 22px; color: var(--mw-dark);
+  font-weight: 700; margin-bottom: 16px;
+}
+.box-options {
+  display: flex; flex-direction: column; gap: 10px;
+  width: 100%; max-width: 400px;
+}
+.box-option {
+  padding: 14px 20px;
+  background: var(--mw-white);
+  border: 3px solid var(--mw-light);
+  border-radius: 14px;
+  font-size: 16px; font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  text-align: center;
+  color: var(--mw-dark);
+}
+.box-option:hover { border-color: var(--mw-purple); transform: translateY(-1px); }
+.box-option.correct { border-color: var(--mw-success); background: #E8F5F0; }
+.box-option.wrong { border-color: var(--mw-error); background: #FEE9E4; }
+.box-option.disabled { opacity: 0.5; pointer-events: none; }
+.box-feedback {
+  text-align: center; font-size: 16px; font-weight: 600;
+  margin-top: 12px; min-height: 24px;
+}
+.box-feedback.correct-text { color: var(--mw-success); }
+.box-feedback.wrong-text { color: var(--mw-error); }
+
+/* ===== Level 3: Spell Making ===== */
+.spell-instruction {
+  text-align: center; font-size: 18px; color: var(--mw-purple); margin-bottom: 12px; font-weight: 600;
+}
+.spell-progress {
+  text-align: center; font-size: 14px; color: var(--mw-dark); opacity: 0.7; margin-bottom: 10px;
+}
+.spell-scene {
+  text-align: center;
+  font-size: 80px;
+  margin: 16px 0;
+  min-height: 100px;
+  display: flex; align-items: center; justify-content: center;
+}
+.spell-hint {
+  text-align: center; font-size: 14px; color: var(--mw-mid);
+  margin-bottom: 16px; font-weight: 600;
+}
+.sentence-slots {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center;
+  min-height: 60px;
+  padding: 12px;
+  background: var(--mw-white);
+  border-radius: 14px;
+  margin-bottom: 16px;
+  border: 2px dashed var(--mw-light);
+}
+.slot {
+  min-width: 50px;
+  padding: 8px 14px;
+  background: var(--mw-pale);
+  border-radius: 10px;
+  font-size: 16px; font-weight: 600;
+  color: var(--mw-dark);
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all .15s;
+}
+.slot.filled { background: var(--mw-light); border-color: var(--mw-mid); }
+.slot.correct { background: #D4EDDA; border-color: var(--mw-success); color: var(--mw-success); }
+.slot.wrong { animation: shake 0.4s; }
+.slot:empty::after { content: '?'; color: var(--mw-light); }
+
+.word-bank {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.word-chip {
+  padding: 10px 18px;
+  background: var(--mw-white);
+  border: 2px solid var(--mw-purple);
+  border-radius: 20px;
+  font-size: 15px; font-weight: 600;
+  color: var(--mw-purple);
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 2px 6px rgba(139,126,200,0.15);
+}
+.word-chip:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(139,126,200,0.3); }
+.word-chip.used { opacity: 0.3; pointer-events: none; transform: scale(0.95); }
+
+.spell-actions {
+  display: flex; gap: 12px; justify-content: center;
+}
+.check-btn, .reset-btn {
+  padding: 12px 28px;
+  border: none; border-radius: 22px;
+  font-size: 16px; font-weight: 600; cursor: pointer;
+  transition: all .2s;
+}
+.check-btn {
+  background: var(--mw-success); color: white;
+  box-shadow: 0 3px 10px rgba(42,157,143,0.3);
+}
+.check-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.check-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.reset-btn {
+  background: var(--mw-white); color: var(--mw-dark);
+  border: 2px solid var(--mw-light);
+}
+.reset-btn:hover { background: var(--mw-pale); }
+
+.sentence-meaning {
+  text-align: center; font-size: 14px;
+  margin-top: 12px; min-height: 20px;
+  font-weight: 600;
+}
+
+/* ===== Result Overlay ===== */
+.result-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(27,58,74,0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.result-overlay.show { opacity: 1; pointer-events: auto; }
+.result-card {
+  background: var(--mw-white);
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  max-width: 340px;
+  width: 85%;
+  transform: scale(0.8);
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.result-overlay.show .result-card { transform: scale(1); }
+.result-emoji { font-size: 70px; margin-bottom: 16px; }
+.result-msg { font-size: 22px; font-weight: 700; color: var(--mw-dark); margin-bottom: 24px; }
+.result-btn {
+  padding: 12px 32px;
+  background: var(--mw-purple); color: white;
+  border: none; border-radius: 24px;
+  font-size: 16px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(139,126,200,0.3);
+  transition: all .2s;
+}
+.result-btn:hover { transform: translateY(-1px); }
+
+/* ===== Stars decoration ===== */
+.stars-bg {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; overflow: hidden; z-index: 0;
+}
+.star {
+  position: absolute;
+  color: rgba(255,255,255,0.6);
+  animation: twinkle 2s ease-in-out infinite;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+@media (max-width: 480px) {
+  .select-header h1 { font-size: 26px; }
+  .transform-emoji { font-size: 80px; }
+  .transform-emoji.multi { font-size: 48px; }
+  .box-content { font-size: 55px; }
+  .mystery-box { font-size: 90px; }
+  .spell-scene { font-size: 60px; }
+  .transform-sentence { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stars-bg" id="starsBg"></div>
+
+<div class="container">
+  <!-- ===== SELECT SCREEN ===== -->
+  <div id="screen-select" class="screen active">
+    <div class="select-header">
+      <div class="logo-circle">🪄</div>
+      <h1>Magic Plurals</h1>
+      <div class="subtitle">魔法变变变 · 复数句型大冒险</div>
+    </div>
+    <div class="level-cards">
+      <div class="level-btn" onclick="initLevel1()">
+        <div class="emoji">✨</div>
+        <div class="level-content">
+          <div class="title">第一关 · 魔法变身</div>
+          <div class="desc">单数变复数，看物品大变身！</div>
+        </div>
+        <div class="tag">入门</div>
+      </div>
+      <div class="level-btn" onclick="initLevel2()">
+        <div class="emoji">🎁</div>
+        <div class="level-content">
+          <div class="title">第二关 · 神秘盒子</div>
+          <div class="desc">猜猜盒子里有什么，选对句子！</div>
+        </div>
+        <div class="tag">进阶</div>
+      </div>
+      <div class="level-btn" onclick="initLevel3()">
+        <div class="emoji">📜</div>
+        <div class="level-content">
+          <div class="title">第三关 · 咒语造句</div>
+          <div class="desc">把单词排成正确的魔法咒语！</div>
+        </div>
+        <div class="tag">挑战</div>
+      </div>
+    </div>
+    <div class="page-footer">
+      <img src="../../logo.png" alt="Mona" class="footer-logo" onerror="this.style.display='none'">
+      <div class="footer-text">Provided by Mona</div>
+    </div>
+  </div>
+
+  <!-- ===== LEVEL 1: Magic Transform ===== -->
+  <div id="screen-level1" class="screen">
+    <div class="nav-bar">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <div class="level-badge">第一关 · 魔法变身</div>
+    </div>
+    <div class="transform-instruction">点魔法棒，看物品大变身！</div>
+    <div class="transform-progress" id="transform-progress">1 / 11</div>
+    
+    <div class="transform-area">
+      <div class="transform-stage" id="transform-stage">
+        <div class="transform-emoji" id="transform-emoji">👜</div>
+      </div>
+      <div class="transform-sentence" id="transform-sentence">
+        <div class="line">What is it?</div>
+        <div class="line">It's a <span class="highlight" id="singular-word">bag</span>.</div>
+      </div>
+      <div class="transform-meaning" id="transform-meaning">它是什么？它是一个书包。</div>
+      
+      <button class="wand-btn" id="wand-btn" onclick="doTransform()">
+        🪄 变！
+      </button>
+      <button class="next-btn" id="next-btn" onclick="nextTransform()">下一个 →</button>
+    </div>
+    
+    <div class="page-footer">
+      <img src="../../logo.png" alt="Mona" class="footer-logo" onerror="this.style.display='none'">
+      <div class="footer-text">Provided by Mona</div>
+    </div>
+  </div>
+
+  <!-- ===== LEVEL 2: Mystery Box ===== -->
+  <div id="screen-level2" class="screen">
+    <div class="nav-bar">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <div class="level-badge">第二关 · 神秘盒子</div>
+    </div>
+    <div class="box-instruction">点开盒子，选正确的句子！</div>
+    <div class="box-progress" id="box-progress">1 / 10</div>
+    
+    <div class="box-area">
+      <div class="mystery-box" id="mystery-box" onclick="openBox()">📦</div>
+      <div class="box-content" id="box-content" style="display:none;"></div>
+      <div class="box-question" id="box-question" style="display:none;">What are they?</div>
+      <div class="box-options" id="box-options" style="display:none;"></div>
+      <div class="box-feedback" id="box-feedback"></div>
+    </div>
+    
+    <div class="page-footer">
+      <img src="../../logo.png" alt="Mona" class="footer-logo" onerror="this.style.display='none'">
+      <div class="footer-text">Provided by Mona</div>
+    </div>
+  </div>
+
+  <!-- ===== LEVEL 3: Spell Making ===== -->
+  <div id="screen-level3" class="screen">
+    <div class="nav-bar">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <div class="level-badge">第三关 · 咒语造句</div>
+    </div>
+    <div class="spell-instruction">把单词排成正确的句子！</div>
+    <div class="spell-progress" id="spell-progress">1 / 10</div>
+    
+    <div class="spell-scene" id="spell-scene">🐦🐦🐦</div>
+    <div class="spell-hint" id="spell-hint">根据提示，组成问句和答句</div>
+    
+    <div class="sentence-slots" id="sentence-slots"></div>
+    <div class="word-bank" id="word-bank"></div>
+    
+    <div class="spell-actions">
+      <button class="reset-btn" onclick="resetSpell()">🔄 重来</button>
+      <button class="check-btn" id="check-btn" onclick="checkSpell()">✓ 检查</button>
+    </div>
+    <div class="sentence-meaning" id="sentence-meaning"></div>
+    
+    <div class="page-footer">
+      <img src="../../logo.png" alt="Mona" class="footer-logo" onerror="this.style.display='none'">
+      <div class="footer-text">Provided by Mona</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RESULT OVERLAY ===== -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-card">
+    <div class="result-emoji" id="result-emoji">🎉</div>
+    <div class="result-msg" id="result-msg">太棒了！</div>
+    <button class="result-btn" onclick="closeResult()">继续</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   WORD DATA
+   ============================================================ */
+const PLURAL_WORDS = [
+  { singular: 'boy', plural: 'boys', emoji: '👦', cn: '男孩' },
+  { singular: 'girl', plural: 'girls', emoji: '👧', cn: '女孩' },
+  { singular: 'bag', plural: 'bags', emoji: '👜', cn: '书包' },
+  { singular: 'book', plural: 'books', emoji: '📚', cn: '书' },
+  { singular: 'pencil', plural: 'pencils', emoji: '✏️', cn: '铅笔' },
+  { singular: 'bird', plural: 'birds', emoji: '🐦', cn: '鸟' },
+  { singular: 'cat', plural: 'cats', emoji: '🐱', cn: '猫' },
+  { singular: 'boat', plural: 'boats', emoji: '🚤', cn: '船' },
+  { singular: 'bus', plural: 'buses', emoji: '🚌', cn: '公交车' },
+  { singular: 'teacher', plural: 'teachers', emoji: '👩‍🏫', cn: '老师' },
+  { singular: 'classroom', plural: 'classrooms', emoji: '🏫', cn: '教室' }
+];
+
+function getEmojiDisplay(emoji, count) {
+  let html = '';
+  const rows = count >= 6 ? 3 : (count >= 3 ? 2 : 1);
+  const cols = Math.ceil(count / rows);
+  for (let i = 0; i < count; i++) {
+    html += `<span>${emoji}</span>`;
+  }
+  return html;
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goSelect() {
+  showScreen('screen-select');
+}
+
+// Stars background
+(function createStars() {
+  const bg = document.getElementById('starsBg');
+  const stars = ['⭐','✨','💫','🌟'];
+  for (let i = 0; i < 20; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.textContent = stars[Math.floor(Math.random() * stars.length)];
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.fontSize = (10 + Math.random() * 14) + 'px';
+    star.style.animationDelay = Math.random() * 2 + 's';
+    star.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    bg.appendChild(star);
+  }
+})();
+
+/* ============================================================
+   AUDIO
+   ============================================================ */
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playTone(freq, duration) {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = freq;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  } catch(e) {}
+}
+function playMagicSound() {
+  playTone(600, 0.1);
+  setTimeout(() => playTone(800, 0.1), 100);
+  setTimeout(() => playTone(1000, 0.15), 200);
+  setTimeout(() => playTone(1200, 0.2), 300);
+}
+function playCorrectSound() {
+  playTone(800, 0.1);
+  setTimeout(() => playTone(1000, 0.15), 100);
+}
+function playWrongSound() {
+  playTone(200, 0.15);
+  setTimeout(() => playTone(150, 0.2), 100);
+}
+
+// Speech synthesis
+function speak(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = 0.85;
+    // Try to use a female voice
+    const voices = window.speechSynthesis.getVoices();
+    const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Google US English'));
+    if (femaleVoice) utter.voice = femaleVoice;
+    window.speechSynthesis.speak(utter);
+  }
+}
+
+/* ============================================================
+   LEVEL 1: MAGIC TRANSFORM
+   ============================================================ */
+let transformState = { currentIdx: 0, order: [], transformed: false };
+
+function initLevel1() {
+  showScreen('screen-level1');
+  transformState.order = shuffle([...Array(PLURAL_WORDS.length).keys()]);
+  transformState.currentIdx = 0;
+  transformState.transformed = false;
+  loadTransformWord();
+}
+
+function loadTransformWord() {
+  const wordData = PLURAL_WORDS[transformState.order[transformState.currentIdx]];
+  document.getElementById('transform-progress').textContent = `${transformState.currentIdx + 1} / ${PLURAL_WORDS.length}`;
+  
+  const emojiEl = document.getElementById('transform-emoji');
+  emojiEl.className = 'transform-emoji';
+  emojiEl.textContent = wordData.emoji;
+  
+  const sentenceEl = document.getElementById('transform-sentence');
+  sentenceEl.innerHTML = `
+    <div class="line">What is it?</div>
+    <div class="line">It's a <span class="highlight">${wordData.singular}</span>.</div>
+  `;
+  
+  document.getElementById('transform-meaning').textContent = `它是什么？它是一个${wordData.cn}。`;
+  
+  const wandBtn = document.getElementById('wand-btn');
+  wandBtn.style.display = '';
+  wandBtn.textContent = '🪄 变！';
+  wandBtn.disabled = false;
+  
+  document.getElementById('next-btn').classList.remove('visible');
+  transformState.transformed = false;
+  
+  // Speak singular form
+  setTimeout(() => speak(`What is it? It's a ${wordData.singular}.`), 300);
+}
+
+function doTransform() {
+  if (transformState.transformed) return;
+  transformState.transformed = true;
+  
+  const wordData = PLURAL_WORDS[transformState.order[transformState.currentIdx]];
+  const stage = document.getElementById('transform-stage');
+  const emojiEl = document.getElementById('transform-emoji');
+  const wandBtn = document.getElementById('wand-btn');
+  
+  wandBtn.disabled = true;
+  playMagicSound();
+  
+  // Create sparkles
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.textContent = ['✨','⭐','💫','🌟'][Math.floor(Math.random() * 4)];
+      sparkle.style.left = (20 + Math.random() * 60) + '%';
+      sparkle.style.top = (20 + Math.random() * 60) + '%';
+      stage.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 800);
+    }, i * 50);
+  }
+  
+  // Transform
+  setTimeout(() => {
+    emojiEl.className = 'transform-emoji multi';
+    emojiEl.innerHTML = getEmojiDisplay(wordData.emoji, 6);
+    
+    const sentenceEl = document.getElementById('transform-sentence');
+    sentenceEl.innerHTML = `
+      <div class="line">What are they?</div>
+      <div class="line">They are <span class="highlight">${wordData.plural}</span>.</div>
+    `;
+    
+    document.getElementById('transform-meaning').textContent = `它们是什么？它们是${wordData.cn}。`;
+    
+    // Speak plural form
+    setTimeout(() => speak(`What are they? They are ${wordData.plural}.`), 300);
+    
+    // Show next button
+    document.getElementById('next-btn').classList.add('visible');
+  }, 400);
+}
+
+function nextTransform() {
+  transformState.currentIdx++;
+  if (transformState.currentIdx < PLURAL_WORDS.length) {
+    loadTransformWord();
+  } else {
+    showResult('🎉', '太棒了！第一关完成！', () => { goSelect(); });
+  }
+}
+
+/* ============================================================
+   LEVEL 2: MYSTERY BOX
+   ============================================================ */
+let boxState = { currentIdx: 0, questions: [], opened: false, answered: false };
+
+function generateBoxQuestions() {
+  const questions = [];
+  const shuffledWords = shuffle([...Array(PLURAL_WORDS.length).keys()]);
+  
+  // 5 What are they? questions
+  for (let i = 0; i < 5; i++) {
+    const correctIdx = shuffledWords[i];
+    const correct = PLURAL_WORDS[correctIdx];
+    const otherWords = PLURAL_WORDS.filter((_, idx) => idx !== correctIdx);
+    const distractors = shuffle(otherWords).slice(0, 3);
+    const options = shuffle([correct, ...distractors]);
+    
+    questions.push({
+      type: 'what',
+      correctWord: correct,
+      question: 'What are they?',
+      options: options.map(w => ({ text: `They are ${w.plural}.`, correct: w.plural === correct.plural }))
+    });
+  }
+  
+  // 5 Yes/No questions (3 Yes + 2 No)
+  const yesNoWords = shuffledWords.slice(5, 10);
+  for (let i = 0; i < 5; i++) {
+    const contentIdx = yesNoWords[i];
+    const content = PLURAL_WORDS[contentIdx];
+    const isYes = i < 3; // first 3 are Yes, last 2 are No
+    
+    let askWord;
+    if (isYes) {
+      askWord = content;
+    } else {
+      const others = PLURAL_WORDS.filter((_, idx) => idx !== contentIdx);
+      askWord = shuffle(others)[0];
+    }
+    
+    // 4 options: Yes correct / No wrong  or  No correct / Yes wrong + 2 distractors
+    const options = [
+      { text: 'Yes, they are.', correct: isYes },
+      { text: "No, they aren't.", correct: !isYes }
+    ];
+    
+    questions.push({
+      type: 'yesno',
+      correctWord: content,
+      askWord: askWord,
+      question: `Are they ${askWord.plural}?`,
+      options: shuffle(options),
+      correctAnswer: isYes ? 'Yes, they are.' : "No, they aren't."
+    });
+  }
+  
+  return shuffle(questions);
+}
+
+function initLevel2() {
+  showScreen('screen-level2');
+  boxState.questions = generateBoxQuestions();
+  boxState.currentIdx = 0;
+  boxState.opened = false;
+  boxState.answered = false;
+  loadBoxQuestion();
+}
+
+function loadBoxQuestion() {
+  const q = boxState.questions[boxState.currentIdx];
+  document.getElementById('box-progress').textContent = `${boxState.currentIdx + 1} / ${boxState.questions.length}`;
+  
+  const box = document.getElementById('mystery-box');
+  box.style.display = '';
+  box.textContent = '📦';
+  box.classList.remove('shaking');
+  
+  document.getElementById('box-content').style.display = 'none';
+  document.getElementById('box-question').style.display = 'none';
+  document.getElementById('box-options').style.display = 'none';
+  document.getElementById('box-feedback').textContent = '';
+  document.getElementById('box-feedback').className = 'box-feedback';
+  
+  boxState.opened = false;
+  boxState.answered = false;
+}
+
+function openBox() {
+  if (boxState.opened) return;
+  boxState.opened = true;
+  
+  const q = boxState.questions[boxState.currentIdx];
+  const box = document.getElementById('mystery-box');
+  
+  // Shake animation
+  box.classList.add('shaking');
+  playTone(300, 0.1);
+  setTimeout(() => playTone(400, 0.1), 100);
+  
+  setTimeout(() => {
+    box.style.display = 'none';
+    
+    const content = document.getElementById('box-content');
+    content.style.display = 'grid';
+    content.innerHTML = getEmojiDisplay(q.correctWord.emoji, 5);
+    
+    playMagicSound();
+    
+    // Show question
+    setTimeout(() => {
+      const questionEl = document.getElementById('box-question');
+      questionEl.style.display = '';
+      questionEl.textContent = q.question;
+      speak(q.question);
+      
+      // Show options
+      setTimeout(() => {
+        const optionsEl = document.getElementById('box-options');
+        optionsEl.style.display = 'flex';
+        optionsEl.innerHTML = '';
+        q.options.forEach(opt => {
+          const btn = document.createElement('div');
+          btn.className = 'box-option';
+          btn.textContent = opt.text;
+          btn.onclick = () => selectBoxOption(btn, opt.correct, opt.text, q);
+          optionsEl.appendChild(btn);
+        });
+      }, 400);
+    }, 300);
+  }, 500);
+}
+
+function selectBoxOption(btn, isCorrect, text, q) {
+  if (boxState.answered) return;
+  
+  if (isCorrect) {
+    boxState.answered = true;
+    btn.classList.add('correct');
+    document.querySelectorAll('.box-option').forEach(b => b.classList.add('disabled'));
+    
+    const fb = document.getElementById('box-feedback');
+    fb.textContent = '✓ 正确！';
+    fb.className = 'box-feedback correct-text';
+    playCorrectSound();
+    speak(text);
+    
+    setTimeout(() => {
+      boxState.currentIdx++;
+      if (boxState.currentIdx < boxState.questions.length) {
+        loadBoxQuestion();
+      } else {
+        showResult('🎊', '第二关完成！你真厉害！', () => { goSelect(); });
+      }
+    }, 1200);
+  } else {
+    btn.classList.add('wrong');
+    const fb = document.getElementById('box-feedback');
+    fb.textContent = '✗ 再想想~';
+    fb.className = 'box-feedback wrong-text';
+    playWrongSound();
+    
+    setTimeout(() => {
+      btn.classList.add('disabled');
+      fb.textContent = '';
+      fb.className = 'box-feedback';
+    }, 600);
+  }
+}
+
+/* ============================================================
+   LEVEL 3: SPELL MAKING
+   ============================================================ */
+let spellState = {
+  currentIdx: 0,
+  sentences: [],
+  slotValues: [],
+  usedWordIndices: new Set(),
+  locked: false
+};
+
+function generateSpellSentences() {
+  const sentences = [];
+  const words = shuffle(PLURAL_WORDS);
+  
+  // 4 "What are they? They are ..." pairs
+  for (let i = 0; i < 4; i++) {
+    const w = words[i];
+    sentences.push({
+      scene: getEmojiDisplay(w.emoji, 5),
+      sceneDisplay: w.emoji + w.emoji + w.emoji + w.emoji + w.emoji,
+      hint: '根据图片，组成问答句',
+      words: ['What', 'are', 'they', 'They', 'are', w.plural],
+      answer: `What are they? They are ${w.plural}.`,
+      meaning: `它们是什么？它们是${w.cn}。`
+    });
+  }
+  
+  // 3 "Are they...? Yes, they are."
+  for (let i = 4; i < 7; i++) {
+    const w = words[i];
+    sentences.push({
+      scene: getEmojiDisplay(w.emoji, 5),
+      sceneDisplay: w.emoji + w.emoji + w.emoji + w.emoji + w.emoji,
+      hint: '根据图片，组成问答句（肯定回答）',
+      words: ['Are', 'they', w.plural, 'Yes', 'they', 'are'],
+      answer: `Are they ${w.plural}? Yes, they are.`,
+      meaning: `它们是${w.cn}吗？是的，它们是。`
+    });
+  }
+  
+  // 3 "Are they...? No, they aren't."
+  for (let i = 7; i < 10; i++) {
+    const w = words[i];
+    const otherWords = PLURAL_WORDS.filter(x => x.plural !== w.plural);
+    const wrongW = shuffle(otherWords)[0];
+    sentences.push({
+      scene: getEmojiDisplay(w.emoji, 5),
+      sceneDisplay: w.emoji + w.emoji + w.emoji + w.emoji + w.emoji,
+      hint: '根据图片，组成问答句（否定回答）',
+      words: ['Are', 'they', wrongW.plural, "No", "they", "aren't"],
+      answer: `Are they ${wrongW.plural}? No, they aren't.`,
+      meaning: `它们是${wrongW.cn}吗？不，它们不是。`
+    });
+  }
+  
+  return shuffle(sentences);
+}
+
+function initLevel3() {
+  showScreen('screen-level3');
+  spellState.sentences = generateSpellSentences();
+  spellState.currentIdx = 0;
+  loadSpellSentence();
+}
+
+function loadSpellSentence() {
+  const s = spellState.sentences[spellState.currentIdx];
+  document.getElementById('spell-progress').textContent = `${spellState.currentIdx + 1} / ${spellState.sentences.length}`;
+  document.getElementById('spell-scene').innerHTML = s.sceneDisplay;
+  document.getElementById('spell-hint').textContent = s.hint;
+  document.getElementById('sentence-meaning').textContent = '';
+  document.getElementById('check-btn').disabled = false;
+  spellState.locked = false;
+  
+  const wordCount = s.words.length;
+  spellState.slotValues = new Array(wordCount).fill(null);
+  spellState.usedWordIndices = new Set();
+  
+  // Create slots
+  const slotsEl = document.getElementById('sentence-slots');
+  slotsEl.innerHTML = '';
+  for (let i = 0; i < wordCount; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    slot.dataset.index = i;
+    slot.onclick = () => removeFromSlot(i);
+    slotsEl.appendChild(slot);
+  }
+  
+  // Create word bank
+  const bankEl = document.getElementById('word-bank');
+  bankEl.innerHTML = '';
+  const shuffledWords = shuffle(s.words.map((w, i) => ({ word: w, idx: i })));
+  shuffledWords.forEach(item => {
+    const chip = document.createElement('div');
+    chip.className = 'word-chip';
+    chip.textContent = item.word;
+    chip.dataset.idx = item.idx;
+    chip.onclick = () => addToSlot(item.word, item.idx, chip);
+    bankEl.appendChild(chip);
+  });
+  
+  // Speak the question hint
+  setTimeout(() => speak(s.answer), 300);
+}
+
+function addToSlot(word, wordIdx, chipEl) {
+  if (spellState.locked) return;
+  if (spellState.usedWordIndices.has(wordIdx)) return;
+  
+  // Find first empty slot
+  const emptyIdx = spellState.slotValues.findIndex(v => v === null);
+  if (emptyIdx === -1) return;
+  
+  spellState.slotValues[emptyIdx] = { word, wordIdx };
+  spellState.usedWordIndices.add(wordIdx);
+  
+  chipEl.classList.add('used');
+  
+  const slot = document.querySelectorAll('.slot')[emptyIdx];
+  slot.textContent = word;
+  slot.classList.add('filled');
+  
+  playTone(500 + emptyIdx * 50, 0.08);
+}
+
+function removeFromSlot(slotIdx) {
+  if (spellState.locked) return;
+  const val = spellState.slotValues[slotIdx];
+  if (!val) return;
+  
+  spellState.slotValues[slotIdx] = null;
+  spellState.usedWordIndices.delete(val.wordIdx);
+  
+  const slot = document.querySelectorAll('.slot')[slotIdx];
+  slot.textContent = '';
+  slot.classList.remove('filled', 'correct');
+  
+  const chip = document.querySelector(`.word-chip[data-idx="${val.wordIdx}"]`);
+  if (chip) chip.classList.remove('used');
+}
+
+function resetSpell() {
+  if (spellState.locked) return;
+  loadSpellSentence();
+}
+
+function checkSpell() {
+  if (spellState.locked) return;
+  
+  const s = spellState.sentences[spellState.currentIdx];
+  const slots = document.querySelectorAll('.slot');
+  
+  // Check if all filled
+  if (spellState.slotValues.some(v => v === null)) {
+    const meaningEl = document.getElementById('sentence-meaning');
+    meaningEl.textContent = '先把所有单词都放进去哦~';
+    meaningEl.style.color = 'var(--mw-accent)';
+    return;
+  }
+  
+  const answerWords = s.answer.replace(/[?.,]/g, '').split(/\s+/);
+  const userWords = spellState.slotValues.map(v => v.word);
+  
+  // Simple comparison
+  let correct = true;
+  for (let i = 0; i < answerWords.length; i++) {
+    if (userWords[i].toLowerCase().replace(/[?.,]/g, '') !== answerWords[i].toLowerCase()) {
+      correct = false;
+      break;
+    }
+  }
+  
+  if (correct) {
+    spellState.locked = true;
+    slots.forEach(slot => slot.classList.add('correct'));
+    document.getElementById('check-btn').disabled = true;
+    
+    const meaningEl = document.getElementById('sentence-meaning');
+    meaningEl.textContent = `✓ 太棒了！${s.meaning}`;
+    meaningEl.style.color = 'var(--mw-success)';
+    
+    playCorrectSound();
+    speak(s.answer);
+    
+    setTimeout(() => {
+      spellState.currentIdx++;
+      if (spellState.currentIdx < spellState.sentences.length) {
+        loadSpellSentence();
+      } else {
+        showResult('🏆', '第三关完成！你是魔法大师！', () => { goSelect(); });
+      }
+    }, 1500);
+  } else {
+    // Wrong - shake and clear
+    playWrongSound();
+    slots.forEach(slot => {
+      slot.classList.add('wrong');
+      setTimeout(() => slot.classList.remove('wrong'), 400);
+    });
+    
+    const meaningEl = document.getElementById('sentence-meaning');
+    meaningEl.textContent = '✗ 再想想~ 已清空，重新排！';
+    meaningEl.style.color = 'var(--mw-error)';
+    
+    setTimeout(() => {
+      // Reset
+      spellState.slotValues = new Array(s.words.length).fill(null);
+      spellState.usedWordIndices = new Set();
+      slots.forEach(slot => {
+        slot.textContent = '';
+        slot.classList.remove('filled', 'correct');
+      });
+      document.querySelectorAll('.word-chip').forEach(chip => {
+        chip.classList.remove('used');
+      });
+      meaningEl.textContent = '';
+    }, 800);
+  }
+}
+
+/* ============================================================
+   RESULT OVERLAY
+   ============================================================ */
+let resultCallback = null;
+function showResult(emoji, msg, callback) {
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-msg').textContent = msg;
+  document.getElementById('result-overlay').classList.add('show');
+  resultCallback = callback;
+  playCorrectSound();
+  setTimeout(() => playTone(1200, 0.15), 120);
+}
+function closeResult() {
+  document.getElementById('result-overlay').classList.remove('show');
+  if (resultCallback) { resultCallback(); resultCallback = null; }
+}
+
+// Load voices
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+  };
+}
+</script>
+</body>
+</html>
