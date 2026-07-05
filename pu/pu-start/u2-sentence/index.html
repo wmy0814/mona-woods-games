@@ -114,7 +114,7 @@ body {
   padding: 20px 0; min-height: 280px;
 }
 .transform-stage {
-  width: 200px; height: 200px;
+  width: 320px; height: 320px;
   display: flex; align-items: center; justify-content: center;
   position: relative;
   margin-bottom: 20px;
@@ -424,6 +424,7 @@ body {
   .select-header h1 { font-size: 26px; }
   .transform-emoji { font-size: 80px; }
   .transform-emoji.multi { font-size: 48px; }
+  .transform-stage { width: 260px; height: 260px; }
   .box-content { font-size: 55px; }
   .mystery-box { font-size: 90px; }
   .spell-scene { font-size: 60px; }
@@ -586,7 +587,7 @@ const PLURAL_WORDS = [
 
 function getImageGrid(imageSrc, count) {
   let html = '';
-  const size = count >= 6 ? 45 : (count >= 3 ? 60 : 80);
+  const size = count >= 6 ? 65 : (count >= 3 ? 90 : 120);
   for (let i = 0; i < count; i++) {
     html += `<img src="${imageSrc}" style="width:${size}px;height:${size}px;object-fit:contain;" alt="">`;
   }
