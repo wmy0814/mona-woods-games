@@ -299,15 +299,24 @@ body {
   text-align: center; font-size: 14px; color: var(--mw-mid);
   margin-bottom: 16px; font-weight: 600;
 }
-.sentence-slots {
+.sentence-slots-question,
+.sentence-slots-answer {
   display: flex; flex-wrap: wrap; gap: 8px;
   justify-content: center;
   min-height: 60px;
   padding: 12px;
   background: var(--mw-white);
   border-radius: 14px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   border: 2px dashed var(--mw-light);
+}
+.sentence-slots-question {
+  border-color: #B5D3CE;
+  background: #F0F8F6;
+}
+.sentence-slots-answer {
+  border-color: #D4C5E0;
+  background: #F5F0F8;
 }
 .slot {
   min-width: 50px;
@@ -542,7 +551,8 @@ body {
     <div class="spell-scene" id="spell-scene">🐦🐦🐦</div>
     <div class="spell-hint" id="spell-hint">根据提示，组成问句和答句</div>
     
-    <div class="sentence-slots" id="sentence-slots"></div>
+    <div class="sentence-slots-question" id="sentence-slots-question"></div>
+    <div class="sentence-slots-answer" id="sentence-slots-answer"></div>
     <div class="word-bank" id="word-bank"></div>
     
     <div class="spell-actions">
@@ -975,12 +985,15 @@ function generateSpellSentences() {
   // 4 "What are they? They are ..." pairs - 只用非人物词汇
   for (let i = 0; i < 4; i++) {
     const w = thingWords[i];
+    const qWords = ['What', 'are', 'they', '?'];
+    const aWords = ['They', 'are', w.plural, '.'];
     sentences.push({
       scene: getImageGrid(w.image, 5),
       sceneDisplay: getImageGrid(w.image, 5),
       hint: `它们是什么？它们是${w.cn}。`,
-      words: shuffle(['What', 'are', 'they', '?', 'They', 'are', w.plural, '.']),
-      answerWords: ['What', 'are', 'they', '?', 'They', 'are', w.plural, '.'],
+      words: shuffle([...qWords, ...aWords]),
+      questionWords: qWords,
+      answerWords: aWords,
       answer: `What are they?\nThey are ${w.plural}.`,
       answerPlain: `What are they? They are ${w.plural}.`,
       meaning: `它们是什么？它们是${w.cn}。`
@@ -990,12 +1003,15 @@ function generateSpellSentences() {
   // 3 "Are they...? Yes, they are." - 可以用全部词汇包括人物
   for (let i = 0; i < 3; i++) {
     const w = allWords[i];
+    const qWords = ['Are', 'they', w.plural, '?'];
+    const aWords = ['Yes', ',', 'they', 'are', '.'];
     sentences.push({
       scene: getImageGrid(w.image, 5),
       sceneDisplay: getImageGrid(w.image, 5),
       hint: `它们是${w.cn}吗？是的，它们是。`,
-      words: shuffle(['Are', 'they', w.plural, '?', 'Yes', ',', 'they', 'are', '.']),
-      answerWords: ['Are', 'they', w.plural, '?', 'Yes', ',', 'they', 'are', '.'],
+      words: shuffle([...qWords, ...aWords]),
+      questionWords: qWords,
+      answerWords: aWords,
       answer: `Are they ${w.plural}?\nYes, they are.`,
       answerPlain: `Are they ${w.plural}? Yes, they are.`,
       meaning: `它们是${w.cn}吗？是的，它们是。`
@@ -1007,12 +1023,15 @@ function generateSpellSentences() {
     const w = allWords[i];
     const otherWords = PLURAL_WORDS.filter(x => x.plural !== w.plural);
     const wrongW = shuffle(otherWords)[0];
+    const qWords = ['Are', 'they', wrongW.plural, '?'];
+    const aWords = ['No', ',', 'they', "aren't", '.'];
     sentences.push({
       scene: getImageGrid(w.image, 5),
       sceneDisplay: getImageGrid(w.image, 5),
       hint: `它们是${wrongW.cn}吗？不，它们不是。`,
-      words: shuffle(['Are', 'they', wrongW.plural, '?', 'No', ',', 'they', "aren't", '.']),
-      answerWords: ['Are', 'they', wrongW.plural, '?', 'No', ',', 'they', "aren't", '.'],
+      words: shuffle([...qWords, ...aWords]),
+      questionWords: qWords,
+      answerWords: aWords,
       answer: `Are they ${wrongW.plural}?\nNo, they aren't.`,
       answerPlain: `Are they ${wrongW.plural}? No, they aren't.`,
       meaning: `它们是${wrongW.cn}吗？不，它们不是。`
@@ -1040,19 +1059,33 @@ function loadSpellSentence() {
   document.getElementById('next-btn').style.display = 'none';
   spellState.locked = false;
   
-  const wordCount = s.words.length;
-  spellState.slotValues = new Array(wordCount).fill(null);
+  const qCount = s.questionWords.length;
+  const aCount = s.answerWords.length;
+  const totalCount = qCount + aCount;
+  spellState.slotValues = new Array(totalCount).fill(null);
+  spellState.questionCount = qCount;
   spellState.usedWordIndices = new Set();
   
-  // Create slots
-  const slotsEl = document.getElementById('sentence-slots');
-  slotsEl.innerHTML = '';
-  for (let i = 0; i < wordCount; i++) {
+  // Create question slots
+  const qSlotsEl = document.getElementById('sentence-slots-question');
+  qSlotsEl.innerHTML = '';
+  for (let i = 0; i < qCount; i++) {
     const slot = document.createElement('div');
     slot.className = 'slot';
     slot.dataset.index = i;
     slot.onclick = () => removeFromSlot(i);
-    slotsEl.appendChild(slot);
+    qSlotsEl.appendChild(slot);
+  }
+  
+  // Create answer slots
+  const aSlotsEl = document.getElementById('sentence-slots-answer');
+  aSlotsEl.innerHTML = '';
+  for (let i = 0; i < aCount; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    slot.dataset.index = qCount + i;
+    slot.onclick = () => removeFromSlot(qCount + i);
+    aSlotsEl.appendChild(slot);
   }
   
   // Create word bank
@@ -1137,11 +1170,12 @@ function checkSpell() {
   }
   
   const userWords = spellState.slotValues.map(v => v.word);
+  const correctWords = [...s.questionWords, ...s.answerWords];
   
   // 严格比较（区分大小写和标点）
   let correct = true;
-  for (let i = 0; i < s.answerWords.length; i++) {
-    if (userWords[i] !== s.answerWords[i]) {
+  for (let i = 0; i < correctWords.length; i++) {
+    if (userWords[i] !== correctWords[i]) {
       correct = false;
       break;
     }
