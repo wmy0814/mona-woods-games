@@ -5,440 +5,651 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>PU Start · U2 Magic Plurals</title>
 <style>
-/* ===== Mona Woods Theme ===== */
-:root {
-  --mw-dark: #1B3A4A;
-  --mw-mid: #5BA88A;
-  --mw-light: #B8E0D2;
-  --mw-pale: #E8F5F0;
-  --mw-accent: #F4A261;
-  --mw-purple: #8B7EC8;
-  --mw-pink: #E8B4D4;
-  --mw-success: #2A9D8F;
-  --mw-error: #E76F51;
-  --mw-white: #FFFFFF;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body {
-  font-family: "Verdana", "Tahoma", "Comic Sans MS", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-  background: linear-gradient(160deg, #F0E8F5 0%, #E8F5F0 50%, #E0F2EC 100%);
-  min-height: 100vh;
-  color: var(--mw-dark);
-  overflow-x: hidden;
-}
-.container { max-width: 900px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0F2B46;
+    min-height: 100vh;
+    color: #0F2B46;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 0; min-height: 100vh; display: flex; flex-direction: column; width: 100%; }
 
-/* ===== Navigation ===== */
-.nav-bar {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
-}
-.btn-back {
-  padding: 8px 18px; background: var(--mw-white); border: 2px solid var(--mw-light);
-  border-radius: 20px; color: var(--mw-dark); font-size: 14px; cursor: pointer;
-  text-decoration: none; transition: all .2s;
-}
-.btn-back:hover { background: var(--mw-light); }
-.level-badge {
-  margin-left: auto; padding: 6px 16px; background: var(--mw-purple); color: white;
-  border-radius: 20px; font-size: 14px; font-weight: 600;
-}
+  /* ===== Header ===== */
+  .header {
+    background: #0F2B46;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+  }
+  .header-back {
+    color: white;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    transition: all .2s;
+  }
+  .header-back:hover { background: rgba(255,255,255,0.2); }
+  .header-home {
+    color: white;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 6px 14px;
+    background: rgba(45, 212, 191, 0.2);
+    border-radius: 20px;
+    transition: all .2s;
+  }
+  .header-home:hover { background: rgba(45, 212, 191, 0.35); }
+  .header-title {
+    color: white;
+    flex: 1;
+    text-align: center;
+  }
+  .header-title h1 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .header-title p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 2px;
+  }
 
-/* ===== Screens ===== */
-.screen { display: none; flex: 1; flex-direction: column; }
-.screen.active { display: flex; }
+  /* ===== Main Content ===== */
+  .main {
+    flex: 1;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
 
-/* ===== Select Screen ===== */
-.select-header {
-  text-align: center; padding: 20px 0 10px;
-}
-.select-header h1 {
-  font-size: 32px; color: var(--mw-dark); margin-bottom: 6px;
-}
-.select-header .subtitle {
-  font-size: 16px; color: var(--mw-purple); margin-bottom: 16px; font-weight: 600;
-}
-.logo-circle {
-  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 12px;
-  background: linear-gradient(135deg, var(--mw-purple), var(--mw-pink));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 40px; box-shadow: 0 4px 16px rgba(139,126,200,0.3);
-  animation: float 3s ease-in-out infinite;
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-.level-cards {
-  display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 16px;
-}
-.level-btn {
-  display: flex; align-items: center; gap: 14px; width: 85%; max-width: 380px;
-  background: var(--mw-white); border-radius: 16px; padding: 16px 22px;
-  cursor: pointer; transition: all .25s; border: 3px solid transparent;
-  box-shadow: 0 3px 10px rgba(27,58,74,0.08); position: relative;
-}
-.level-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139,126,200,0.2); border-color: var(--mw-purple); }
-.level-btn:active { transform: scale(0.98); }
-.level-btn .emoji { font-size: 36px; flex-shrink: 0; }
-.level-btn .level-content { flex: 1; }
-.level-btn .level-content .title { font-size: 18px; font-weight: 700; color: var(--mw-dark); margin-bottom: 2px; }
-.level-btn .level-content .desc { font-size: 12px; color: var(--mw-purple); line-height: 1.4; }
-.level-btn .tag {
-  padding: 3px 10px; background: var(--mw-pink); color: var(--mw-dark);
-  border-radius: 10px; font-size: 11px; font-weight: 600; flex-shrink: 0;
-}
+  /* ===== Card ===== */
+  .card {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  }
 
-/* ===== Footer ===== */
-.page-footer {
-  text-align: center; padding: 20px 0 16px; margin-top: auto;
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-}
-.page-footer .footer-logo {
-  width: 32px; height: 32px; border-radius: 50%; object-fit: contain;
-  opacity: 0.6;
-}
-.page-footer .footer-text {
-  font-size: 12px; color: var(--mw-mid); opacity: 0.7;
-  letter-spacing: 0.5px;
-}
+  /* ===== Screens ===== */
+  .screen { display: none; flex: 1; flex-direction: column; }
+  .screen.active { display: flex; }
 
-/* ===== Level 1: Magic Transform ===== */
-.transform-instruction {
-  text-align: center; font-size: 18px; color: var(--mw-purple); margin-bottom: 12px; font-weight: 600;
-}
-.transform-progress {
-  text-align: center; font-size: 14px; color: var(--mw-dark); opacity: 0.7; margin-bottom: 10px;
-}
-.transform-area {
-  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 20px 0; min-height: 280px;
-}
-.transform-stage {
-  width: 320px; height: 320px;
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-  margin-bottom: 20px;
-}
-.transform-emoji {
-  font-size: 100px;
-  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-}
-.transform-emoji.multi {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-}
-.transform-emoji.multi span {
-  animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
-}
-.transform-emoji.multi span:nth-child(1) { animation-delay: 0.05s; }
-.transform-emoji.multi span:nth-child(2) { animation-delay: 0.15s; }
-.transform-emoji.multi span:nth-child(3) { animation-delay: 0.25s; }
-.transform-emoji.multi span:nth-child(4) { animation-delay: 0.1s; }
-.transform-emoji.multi span:nth-child(5) { animation-delay: 0.2s; }
-.transform-emoji.multi span:nth-child(6) { animation-delay: 0.3s; }
-@keyframes popIn {
-  0% { transform: scale(0) rotate(-10deg); opacity: 0; }
-  100% { transform: scale(1) rotate(0); opacity: 1; }
-}
+  /* ===== Select Screen ===== */
+  .select-header {
+    text-align: center;
+    padding: 30px 20px 20px;
+  }
+  .select-header h1 {
+    font-size: 28px;
+    color: white;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .select-header .subtitle {
+    font-size: 15px;
+    color: #2DD4BF;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, #2DD4BF 0%, #0F2B46 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .level-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 16px;
+    padding: 0 20px;
+  }
+  .level-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 16px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: all .25s;
+    border-left: 5px solid #2DD4BF;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: relative;
+  }
+  .level-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+  .level-btn:active { transform: scale(0.98); }
+  .level-btn .emoji { font-size: 32px; flex-shrink: 0; }
+  .level-btn .level-content { flex: 1; }
+  .level-btn .level-content .title { font-size: 18px; font-weight: 700; color: #0F2B46; margin-bottom: 4px; }
+  .level-btn .level-content .desc { font-size: 13px; color: #64748B; line-height: 1.4; }
+  .level-btn .tag {
+    padding: 4px 12px;
+    background: #E6FFFA;
+    color: #0F2B46;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
 
-/* Magic sparkles */
-.sparkle {
-  position: absolute;
-  width: 20px; height: 20px;
-  font-size: 20px;
-  pointer-events: none;
-  animation: sparkleAnim 0.8s ease-out forwards;
-}
-@keyframes sparkleAnim {
-  0% { transform: scale(0) rotate(0deg); opacity: 1; }
-  50% { transform: scale(1.5) rotate(180deg); opacity: 1; }
-  100% { transform: scale(0) rotate(360deg); opacity: 0; }
-}
+  /* ===== Level Header ===== */
+  .level-header {
+    background: #0F2B46;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+  }
+  .btn-back {
+    color: white;
+    font-size: 14px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-back:hover { background: rgba(255,255,255,0.2); }
+  .btn-home {
+    color: white;
+    font-size: 14px;
+    padding: 6px 14px;
+    background: rgba(45, 212, 191, 0.2);
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all .2s;
+  }
+  .btn-home:hover { background: rgba(45, 212, 191, 0.35); }
+  .level-badge {
+    margin-left: auto;
+    padding: 6px 16px;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+  }
 
-.transform-sentence {
-  text-align: center; font-size: 24px; color: var(--mw-dark);
-  font-weight: 700; margin-bottom: 8px; min-height: 72px;
-  display: flex; flex-direction: column; gap: 4px; align-items: center;
-}
-.transform-sentence .line { line-height: 1.3; }
-.transform-sentence .highlight {
-  color: var(--mw-purple);
-  background: linear-gradient(transparent 60%, rgba(232,180,212,0.5) 60%);
-  padding: 0 4px;
-}
-.transform-meaning {
-  text-align: center; font-size: 14px; color: var(--mw-mid); margin-bottom: 20px;
-}
+  /* ===== Progress ===== */
+  .progress-text {
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    margin: 16px 0 12px;
+  }
+  .instruction {
+    text-align: center;
+    font-size: 16px;
+    color: #2DD4BF;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
 
-.wand-btn {
-  padding: 14px 36px;
-  background: linear-gradient(135deg, var(--mw-purple), #A78BFA);
-  color: white; border: none; border-radius: 28px;
-  font-size: 18px; font-weight: 700; cursor: pointer;
-  box-shadow: 0 4px 16px rgba(139,126,200,0.4);
-  transition: all .2s;
-  display: flex; align-items: center; gap: 8px;
-}
-.wand-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(139,126,200,0.5); }
-.wand-btn:active { transform: scale(0.97); }
-.wand-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  /* ===== Level 1: Magic Transform ===== */
+  .transform-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px;
+  }
+  .transform-card {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+  .transform-stage {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #F7FAFC;
+    border-radius: 16px;
+  }
+  .transform-emoji {
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  .transform-emoji.multi {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+  }
+  .transform-emoji.multi span {
+    animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+  }
+  .transform-emoji.multi span:nth-child(1) { animation-delay: 0.05s; }
+  .transform-emoji.multi span:nth-child(2) { animation-delay: 0.15s; }
+  .transform-emoji.multi span:nth-child(3) { animation-delay: 0.25s; }
+  .transform-emoji.multi span:nth-child(4) { animation-delay: 0.1s; }
+  .transform-emoji.multi span:nth-child(5) { animation-delay: 0.2s; }
+  .transform-emoji.multi span:nth-child(6) { animation-delay: 0.3s; }
+  @keyframes popIn {
+    0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  .sparkle {
+    position: absolute;
+    width: 20px; height: 20px;
+    font-size: 20px;
+    pointer-events: none;
+    animation: sparkleAnim 0.8s ease-out forwards;
+  }
+  @keyframes sparkleAnim {
+    0% { transform: scale(0) rotate(0deg); opacity: 1; }
+    50% { transform: scale(1.5) rotate(180deg); opacity: 1; }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+  }
+  .transform-sentence {
+    font-size: 22px;
+    color: #0F2B46;
+    font-weight: 700;
+    margin-bottom: 8px;
+    min-height: 66px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+  .transform-sentence .line { line-height: 1.3; }
+  .transform-sentence .highlight {
+    color: #0F2B46;
+    background: linear-gradient(transparent 60%, rgba(45, 212, 191, 0.4) 60%);
+    padding: 0 4px;
+  }
+  .transform-meaning {
+    font-size: 14px;
+    color: #64748B;
+    margin-bottom: 20px;
+  }
+  .sound-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #E6FFFA;
+    color: #0F2B46;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+  }
+  .sound-btn:hover { background: #2DD4BF; color: white; }
+  .sound-btn:active { transform: scale(0.95); }
 
-.next-btn {
-  margin-top: 12px;
-  padding: 10px 28px;
-  background: var(--mw-success);
-  color: white; border: none; border-radius: 22px;
-  font-size: 16px; font-weight: 600; cursor: pointer;
-  box-shadow: 0 3px 10px rgba(42,157,143,0.3);
-  transition: all .2s;
-  display: none;
-}
-.next-btn.visible { display: inline-block; }
-.next-btn:hover { transform: translateY(-1px); }
+  .wand-btn {
+    padding: 14px 36px;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(45, 212, 191, 0.4);
+    transition: all .2s;
+  }
+  .wand-btn:hover { background: #1FB8A3; }
+  .wand-btn:active { transform: scale(0.97); }
+  .wand-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.audio-btn {
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  background: var(--mw-white);
-  border: 2px solid var(--mw-light);
-  font-size: 20px;
-  cursor: pointer;
-  transition: all .2s;
-  display: flex; align-items: center; justify-content: center;
-}
-.audio-btn:hover { background: var(--mw-light); transform: scale(1.05); }
+  .next-btn {
+    margin-top: 12px;
+    padding: 12px 32px;
+    background: #0F2B46;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    display: none;
+  }
+  .next-btn.visible { display: inline-block; }
+  .next-btn:hover { background: #1a3a5c; }
 
-/* ===== Level 2: Mystery Box ===== */
-.box-instruction {
-  text-align: center; font-size: 18px; color: var(--mw-purple); margin-bottom: 12px; font-weight: 600;
-}
-.box-progress {
-  text-align: center; font-size: 14px; color: var(--mw-dark); opacity: 0.7; margin-bottom: 10px;
-}
-.box-area {
-  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 10px 0;
-}
-.mystery-box {
-  font-size: 120px;
-  margin-bottom: 16px;
-  cursor: pointer;
-  transition: all 0.3s;
-  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
-}
-.mystery-box.shaking {
-  animation: shake 0.5s ease-in-out;
-}
-@keyframes shake {
-  0%, 100% { transform: rotate(0); }
-  25% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
-}
-.box-content {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  gap: 8px;
-  margin-bottom: 16px;
-  min-height: 100px;
-  align-items: center;
-  justify-content: center;
-}
-.box-content span {
-  animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
-}
-.box-question {
-  text-align: center; font-size: 22px; color: var(--mw-dark);
-  font-weight: 700; margin-bottom: 16px;
-}
-.box-options {
-  display: flex; flex-direction: column; gap: 10px;
-  width: 100%; max-width: 400px;
-}
-.box-option {
-  padding: 14px 20px;
-  background: var(--mw-white);
-  border: 3px solid var(--mw-light);
-  border-radius: 14px;
-  font-size: 16px; font-weight: 600;
-  cursor: pointer;
-  transition: all .2s;
-  text-align: center;
-  color: var(--mw-dark);
-}
-.box-option:hover { border-color: var(--mw-purple); transform: translateY(-1px); }
-.box-option.correct { border-color: var(--mw-success); background: #E8F5F0; }
-.box-option.wrong { border-color: var(--mw-error); background: #FEE9E4; }
-.box-option.disabled { opacity: 0.5; pointer-events: none; }
-.box-feedback {
-  text-align: center; font-size: 16px; font-weight: 600;
-  margin-top: 12px; min-height: 24px;
-}
-.box-feedback.correct-text { color: var(--mw-success); }
-.box-feedback.wrong-text { color: var(--mw-error); }
+  /* ===== Level 2: Mystery Box ===== */
+  .box-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px;
+  }
+  .box-card {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+  .mystery-box {
+    font-size: 100px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+  }
+  .mystery-box.shaking {
+    animation: shake 0.5s ease-in-out;
+  }
+  @keyframes shake {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+  }
+  .box-content {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 6px;
+    margin-bottom: 16px;
+    min-height: 90px;
+    align-items: center;
+    justify-content: center;
+  }
+  .box-content span {
+    animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) backwards;
+  }
+  .box-question {
+    font-size: 22px;
+    color: #0F2B46;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .box-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .box-option {
+    padding: 14px 20px;
+    background: #F7FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+    color: #0F2B46;
+  }
+  .box-option:hover { border-color: #2DD4BF; background: #E6FFFA; }
+  .box-option.correct { border-color: #2DD4BF; background: #DEF7EC; }
+  .box-option.wrong { border-color: #FC8181; background: #FED7D7; color: #742A2A; }
+  .box-option.disabled { opacity: 0.5; pointer-events: none; }
+  .box-feedback {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 12px;
+    min-height: 24px;
+  }
+  .box-feedback.correct-text { color: #276749; }
+  .box-feedback.wrong-text { color: #742A2A; }
 
-/* ===== Level 3: Spell Making ===== */
-.spell-instruction {
-  text-align: center; font-size: 18px; color: var(--mw-purple); margin-bottom: 12px; font-weight: 600;
-}
-.spell-progress {
-  text-align: center; font-size: 14px; color: var(--mw-dark); opacity: 0.7; margin-bottom: 10px;
-}
-.spell-scene {
-  text-align: center;
-  margin: 16px 0;
-  min-height: 100px;
-  display: flex; align-items: center; justify-content: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-.spell-hint {
-  text-align: center; font-size: 14px; color: var(--mw-mid);
-  margin-bottom: 16px; font-weight: 600;
-}
-.sentence-slots-question,
-.sentence-slots-answer {
-  display: flex; flex-wrap: wrap; gap: 8px;
-  justify-content: center;
-  min-height: 60px;
-  padding: 12px;
-  background: var(--mw-white);
-  border-radius: 14px;
-  margin-bottom: 10px;
-  border: 2px dashed var(--mw-light);
-}
-.sentence-slots-question {
-  border-color: #B5D3CE;
-  background: #F0F8F6;
-}
-.sentence-slots-answer {
-  border-color: #D4C5E0;
-  background: #F5F0F8;
-}
-.slot {
-  min-width: 50px;
-  padding: 8px 14px;
-  background: var(--mw-pale);
-  border-radius: 10px;
-  font-size: 16px; font-weight: 600;
-  color: var(--mw-dark);
-  text-align: center;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: all .15s;
-}
-.slot.filled { background: var(--mw-light); border-color: var(--mw-mid); }
-.slot.correct { background: #D4EDDA; border-color: var(--mw-success); color: var(--mw-success); }
-.slot.wrong { animation: shake 0.4s; }
-.slot:empty::after { content: '?'; color: var(--mw-light); }
+  /* ===== Level 3: Spell Making ===== */
+  .spell-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 16px;
+  }
+  .spell-card {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 20px;
+    padding: 24px 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  }
+  .spell-scene {
+    text-align: center;
+    margin: 8px 0 12px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    background: #F7FAFC;
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .spell-hint {
+    text-align: center;
+    font-size: 13px;
+    color: #64748B;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .sentence-slots-question,
+  .sentence-slots-answer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    min-height: 48px;
+    padding: 10px;
+    background: #F7FAFC;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 2px dashed #CBD5E0;
+  }
+  .sentence-slots-question {
+    border-color: #2DD4BF;
+    background: #E6FFFA;
+  }
+  .slot {
+    min-width: 44px;
+    padding: 6px 12px;
+    background: #E2E8F0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0F2B46;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all .15s;
+  }
+  .slot.filled { background: #2DD4BF; color: #0F2B46; border-color: #1FB8A3; }
+  .slot.correct { background: #DEF7EC; border-color: #2DD4BF; color: #276749; }
+  .slot.wrong { animation: shake 0.4s; }
+  .slot:empty::after { content: '?'; color: #A0AEC0; }
 
-.word-bank {
-  display: flex; flex-wrap: wrap; gap: 8px;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-.word-chip {
-  padding: 10px 18px;
-  background: var(--mw-white);
-  border: 2px solid var(--mw-purple);
-  border-radius: 20px;
-  font-size: 15px; font-weight: 600;
-  color: var(--mw-purple);
-  cursor: pointer;
-  transition: all .2s;
-  box-shadow: 0 2px 6px rgba(139,126,200,0.15);
-}
-.word-chip:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(139,126,200,0.3); }
-.word-chip.used { opacity: 0.3; pointer-events: none; transform: scale(0.95); }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .word-chip {
+    padding: 8px 16px;
+    background: #F7FAFC;
+    border: 2px solid #2DD4BF;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0F2B46;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .word-chip:hover { transform: translateY(-2px); background: #E6FFFA; }
+  .word-chip.used { opacity: 0.3; pointer-events: none; transform: scale(0.95); }
 
-.spell-actions {
-  display: flex; gap: 12px; justify-content: center;
-}
-.check-btn, .reset-btn {
-  padding: 12px 28px;
-  border: none; border-radius: 22px;
-  font-size: 16px; font-weight: 600; cursor: pointer;
-  transition: all .2s;
-}
-.check-btn {
-  background: var(--mw-success); color: white;
-  box-shadow: 0 3px 10px rgba(42,157,143,0.3);
-}
-.check-btn:hover:not(:disabled) { transform: translateY(-1px); }
-.check-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.reset-btn {
-  background: var(--mw-white); color: var(--mw-dark);
-  border: 2px solid var(--mw-light);
-}
-.reset-btn:hover { background: var(--mw-pale); }
+  .spell-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  .check-btn, .reset-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .check-btn {
+    background: #2DD4BF;
+    color: #0F2B46;
+    flex: 1;
+  }
+  .check-btn:hover:not(:disabled) { background: #1FB8A3; }
+  .check-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .reset-btn {
+    background: #E2E8F0;
+    color: #0F2B46;
+  }
+  .reset-btn:hover { background: #CBD5E0; }
 
-.sentence-meaning {
-  text-align: center; font-size: 14px;
-  margin-top: 12px; min-height: 20px;
-  font-weight: 600;
-}
+  .sentence-meaning {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 12px;
+    min-height: 20px;
+    font-weight: 600;
+  }
 
-/* ===== Result Overlay ===== */
-.result-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(27,58,74,0.6);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 100;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s;
-}
-.result-overlay.show { opacity: 1; pointer-events: auto; }
-.result-card {
-  background: var(--mw-white);
-  border-radius: 20px;
-  padding: 40px 30px;
-  text-align: center;
-  max-width: 340px;
-  width: 85%;
-  transform: scale(0.8);
-  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-.result-overlay.show .result-card { transform: scale(1); }
-.result-emoji { font-size: 70px; margin-bottom: 16px; }
-.result-msg { font-size: 22px; font-weight: 700; color: var(--mw-dark); margin-bottom: 24px; }
-.result-btn {
-  padding: 12px 32px;
-  background: var(--mw-purple); color: white;
-  border: none; border-radius: 24px;
-  font-size: 16px; font-weight: 600; cursor: pointer;
-  box-shadow: 0 4px 12px rgba(139,126,200,0.3);
-  transition: all .2s;
-}
-.result-btn:hover { transform: translateY(-1px); }
+  .spell-next-btn {
+    margin-top: 12px;
+    width: 100%;
+    padding: 12px;
+    background: #0F2B46;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    display: none;
+  }
+  .spell-next-btn.visible { display: block; }
+  .spell-next-btn:hover { background: #1a3a5c; }
 
-/* ===== Stars decoration ===== */
-.stars-bg {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  pointer-events: none; overflow: hidden; z-index: 0;
-}
-.star {
-  position: absolute;
-  color: rgba(255,255,255,0.6);
-  animation: twinkle 2s ease-in-out infinite;
-}
-@keyframes twinkle {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.8; }
-}
+  /* ===== Result Overlay ===== */
+  .result-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 43, 70, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .result-overlay.show { opacity: 1; pointer-events: auto; }
+  .result-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    max-width: 340px;
+    width: 85%;
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  .result-overlay.show .result-card { transform: scale(1); }
+  .result-emoji { font-size: 70px; margin-bottom: 16px; }
+  .result-msg { font-size: 22px; font-weight: 700; color: #0F2B46; margin-bottom: 24px; }
+  .result-btn {
+    padding: 12px 32px;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .result-btn:hover { background: #1FB8A3; }
 
-@media (max-width: 480px) {
-  .select-header h1 { font-size: 26px; }
-  .transform-emoji { font-size: 80px; }
-  .transform-emoji.multi { font-size: 48px; }
-  .transform-stage { width: 260px; height: 260px; }
-  .box-content { font-size: 55px; }
-  .mystery-box { font-size: 90px; }
-  .spell-scene { font-size: 60px; }
-  .transform-sentence { font-size: 20px; }
-}
+  /* ===== Stars decoration ===== */
+  .stars-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    color: rgba(45, 212, 191, 0.3);
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.6; }
+  }
+
+  /* ===== Footer ===== */
+  .page-footer {
+    text-align: center;
+    padding: 16px 0;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 480px) {
+    .select-header h1 { font-size: 24px; }
+    .transform-stage { width: 180px; height: 180px; }
+    .mystery-box { font-size: 80px; }
+    .transform-sentence { font-size: 19px; }
+    .box-question { font-size: 19px; }
+  }
 </style>
 </head>
 <body>
@@ -448,8 +659,12 @@ body {
 <div class="container">
   <!-- ===== SELECT SCREEN ===== -->
   <div id="screen-select" class="screen active">
+    <div class="level-header">
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">U2 句型游戏</div>
+    </div>
     <div class="select-header">
-      <div class="logo-circle"><img src="images/logo.jpg" alt="Mona Woods" style="width:72px;height:72px;object-fit:contain;border-radius:50%;"></div>
+      <div class="logo-circle">🪄</div>
       <h1>Magic Plurals</h1>
       <div class="subtitle">魔法变变变 · 复数句型大冒险</div>
     </div>
@@ -479,96 +694,88 @@ body {
         <div class="tag">挑战</div>
       </div>
     </div>
-    <div class="page-footer">
-      <img src="images/logo.jpg" alt="Mona" class="footer-logo" onerror="this.style.display='none'">
-      <div class="footer-text">Provided by Mona</div>
-    </div>
+    <div class="page-footer">Mona Woods Games</div>
   </div>
 
   <!-- ===== LEVEL 1: Magic Transform ===== -->
   <div id="screen-level1" class="screen">
-    <div class="nav-bar">
+    <div class="level-header">
       <button class="btn-back" onclick="goSelect()">← 返回</button>
-      <a class="btn-back" href="../">🏠 主页</a>
+      <a class="btn-home" href="../">🏠 主页</a>
       <div class="level-badge">第一关 · 魔法变身</div>
     </div>
-    <div class="transform-instruction">点魔法棒，看物品大变身！</div>
-    <div class="transform-progress" id="transform-progress">1 / 11</div>
-    
     <div class="transform-area">
-      <div class="transform-stage" id="transform-stage">
-        <div class="transform-emoji" id="transform-emoji">👜</div>
+      <div class="instruction">点魔法棒，看物品大变身！</div>
+      <div class="progress-text" id="transform-progress">1 / 8</div>
+      <div class="transform-card">
+        <div class="transform-stage" id="transform-stage">
+          <div class="transform-emoji" id="transform-emoji">👜</div>
+        </div>
+        <button class="sound-btn" id="sound-btn1" onclick="speakCurrent()">🔊 听发音</button>
+        <div class="transform-sentence" id="transform-sentence">
+          <div class="line">What is it?</div>
+          <div class="line">It's a <span class="highlight" id="singular-word">bag</span>.</div>
+        </div>
+        <div class="transform-meaning" id="transform-meaning">它是什么？它是一个书包。</div>
+        
+        <button class="wand-btn" id="wand-btn" onclick="doTransform()">
+          🪄 变！
+        </button>
+        <button class="next-btn" id="next-btn" onclick="nextTransform()">下一个 →</button>
       </div>
-      <div class="transform-sentence" id="transform-sentence">
-        <div class="line">What is it?</div>
-        <div class="line">It's a <span class="highlight" id="singular-word">bag</span>.</div>
-      </div>
-      <div class="transform-meaning" id="transform-meaning">它是什么？它是一个书包。</div>
-      
-      <button class="wand-btn" id="wand-btn" onclick="doTransform()">
-        🪄 变！
-      </button>
-      <button class="next-btn" id="next-btn" onclick="nextTransform()">下一个 →</button>
     </div>
     
-    <div class="page-footer">
-      <img src="images/logo.jpg" alt="Mona" class="footer-logo" onerror="this.style.display='none'">
-      <div class="footer-text">Provided by Mona</div>
-    </div>
+    <div class="page-footer">Mona Woods Games</div>
   </div>
 
   <!-- ===== LEVEL 2: Mystery Box ===== -->
   <div id="screen-level2" class="screen">
-    <div class="nav-bar">
+    <div class="level-header">
       <button class="btn-back" onclick="goSelect()">← 返回</button>
-      <a class="btn-back" href="../">🏠 主页</a>
+      <a class="btn-home" href="../">🏠 主页</a>
       <div class="level-badge">第二关 · 神秘盒子</div>
     </div>
-    <div class="box-instruction">点开盒子，选正确的句子！</div>
-    <div class="box-progress" id="box-progress">1 / 10</div>
-    
     <div class="box-area">
-      <div class="mystery-box" id="mystery-box" onclick="openBox()">📦</div>
-      <div class="box-content" id="box-content" style="display:none;"></div>
-      <div class="box-question" id="box-question" style="display:none;">What are they?</div>
-      <div class="box-options" id="box-options" style="display:none;"></div>
-      <div class="box-feedback" id="box-feedback"></div>
+      <div class="instruction">点开盒子，选正确的句子！</div>
+      <div class="progress-text" id="box-progress">1 / 10</div>
+      <div class="box-card">
+        <div class="mystery-box" id="mystery-box" onclick="openBox()">📦</div>
+        <div class="box-content" id="box-content" style="display:none;"></div>
+        <div class="box-question" id="box-question" style="display:none;">What are they?</div>
+        <div class="box-options" id="box-options" style="display:none;"></div>
+        <div class="box-feedback" id="box-feedback"></div>
+      </div>
     </div>
     
-    <div class="page-footer">
-      <img src="images/logo.jpg" alt="Mona" class="footer-logo" onerror="this.style.display='none'">
-      <div class="footer-text">Provided by Mona</div>
-    </div>
+    <div class="page-footer">Mona Woods Games</div>
   </div>
 
   <!-- ===== LEVEL 3: Spell Making ===== -->
   <div id="screen-level3" class="screen">
-    <div class="nav-bar">
+    <div class="level-header">
       <button class="btn-back" onclick="goSelect()">← 返回</button>
-      <a class="btn-back" href="../">🏠 主页</a>
+      <a class="btn-home" href="../">🏠 主页</a>
       <div class="level-badge">第三关 · 咒语造句</div>
     </div>
-    <div class="spell-instruction">把单词排成正确的句子！</div>
-    <div class="spell-progress" id="spell-progress">1 / 10</div>
-    
-    <div class="spell-scene" id="spell-scene">🐦🐦🐦</div>
-    <div class="spell-hint" id="spell-hint">根据提示，组成问句和答句</div>
-    
-    <div class="sentence-slots-question" id="sentence-slots-question"></div>
-    <div class="sentence-slots-answer" id="sentence-slots-answer"></div>
-    <div class="word-bank" id="word-bank"></div>
-    
-    <div class="spell-actions">
-      <button class="reset-btn" onclick="resetSpell()">🔄 重来</button>
-      <button class="check-btn" id="check-btn" onclick="checkSpell()">✓ 检查</button>
-      <button class="next-btn" id="spell-next-btn" onclick="nextSpell()" style="display:none;">下一题 →</button>
+    <div class="instruction">把单词排成正确的句子！</div>
+    <div class="progress-text" id="spell-progress">1 / 10</div>
+    <div class="spell-card">
+      <div class="spell-scene" id="spell-scene">🐦🐦🐦</div>
+      <div class="spell-hint" id="spell-hint">根据提示，组成问句和答句</div>
+      
+      <div class="sentence-slots-question" id="sentence-slots-question"></div>
+      <div class="sentence-slots-answer" id="sentence-slots-answer"></div>
+      <div class="word-bank" id="word-bank"></div>
+      
+      <div class="spell-actions">
+        <button class="reset-btn" onclick="resetSpell()">🔄 重来</button>
+        <button class="check-btn" id="check-btn" onclick="checkSpell()">✓ 检查</button>
+      </div>
+      <button class="spell-next-btn" id="spell-next-btn" onclick="nextSpell()">下一题 →</button>
+      <div class="sentence-meaning" id="sentence-meaning"></div>
     </div>
-    <div class="sentence-meaning" id="sentence-meaning"></div>
     
-    <div class="page-footer">
-      <img src="images/logo.jpg" alt="Mona" class="footer-logo" onerror="this.style.display='none'">
-      <div class="footer-text">Provided by Mona</div>
-    </div>
+    <div class="page-footer">Mona Woods Games</div>
   </div>
 </div>
 
@@ -702,6 +909,20 @@ function speak(text) {
     window.speechSynthesis.speak(utter);
   }
 }
+
+function speakCurrent() {
+  const s = spellState.sentences ? spellState.sentences[spellState.currentIdx] : null;
+  const wordData = transformState.order ? THING_WORDS[transformState.order[transformState.currentIdx]] : null;
+  
+  if (transformState.transformed && wordData) {
+    speak(`What are they? They are ${wordData.plural}.`);
+  } else if (wordData) {
+    speak(`What is it? It\'s a ${wordData.singular}.`);
+  } else if (s && s.answerPlain) {
+    speak(s.answerPlain);
+  }
+}
+
 
 /* ============================================================
    LEVEL 1: MAGIC TRANSFORM
@@ -1199,7 +1420,7 @@ function checkSpell() {
     
     // 显示下一题按钮，不自动跳转
     const nextBtn = document.getElementById('spell-next-btn');
-    nextBtn.style.display = 'inline-block';
+    nextBtn.classList.add('visible');
   } else {
     // Wrong - shake and clear
     playWrongSound();
