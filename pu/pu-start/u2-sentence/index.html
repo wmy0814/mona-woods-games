@@ -558,7 +558,7 @@ body {
     <div class="spell-actions">
       <button class="reset-btn" onclick="resetSpell()">🔄 重来</button>
       <button class="check-btn" id="check-btn" onclick="checkSpell()">✓ 检查</button>
-      <button class="next-btn" id="next-btn" onclick="nextSpell()" style="display:none;">下一题 →</button>
+      <button class="next-btn" id="spell-next-btn" onclick="nextSpell()" style="display:none;">下一题 →</button>
     </div>
     <div class="sentence-meaning" id="sentence-meaning"></div>
     
@@ -1195,7 +1195,7 @@ function checkSpell() {
     speak(s.answerPlain);
     
     // 显示下一题按钮，不自动跳转
-    const nextBtn = document.getElementById('next-btn');
+    const nextBtn = document.getElementById('spell-next-btn');
     nextBtn.style.display = 'inline-block';
   } else {
     // Wrong - shake and clear
