@@ -551,7 +551,7 @@
       <h1>Mona 单词闯关</h1>
       <p>Power Up 1 · Unit 1 词汇1</p>
     </div>
-    <button class="home-btn" id="homeBtn" style="display:none;" onclick="goHome()">← 返回主页</button>
+    <button class="home-btn" id="homeBtn" onclick="goHome()">← 返回单元主页</button>
   </div>
 
   <div class="main">
@@ -623,7 +623,7 @@
           <button class="btn btn-primary" id="nextLevelBtn" onclick="nextLevel()">下一关 →</button>
         </div>
         <div style="margin-top: 10px;">
-          <button class="btn btn-secondary" style="background:#E6FFFA;color:#0F2B46;" onclick="goHome()">🏠 返回主页</button>
+          <button class="btn btn-secondary" style="background:#E6FFFA;color:#0F2B46;" onclick="goHome()">🏠 返回单元主页</button>
         </div>
       </div>
     </div>
@@ -685,7 +685,6 @@ function startGame(level) {
   document.getElementById('resultScreen').style.display = 'none';
   document.getElementById('levelProgress').style.display = 'flex';
   document.getElementById('gameArea').style.display = 'block';
-  document.getElementById('homeBtn').style.display = 'block';
   updateLevelProgress();
   loadLevel();
 }
@@ -1009,13 +1008,9 @@ function showResult() {
   }
 }
 
-// 返回主页
+// 返回PU1单元主页
 function goHome() {
-  document.getElementById('gameArea').style.display = 'none';
-  document.getElementById('resultScreen').style.display = 'none';
-  document.getElementById('levelProgress').style.display = 'none';
-  document.getElementById('homeBtn').style.display = 'none';
-  document.getElementById('startScreen').style.display = 'block';
+  window.location.href = '../../';
 }
 
 // 重玩本关
