@@ -300,8 +300,8 @@
     justify-content: center;
   }
   .link-item.emoji-only img {
-    max-width: 50px;
-    max-height: 50px;
+    max-width: 65px;
+    max-height: 65px;
     object-fit: contain;
   }
   .link-item.matched {
@@ -1005,74 +1005,36 @@ function initLinking(type) {
   leftCol.innerHTML = '';
   rightCol.innerHTML = '';
 
-  // 生成所有卡片
-  let allItems = [];
-  if (type === 'en') {
-    // 中英连连看：左英右中
-    const leftItems = words.map((w, i) => ({ ...w, id: i, itemType: 'en' }));
-    const rightItems = shuffle(words.map((w, i) => ({ ...w, id: i, itemType: 'cn' })));
-    leftItems.forEach((item, idx) => {
-      const el = document.createElement('div');
-      el.className = 'link-item';
-      el.dataset.id = item.id;
-      el.dataset.side = 'left';
-      el.dataset.idx = idx;
+  // 左侧: 英文(游戏1) 或 图片(游戏2)
+  const leftItems = words.map((w, i) => ({ ...w, id: i }));
+  // 右侧: 中文(游戏1) 或 英文(游戏2) - 打乱
+  const rightItems = shuffle(words.map((w, i) => ({ ...w, id: i })));
+
+  leftItems.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'link-item' + (type === 'emoji' ? ' emoji-only' : '');
+    el.dataset.id = item.id;
+    el.dataset.side = 'left';
+    el.dataset.idx = idx;
+    if (type === 'en') {
       el.textContent = item.en;
-      el.addEventListener('click', () => handleLinkClick(type, el));
-      leftCol.appendChild(el);
-    });
-    rightItems.forEach((item, idx) => {
-      const el = document.createElement('div');
-      el.className = 'link-item';
-      el.dataset.id = item.id;
-      el.dataset.side = 'right';
-      el.dataset.idx = idx;
-      el.textContent = item.cn;
-      el.addEventListener('click', () => handleLinkClick(type, el));
-      rightCol.appendChild(el);
-    });
-  } else {
-    // 图文连连看：图片+单词混合，左右列各10个，全部打乱
-    words.forEach((w, i) => {
-      allItems.push({ ...w, id: i, itemType: 'img' });
-      allItems.push({ ...w, id: i, itemType: 'word' });
-    });
-    allItems = shuffle(allItems);
-    const leftItems = allItems.slice(0, 10);
-    const rightItems = allItems.slice(10, 20);
+    } else {
+      el.innerHTML = '<img src="' + item.img + '" alt="' + item.en + '">';
+    }
+    el.addEventListener('click', () => handleLinkClick(type, el));
+    leftCol.appendChild(el);
+  });
 
-    leftItems.forEach((item, idx) => {
-      const el = document.createElement('div');
-      el.className = 'link-item' + (item.itemType === 'img' ? ' emoji-only' : '');
-      el.dataset.id = item.id;
-      el.dataset.side = 'left';
-      el.dataset.idx = idx;
-      el.dataset.itemType = item.itemType;
-      if (item.itemType === 'img') {
-        el.innerHTML = '<img src="' + item.img + '" alt="' + item.en + '">';
-      } else {
-        el.textContent = item.en;
-      }
-      el.addEventListener('click', () => handleLinkClick(type, el));
-      leftCol.appendChild(el);
-    });
-
-    rightItems.forEach((item, idx) => {
-      const el = document.createElement('div');
-      el.className = 'link-item' + (item.itemType === 'img' ? ' emoji-only' : '');
-      el.dataset.id = item.id;
-      el.dataset.side = 'right';
-      el.dataset.idx = idx;
-      el.dataset.itemType = item.itemType;
-      if (item.itemType === 'img') {
-        el.innerHTML = '<img src="' + item.img + '" alt="' + item.en + '">';
-      } else {
-        el.textContent = item.en;
-      }
-      el.addEventListener('click', () => handleLinkClick(type, el));
-      rightCol.appendChild(el);
-    });
-  }
+  rightItems.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'link-item';
+    el.dataset.id = item.id;
+    el.dataset.side = 'right';
+    el.dataset.idx = idx;
+    el.textContent = type === 'en' ? item.cn : item.en;
+    el.addEventListener('click', () => handleLinkClick(type, el));
+    rightCol.appendChild(el);
+  });
 }
 
 function handleLinkClick(type, el) {
