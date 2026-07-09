@@ -183,6 +183,11 @@
     transform: scale(1.08);
     box-shadow: 0 4px 15px rgba(45, 212, 191, 0.5);
   }
+  .link-item.emoji-only {
+    font-size: 50px;
+    padding: 20px;
+    min-width: 100px;
+  }
   .link-item.matched {
     background: #dcfce7;
     border-color: #22c55e;
@@ -653,7 +658,10 @@
     <div class="victory-emoji" id="victory-emoji">🎉</div>
     <div class="victory-title" id="victory-title">太棒了！</div>
     <div class="victory-stats" id="victory-stats"></div>
-    <button class="btn btn-primary" onclick="closeVictory()">🔄 再玩一次</button>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-secondary btn-hall" onclick="event.stopPropagation();closeVictory()">🏠 返回游戏大厅</button>
+      <button class="btn btn-primary btn-replay">🔄 再玩一次</button>
+    </div>
   </div>
 </div>
 
@@ -816,18 +824,18 @@ function initLinking(type) {
 
   leftItems.forEach((item, idx) => {
     const el = document.createElement('div');
-    el.className = 'link-item';
+    el.className = 'link-item' + (type === 'emoji' ? ' emoji-only' : '');
     el.dataset.id = item.id;
     el.dataset.side = 'left';
     el.dataset.idx = idx;
-    el.textContent = type === 'en' ? item.en : item.emoji + ' ' + item.cn;
+    el.textContent = type === 'en' ? item.en : item.emoji;
     el.addEventListener('click', () => handleLinkClick(type, el));
     leftCol.appendChild(el);
   });
 
   rightItems.forEach((item, idx) => {
     const el = document.createElement('div');
-    el.className = 'link-item';
+    el.className = 'link-item' + (type === 'emoji' ? ' emoji-only' : '');
     el.dataset.id = item.id;
     el.dataset.side = 'right';
     el.dataset.idx = idx;
@@ -1255,7 +1263,7 @@ function closeVictory() {
 }
 
 // 弹窗点击重玩时，根据当前激活的游戏重玩
-document.querySelector('.victory-modal .btn').addEventListener('click', (e) => {
+document.querySelector('.victory-modal .btn-replay').addEventListener('click', (e) => {
   e.stopPropagation();
   const activePanel = document.querySelector('.game-panel.active').id;
   document.getElementById('victory-modal').classList.remove('show');
