@@ -1012,7 +1012,7 @@ function initLinking(type) {
 
   leftItems.forEach((item, idx) => {
     const el = document.createElement('div');
-    el.className = 'link-item' + (type === 'emoji' ? ' emoji-only' : '');
+    el.className = 'link-item' + (type === 'pic' ? ' emoji-only' : '');
     el.dataset.id = item.id;
     el.dataset.side = 'left';
     el.dataset.idx = idx;
