@@ -57,6 +57,114 @@
     margin-top: 5px;
   }
 
+
+  /* ========== 游戏大厅 ========== */
+  .lobby {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  .lobby-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .lobby-subtitle {
+    text-align: center;
+    font-size: 18px;
+    color: #94a3b8;
+    margin-bottom: 40px;
+  }
+  .game-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .game-card {
+    background: linear-gradient(145deg, #1a3a5c, #0F2B46);
+    border: 3px solid #2DD4BF;
+    border-radius: 24px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(45,212,191,0.1), transparent);
+    transform: rotate(45deg);
+    transition: all 0.5s ease;
+    opacity: 0;
+  }
+  .game-card:hover::before {
+    opacity: 1;
+    top: -30%;
+  }
+  .game-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 12px 40px rgba(45, 212, 191, 0.4);
+    border-color: #5eead4;
+  }
+  .card-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    display: block;
+    animation: cardFloat 3s ease-in-out infinite;
+  }
+  .game-card:nth-child(2) .card-icon { animation-delay: 0.3s; }
+  .game-card:nth-child(3) .card-icon { animation-delay: 0.6s; }
+  .game-card:nth-child(4) .card-icon { animation-delay: 0.9s; }
+  @keyframes cardFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .card-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .card-desc {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: rgba(45, 212, 191, 0.15);
+    border: 2px solid #2DD4BF;
+    color: #2DD4BF;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: inherit;
+    transition: all 0.3s ease;
+  }
+  .back-btn:hover {
+    background: #2DD4BF;
+    color: #0F2B46;
+    transform: translateX(-3px);
+  }
+  .game-header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
   /* ========== Tab 切换 ========== */
   .tabs {
     display: flex;
@@ -541,6 +649,10 @@
     .sub-title { font-size: 14px; }
     .logo { width: 50px; height: 50px; font-size: 20px; }
     .tab-btn { padding: 10px 18px; font-size: 16px; }
+    .game-cards { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .card-icon { font-size: 48px; }
+    .card-title { font-size: 18px; }
+    .lobby-title { font-size: 24px; }
     .game-title { font-size: 22px; }
     .link-item { font-size: 18px; min-width: 120px; padding: 10px 14px; }
     .linking-game { gap: 20px; }
@@ -573,8 +685,37 @@
   </div>
 </div>
 
+
+<!-- 游戏大厅 -->
+<div class="lobby" id="game-lobby">
+  <div class="lobby-title">🎡 选择你喜欢的游戏 🎠</div>
+  <div class="lobby-subtitle">点击卡片进入游戏，玩得开心哦～</div>
+  <div class="game-cards">
+    <div class="game-card" onclick="enterGame('linking-en')">
+      <span class="card-icon">🔗</span>
+      <div class="card-title">中英连连看</div>
+      <div class="card-desc">英文单词<br>配对中文意思</div>
+    </div>
+    <div class="game-card" onclick="enterGame('linking-pic')">
+      <span class="card-icon">🖼️</span>
+      <div class="card-title">图文连连看</div>
+      <div class="card-desc">看图片<br>配对英文单词</div>
+    </div>
+    <div class="game-card" onclick="enterGame('audio')">
+      <span class="card-icon">🔊</span>
+      <div class="card-title">听音辨词</div>
+      <div class="card-desc">听发音<br>选出正确单词</div>
+    </div>
+    <div class="game-card" onclick="enterGame('whack')">
+      <span class="card-icon">🐭</span>
+      <div class="card-title">单词打地鼠</div>
+      <div class="card-desc">眼疾手快<br>敲对单词得分</div>
+    </div>
+  </div>
+</div>
+
 <!-- Tab 切换 -->
-<div class="tabs">
+<div class="tabs" style="display:none;" id="game-tabs">
   <button class="tab-btn active" data-game="linking-en">🔗 中英连连看</button>
   <button class="tab-btn" data-game="linking-pic">🖼️ 图文连连看</button>
   <button class="tab-btn" data-game="audio">🔊 听音辨词</button>
@@ -582,12 +723,15 @@
 </div>
 
 <!-- 游戏区 -->
-<div class="game-container">
+<div class="game-container" id="game-area" style="display:none;">
 
   <!-- 游戏1: 中英连连看 -->
-  <div class="game-panel active" id="game-linking-en">
+  <div class="game-panel" id="game-linking-en">
     <div class="game-header">
-      <div class="game-title">🔗 中英连连看</div>
+      <div class="game-header-left">
+        <button class="back-btn" onclick="backToLobby()">← 返回大厅</button>
+        <div class="game-title">🔗 中英连连看</div>
+      </div>
       <div class="game-info">
         <div class="timer-box" id="timer-en">⏱️ 00:00</div>
         <button class="btn btn-primary" onclick="resetLinking('en')">🔄 重玩</button>
@@ -603,7 +747,10 @@
   <!-- 游戏2: 图文连连看 -->
   <div class="game-panel" id="game-linking-pic">
     <div class="game-header">
-      <div class="game-title">🖼️ 图文连连看</div>
+      <div class="game-header-left">
+        <button class="back-btn" onclick="backToLobby()">← 返回大厅</button>
+        <div class="game-title">🖼️ 图文连连看</div>
+      </div>
       <div class="game-info">
         <div class="timer-box" id="timer-pic">⏱️ 00:00</div>
         <button class="btn btn-primary" onclick="resetLinking('pic')">🔄 重玩</button>
@@ -620,7 +767,10 @@
   <div class="game-panel" id="game-audio">
     <div class="audio-game">
       <div class="game-header" style="margin-bottom:15px;">
-        <div class="game-title">🔊 听音辨词大挑战</div>
+        <div class="game-header-left">
+          <button class="back-btn" onclick="backToLobby()">← 返回大厅</button>
+          <div class="game-title">🔊 听音辨词大挑战</div>
+        </div>
         <div class="game-info">
           <div class="timer-box" id="timer-audio">⏱️ 00:00</div>
           <button class="btn btn-primary" onclick="resetAudioGame()">🔄 重玩</button>
@@ -638,6 +788,9 @@
   <!-- 游戏4: 单词打地鼠 -->
   <div class="game-panel" id="game-whack">
     <div class="whack-game">
+      <div style="margin-bottom:20px;">
+        <button class="back-btn" onclick="backToLobby()">← 返回大厅</button>
+      </div>
       <div class="whack-info-bar">
         <div class="target-word" id="whack-target">快找：chair 椅子！</div>
         <div class="score-box">⭐ 得分: <span id="whack-score">0</span></div>
@@ -659,7 +812,7 @@
     <div class="victory-title" id="victory-title">太棒了！</div>
     <div class="victory-stats" id="victory-stats"></div>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-      <button class="btn btn-secondary btn-hall" onclick="event.stopPropagation();closeVictory()">🏠 返回游戏大厅</button>
+      <button class="btn btn-secondary btn-hall" onclick="event.stopPropagation();backToLobby()">🏠 返回游戏大厅</button>
       <button class="btn btn-primary btn-replay">🔄 再玩一次</button>
     </div>
   </div>
@@ -687,6 +840,33 @@ const words = [
   { en: 'cupboard', cn: '橱柜', emoji: '🗄️' }
 ];
 
+
+/* =========================================================
+   大厅与游戏切换
+   ========================================================= */
+function enterGame(gameName) {
+  document.getElementById('game-lobby').style.display = 'none';
+  document.getElementById('game-area').style.display = 'block';
+  // 切换到对应游戏
+  document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('game-' + gameName).classList.add('active');
+  // 重置对应游戏
+  if (gameName === 'linking-en') resetLinking('en');
+  if (gameName === 'linking-pic') resetLinking('pic');
+  if (gameName === 'audio') resetAudioGame();
+  if (gameName === 'whack') resetWhackGame();
+  // 滚动到顶部
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function backToLobby() {
+  document.getElementById('game-lobby').style.display = 'block';
+  document.getElementById('game-area').style.display = 'none';
+  document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
+  // 关闭可能存在的弹窗
+  document.getElementById('victory-modal').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 /* =========================================================
    Tab 切换
    ========================================================= */
