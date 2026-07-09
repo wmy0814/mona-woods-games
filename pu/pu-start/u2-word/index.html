@@ -653,16 +653,16 @@
 <script>
 // 单词数据 + 音节拆分
 const words = [
-  { en: 'bag', cn: '书包', syllables: ['b', 'ag'] },
-  { en: 'pencil', cn: '铅笔', syllables: ['pen', 'cil'] },
-  { en: 'teacher', cn: '老师', syllables: ['tea', 'cher'] },
-  { en: 'classroom', cn: '教室', syllables: ['class', 'room'] },
-  { en: 'playground', cn: '操场', syllables: ['play', 'ground'] },
-  { en: 'board', cn: '写字板', syllables: ['b', 'oard'] },
-  { en: 'table', cn: '桌子', syllables: ['ta', 'ble'] },
-  { en: 'bookcase', cn: '书柜', syllables: ['book', 'case'] },
+  { en: 'bag', cn: '书包', syllables: ['b', 'a', 'g'] },
+  { en: 'pencil', cn: '铅笔', syllables: ['p', 'en', 'cil'] },
+  { en: 'teacher', cn: '老师', syllables: ['t', 'ea', 'ch', 'er'] },
+  { en: 'classroom', cn: '教室', syllables: ['cl', 'a', 'ss', 'r', 'oo', 'm'] },
+  { en: 'playground', cn: '操场', syllables: ['pl', 'ay', 'gr', 'ou', 'nd'] },
+  { en: 'board', cn: '写字板', syllables: ['b', 'oar', 'd'] },
+  { en: 'table', cn: '桌子', syllables: ['t', 'a', 'ble'] },
+  { en: 'bookcase', cn: '书柜', syllables: ['b', 'oo', 'k', 'ca', 'se'] },
   { en: 'chair', cn: '椅子', syllables: ['ch', 'air'] },
-  { en: 'cupboard', cn: '橱柜', syllables: ['cup', 'board'] }
+  { en: 'cupboard', cn: '橱柜', syllables: ['c', 'u', 'p', 'b', 'oar', 'd'] }
 ];
 
 // 干扰音节块库（自然拼读常见音节）
@@ -908,7 +908,7 @@ function nextQuestion() {
 function renderSyllableSpellQuestion(word, total) {
   const correctSyllables = word.syllables;
   // 生成干扰音节块（2-3个）
-  const distractorCount = Math.min(3, Math.max(2, correctSyllables.length));
+  const distractorCount = 0; // 无干扰音节，只显示正确音节块
   const distractors = generateSyllableDistractors(correctSyllables, distractorCount);
   const allSyllables = shuffle([...correctSyllables, ...distractors]);
 
