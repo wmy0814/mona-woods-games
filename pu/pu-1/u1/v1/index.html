@@ -551,7 +551,7 @@
       <h1>Mona 单词闯关</h1>
       <p>Power Up 1 · Unit 1 词汇1</p>
     </div>
-    <button class="home-btn" id="homeBtn" onclick="goHome()">← 返回单元主页</button>
+    <button class="home-btn" id="homeBtn" onclick="goBack()">← 返回</button>
   </div>
 
   <div class="main">
@@ -1005,6 +1005,29 @@ function showResult() {
     nextBtn.style.display = 'block';
   } else {
     nextBtn.style.display = 'none';
+  }
+}
+
+// 返回到选关主页（游戏中/结果页都回到选关页）
+function backToStart() {
+  document.getElementById('startScreen').style.display = 'flex';
+  document.getElementById('gameArea').style.display = 'none';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('levelProgress').style.display = 'none';
+}
+
+// 智能返回：游戏中→选关页，选关页→单元主页
+function goBack() {
+  var gameArea = document.getElementById('gameArea');
+  var resultScreen = document.getElementById('resultScreen');
+  // 如果在游戏中或结果页，返回选关页
+  if (gameArea && gameArea.style.display !== 'none') {
+    backToStart();
+  } else if (resultScreen && resultScreen.style.display !== 'none') {
+    backToStart();
+  } else {
+    // 在选关页，返回单元主页
+    goHome();
   }
 }
 
