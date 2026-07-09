@@ -292,9 +292,17 @@
     box-shadow: 0 4px 15px rgba(45, 212, 191, 0.5);
   }
   .link-item.emoji-only {
-    font-size: 50px;
-    padding: 20px;
+    padding: 10px;
     min-width: 100px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .link-item.emoji-only img {
+    max-width: 80px;
+    max-height: 80px;
+    object-fit: contain;
   }
   .link-item.matched {
     background: #dcfce7;
@@ -828,16 +836,16 @@
    单词数据
    ========================================================= */
 const words = [
-  { en: 'bag', cn: '书包', emoji: '🎒' },
-  { en: 'pencil', cn: '铅笔', emoji: '✏️' },
-  { en: 'teacher', cn: '老师', emoji: '👩‍🏫' },
-  { en: 'classroom', cn: '教室', emoji: '🏫' },
-  { en: 'playground', cn: '操场', emoji: '🎪' },
-  { en: 'board', cn: '写字板', emoji: '📝' },
-  { en: 'table', cn: '桌子', emoji: '🪑' },
-  { en: 'bookcase', cn: '书柜', emoji: '📚' },
-  { en: 'chair', cn: '椅子', emoji: '🪑' },
-  { en: 'cupboard', cn: '橱柜', emoji: '🗄️' }
+  { en: 'bag', cn: '书包', emoji: '🎒', img: 'images/bag.png' },
+  { en: 'pencil', cn: '铅笔', emoji: '✏️', img: 'images/pencil.png' },
+  { en: 'teacher', cn: '老师', emoji: '👩‍🏫', img: 'images/teacher.png' },
+  { en: 'classroom', cn: '教室', emoji: '🏫', img: 'images/classroom.png' },
+  { en: 'playground', cn: '操场', emoji: '🎪', img: 'images/playground.png' },
+  { en: 'board', cn: '写字板', emoji: '📝', img: 'images/board.png' },
+  { en: 'table', cn: '桌子', emoji: '🪑', img: 'images/table.png' },
+  { en: 'bookcase', cn: '书柜', emoji: '📚', img: 'images/bookcase.png' },
+  { en: 'chair', cn: '椅子', emoji: '🪑', img: 'images/chair.png' },
+  { en: 'cupboard', cn: '橱柜', emoji: '🗄️', img: 'images/cupboard.png' }
 ];
 
 
@@ -1008,7 +1016,11 @@ function initLinking(type) {
     el.dataset.id = item.id;
     el.dataset.side = 'left';
     el.dataset.idx = idx;
-    el.textContent = type === 'en' ? item.en : item.emoji;
+    if (type === 'en') {
+      el.textContent = item.en;
+    } else {
+      el.innerHTML = '<img src="' + item.img + '" alt="' + item.en + '">';
+    }
     el.addEventListener('click', () => handleLinkClick(type, el));
     leftCol.appendChild(el);
   });
