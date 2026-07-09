@@ -672,13 +672,29 @@
     .victory-title { font-size: 28px; }
     .victory-emoji { font-size: 60px; }
   }
+  @media (max-width: 768px) {
+    .link-item { font-size: 16px; min-width: 100px; padding: 8px 12px; }
+    .link-item.emoji-only { min-width: 90px; min-height: 80px; padding: 5px; }
+    .link-item.emoji-only img { max-width: 70px; max-height: 70px; }
+    .linking-game { gap: 20px; }
+  }
   @media (max-width: 480px) {
-    .linking-game { flex-direction: column; }
-    .linking-col.right { align-items: stretch; }
-    .linking-col.left .link-item { border-radius: 16px; }
-    .linking-col.right .link-item { border-radius: 16px; }
+    .linking-game { flex-direction: column; gap: 15px; min-height: auto; }
+    .linking-col { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    .linking-col.right { align-items: center; }
+    .linking-col.left .link-item { border-radius: 12px; }
+    .linking-col.right .link-item { border-radius: 12px; }
+    .link-item { font-size: 14px; min-width: 70px; padding: 6px 10px; }
+    .link-item.emoji-only { min-width: 60px; min-height: 60px; padding: 4px; }
+    .link-item.emoji-only img { max-width: 50px; max-height: 50px; }
+    .link-svg { display: none; }
     .options-grid { grid-template-columns: 1fr; }
     .whack-grid { gap: 10px; }
+    .game-cards { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .card-icon { font-size: 40px; }
+    .card-title { font-size: 16px; }
+    .card-desc { font-size: 12px; }
+    .lobby-title { font-size: 22px; }
   }
 </style>
 </head>
