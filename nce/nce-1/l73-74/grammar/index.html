@@ -393,7 +393,7 @@
         ✅ 规则动词 & 不规则动词过去式变形<br>
         ✅ 过去式在句子中的正确使用<br>
         ✅ 识别时间标志词，快速判断时态<br>
-        ✅ 四大时态综合辨析（一般现在 / 现在进行 / 一般过去 / be going to）
+        ✅ 三大时态综合辨析（一般过去 / 一般现在 / 现在进行）
       </div>
       <div class="level-select-title">选择关卡开始挑战：</div>
       <div class="level-list">
@@ -636,10 +636,29 @@ const questionBank = [
   },
   // ========== 第三关：时间侦探（看时间标志词判断时态）==========
   {
-    title: '第三关：时间侦探',
+    title: '第三关：时间侦探（三时态判断）',
     type: 'choice',
     bank: [
-      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">yesterday</span>', options: ['一般过去时', '一般现在时', '现在进行时', '一般将来时 (be going to)'], answer: 0, explain: 'yesterday 昨天，是过去的时间，所以用一般过去时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">yesterday</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'yesterday 昨天，是过去的时间，所以用一般过去时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">every day</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'every day 每天，是习惯性、经常性的动作，用一般现在时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">now</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'now 现在，动作正在发生，用现在进行时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">last week</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'last week 上周，是过去的时间，用一般过去时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">last Sunday</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'last Sunday 上周日，是过去的时间，用一般过去时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">on Sundays</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'on Sundays 每周日，是习惯性动作，用一般现在时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">Look!</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'Look! 看！说明动作正在眼前发生，用现在进行时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">Listen!</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'Listen! 听！说明声音正在响起，动作正在进行，用现在进行时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">just now</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'just now 刚才，是刚刚过去的时间，用一般过去时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">usually</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'usually 通常，是经常性的习惯，用一般现在时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">three days ago</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: '...ago ……以前，表示过去的时间，用一般过去时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">at the moment</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'at the moment 此刻，现在，用现在进行时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">the day before yesterday</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'the day before yesterday 前天，是过去的时间，用一般过去时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">sometimes</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'sometimes 有时候，是偶尔发生的习惯，用一般现在时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">last night</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'last night 昨晚，是过去的时间，用一般过去时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">in the morning</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'in the morning 在早上，表示每天早上的习惯，用一般现在时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">often</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'often 经常，是经常性的习惯动作，用一般现在时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">yesterday morning</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'yesterday morning 昨天早上，是过去的时间，用一般过去时。' },
+      { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">right now</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'right now 就在此刻，用现在进行时。' },
+    ], answer: 0, explain: 'yesterday 昨天，是过去的时间，所以用一般过去时。' },
       { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">every day</span>', options: ['一般过去时', '一般现在时', '现在进行时', '一般将来时 (be going to)'], answer: 1, explain: 'every day 每天，是习惯性、经常性的动作，用一般现在时。' },
       { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">now</span>', options: ['一般过去时', '一般现在时', '现在进行时', '一般将来时 (be going to)'], answer: 2, explain: 'now 现在，动作正在发生，用现在进行时。' },
       { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">tomorrow</span>', options: ['一般过去时', '一般现在时', '现在进行时', '一般将来时 (be going to)'], answer: 3, explain: 'tomorrow 明天，是将来的时间，用 be going to 表示将来打算。' },
@@ -667,10 +686,43 @@ const questionBank = [
   },
   // ========== 第四关：时态大综合（四时态综合选择）==========
   {
-    title: '第四关：时态大综合',
+    title: '第四关：时态大综合（三时态）',
     type: 'choice',
     bank: [
       { scene: '选择正确答案', text: 'She ______ to school every day.', options: ['go', 'goes', 'went', 'is going'], answer: 1, explain: 'every day 是一般现在时的标志，she 三单，动词加 s → goes。' },
+      { scene: '选择正确答案', text: 'Look! The children ______ in the playground.', options: ['play', 'plays', 'played', 'are playing'], answer: 3, explain: 'Look! 是现在进行时的标志，children 复数，用 are playing。' },
+      { scene: '选择正确答案', text: 'I ______ a film with my friend yesterday.', options: ['watch', 'watches', 'watched', 'am watching'], answer: 2, explain: 'yesterday 是一般过去时的标志，watch 的过去式是 watched。' },
+      { scene: '选择正确答案', text: 'Listen! Someone ______ at the door.', options: ['knock', 'knocks', 'knocked', 'is knocking'], answer: 3, explain: 'Listen! 是现在进行时的标志，someone 三单，用 is knocking。' },
+      { scene: '选择正确答案', text: 'They ______ to Beijing last summer.', options: ['go', 'goes', 'went', 'are going'], answer: 2, explain: 'last summer 去年夏天，过去时间，go 的过去式是 went。' },
+      { scene: '选择正确答案', text: 'My father ______ TV every evening.', options: ['watch', 'watches', 'watched', 'is watching'], answer: 1, explain: 'every evening 每天晚上，习惯动作，一般现在时。father 三单，watch 加 es → watches。' },
+      { scene: '选择正确答案', text: 'She ______ a book now.', options: ['read', 'reads', 'readed', 'is reading'], answer: 3, explain: 'now 现在，现在进行时。she 三单，用 is reading。' },
+      { scene: '选择正确答案', text: 'We ______ a great time at the party last Saturday.', options: ['have', 'has', 'had', 'are having'], answer: 2, explain: 'last Saturday 上周六，过去时间，have 的过去式是 had。' },
+      { scene: '选择正确答案', text: 'The sun ______ in the east.', options: ['rise', 'rises', 'rose', 'is rising'], answer: 1, explain: '太阳从东方升起是客观真理，用一般现在时。sun 三单，rise 加 s → rises。' },
+      { scene: '选择正确答案', text: 'Be quiet! The baby ______.', options: ['sleep', 'sleeps', 'slept', 'is sleeping'], answer: 3, explain: 'Be quiet! 安静点！说明宝宝正在睡觉，用现在进行时。' },
+      { scene: '选择正确答案', text: 'He ______ his homework an hour ago.', options: ['finish', 'finishes', 'finished', 'is finishing'], answer: 2, explain: 'an hour ago 一小时前，过去时间，finish 加 ed → finished。' },
+      { scene: '选择正确答案', text: 'She sometimes ______ to work by bus.', options: ['go', 'goes', 'went', 'is going'], answer: 1, explain: 'sometimes 有时，是一般现在时的标志，she 三单，用 goes。' },
+      { scene: '选择正确答案', text: 'I ______ to the park with my parents yesterday.', options: ['go', 'goes', 'went', 'am going'], answer: 2, explain: 'yesterday 昨天，过去时间，go 的过去式是 went。' },
+      { scene: '选择正确答案', text: 'He ______ English every morning.', options: ['study', 'studies', 'studied', 'is studying'], answer: 1, explain: 'every morning 每天早上，习惯动作，一般现在时。he 三单，study 变 y 为 i 加 es → studies。' },
+      { scene: '选择正确答案', text: 'They ______ basketball at the moment.', options: ['play', 'plays', 'played', 'are playing'], answer: 3, explain: 'at the moment 此刻，现在进行时。they 复数，用 are playing。' },
+      { scene: '选择正确答案', text: 'We ______ dinner just now.', options: ['have', 'has', 'had', 'are having'], answer: 2, explain: 'just now 刚才，过去时间，have 的过去式是 had。' },
+      { scene: '选择正确答案', text: 'The students ______ hard every day.', options: ['work', 'works', 'worked', 'are working'], answer: 0, explain: 'every day 每天，习惯动作，一般现在时。students 复数，用原形 work。' },
+      { scene: '选择正确答案', text: 'She ______ to music in her room now.', options: ['listen', 'listens', 'listened', 'is listening'], answer: 3, explain: 'now 现在，现在进行时。she 三单，用 is listening。' },
+      { scene: '选择正确答案', text: 'They ______ football yesterday afternoon.', options: ['play', 'plays', 'played', 'are playing'], answer: 2, explain: 'yesterday afternoon 昨天下午，过去时间，play 加 ed → played。' },
+      { scene: '选择正确答案', text: 'My brother ______ very fast.', options: ['run', 'runs', 'ran', 'is running'], answer: 1, explain: '描述人的能力特征，用一般现在时。brother 三单，run 加 s → runs。' },
+      { scene: '选择正确答案', text: 'Look! The dog ______ after the cat.', options: ['run', 'runs', 'ran', 'is running'], answer: 3, explain: 'Look! 是现在进行时的标志，dog 三单，用 is running。' },
+      { scene: '选择正确答案', text: 'He ______ to Beijing last month.', options: ['go', 'goes', 'went', 'is going'], answer: 2, explain: 'last month 上个月，过去时间，go 的过去式是 went。' },
+      { scene: '选择正确答案', text: 'She always ______ a dress to school.', options: ['wear', 'wears', 'wore', 'is wearing'], answer: 1, explain: 'always 总是，习惯性动作，一般现在时。she 三单，wear 加 s → wears。' },
+      { scene: '选择正确答案', text: 'Listen! The birds ______ in the tree.', options: ['sing', 'sings', 'sang', 'are singing'], answer: 3, explain: 'Listen! 是现在进行时的标志，birds 复数，用 are singing。' },
+      { scene: '选择正确答案', text: 'I ______ a letter to my grandma last week.', options: ['write', 'writes', 'wrote', 'am writing'], answer: 2, explain: 'last week 上周，过去时间，write 的过去式是 wrote。' },
+      { scene: '选择正确答案', text: 'He usually ______ his homework before dinner.', options: ['do', 'does', 'did', 'is doing'], answer: 1, explain: 'usually 通常，习惯动作，一般现在时。he 三单，用 does。' },
+      { scene: '选择正确答案', text: 'Be quiet! The baby ______ in the next room.', options: ['sleep', 'sleeps', 'slept', 'is sleeping'], answer: 3, explain: 'Be quiet! 安静！说明动作正在进行，用现在进行时。' },
+      { scene: '选择正确答案', text: 'We ______ a great time at the party last Saturday.', options: ['have', 'has', 'had', 'are having'], answer: 2, explain: 'last Saturday 上周六，过去时间，have 的过去式是 had。' },
+      { scene: '选择正确答案', text: 'The earth ______ around the sun.', options: ['go', 'goes', 'went', 'is going'], answer: 1, explain: '地球绕着太阳转是客观真理，用一般现在时。earth 三单，go 加 es → goes。' },
+      { scene: '选择正确答案', text: 'They ______ trees last spring.', options: ['plant', 'plants', 'planted', 'are planting'], answer: 2, explain: 'last spring 去年春天，过去时间，plant 加 ed → planted。' },
+      { scene: '选择正确答案', text: 'My father ______ newspapers every evening.', options: ['read', 'reads', 'readed', 'is reading'], answer: 1, explain: 'every evening 每天晚上，习惯动作，一般现在时。father 三单，read 加 s → reads。' },
+      { scene: '选择正确答案', text: 'Where is Tom? He ______ basketball on the playground.', options: ['play', 'plays', 'played', 'is playing'], answer: 3, explain: '问 Tom 在哪儿，回答他正在做什么，用现在进行时。' },
+      { scene: '选择正确答案', text: 'She ______ English very well when she was young.', options: ['speak', 'speaks', 'spoke', 'is speaking'], answer: 2, explain: 'when she was young 她小时候，过去时间，speak 的过去式是 spoke。' },
+    ], answer: 1, explain: 'every day 是一般现在时的标志，she 三单，动词加 s → goes。' },
       { scene: '选择正确答案', text: 'Look! The children ______ in the playground.', options: ['play', 'plays', 'played', 'are playing'], answer: 3, explain: 'Look! 是现在进行时的标志，children 复数，用 are playing。' },
       { scene: '选择正确答案', text: 'I ______ a film with my friend yesterday.', options: ['watch', 'watches', 'watched', 'am watching'], answer: 2, explain: 'yesterday 是一般过去时的标志，watch 的过去式是 watched。' },
       { scene: '选择正确答案', text: 'We ______ a picnic next Sunday.', options: ['have', 'has', 'had', 'are going to have'], answer: 3, explain: 'next Sunday 下周日，是将来的时间，用 be going to + 动词原形。' },
