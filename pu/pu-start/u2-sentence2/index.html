@@ -753,7 +753,7 @@
       <div class="progress-text" id="l1-progress">1 / 10</div>
       <div class="game-card">
         <div class="scene-wrap" id="l1-scene"></div>
-        <div class="question-text" id="l1-question">Where is the cat? <br>It's <span class="blank">?</span> the box.</div>
+        <div class="question-text" id="l1-question">Where's the cat? <br>It's <span class="blank">?</span> the box.</div>
         <div class="options-row">
           <button class="option-btn" onclick="answerL1('on', this)">on</button>
           <button class="option-btn" onclick="answerL1('in', this)">in</button>
@@ -833,25 +833,28 @@
    DATA
    ============================================================ */
 
-// 物品及其中文名、emoji
+// 物品及其中文名、emoji、冠词、代词
+// article: 名词前用 the 还是 my
+// pronoun: 回答用的主语代词 (It / He / She)
+// answerCn: 中文回答的主语（它/他/她）
 const ITEMS = {
-  bus:    { cn: '公交车', emoji: '🚌' },
-  bird:   { cn: '鸟',    emoji: '🐦' },
-  cat:    { cn: '猫',    emoji: '🐱' },
-  book:   { cn: '书',    emoji: '📚' },
-  boat:   { cn: '船',    emoji: '🚤' },
-  dad:    { cn: '爸爸',  emoji: '👨' },
-  mum:    { cn: '妈妈',  emoji: '👩' },
-  sister: { cn: '姐姐',  emoji: '👧' },
-  brother:{ cn: '哥哥',  emoji: '👦' },
-  man:    { cn: '男人',  emoji: '👨' },
-  woman:  { cn: '女人',  emoji: '👩' },
-  grandpa:{ cn: '爷爷',  emoji: '👴' },
-  grandma:{ cn: '奶奶',  emoji: '👵' },
-  pet:    { cn: '宠物',  emoji: '🐶' },
-  bag:    { cn: '书包',  emoji: '👜' },
-  pencil: { cn: '铅笔',  emoji: '✏️' },
-  teacher:{ cn: '老师',  emoji: '👩‍🏫' }
+  bus:    { cn: '公交车', emoji: '🚌', article: 'the', pronoun: 'It',    answerCn: '它' },
+  bird:   { cn: '鸟',    emoji: '🐦', article: 'the', pronoun: 'It',    answerCn: '它' },
+  cat:    { cn: '猫',    emoji: '🐱', article: 'the', pronoun: 'It',    answerCn: '它' },
+  book:   { cn: '书',    emoji: '📚', article: 'the', pronoun: 'It',    answerCn: '它' },
+  boat:   { cn: '船',    emoji: '🚤', article: 'the', pronoun: 'It',    answerCn: '它' },
+  dad:    { cn: '爸爸',  emoji: '👨', article: 'my',  pronoun: 'He',    answerCn: '他' },
+  mum:    { cn: '妈妈',  emoji: '👩', article: 'my',  pronoun: 'She',   answerCn: '她' },
+  sister: { cn: '姐姐',  emoji: '👧', article: 'my',  pronoun: 'She',   answerCn: '她' },
+  brother:{ cn: '哥哥',  emoji: '👦', article: 'my',  pronoun: 'He',    answerCn: '他' },
+  man:    { cn: '男人',  emoji: '👨', article: 'the', pronoun: 'He',    answerCn: '他' },
+  woman:  { cn: '女人',  emoji: '👩', article: 'the', pronoun: 'She',   answerCn: '她' },
+  grandpa:{ cn: '爷爷',  emoji: '👴', article: 'my',  pronoun: 'He',    answerCn: '他' },
+  grandma:{ cn: '奶奶',  emoji: '👵', article: 'my',  pronoun: 'She',   answerCn: '她' },
+  pet:    { cn: '宠物',  emoji: '🐶', article: 'the', pronoun: 'It',    answerCn: '它' },
+  bag:    { cn: '书包',  emoji: '👜', article: 'the', pronoun: 'It',    answerCn: '它' },
+  pencil: { cn: '铅笔',  emoji: '✏️', article: 'the', pronoun: 'It',    answerCn: '它' },
+  teacher:{ cn: '老师',  emoji: '👩‍🏫', article: 'the', pronoun: 'She',   answerCn: '她' }
 };
 
 // 容器及其中文名、CSS类名
@@ -932,20 +935,42 @@ function generateQuestions(count) {
   return shuffle(combos).slice(0, count).map(q => {
     const item = ITEMS[q.item];
     const container = CONTAINERS[q.container];
+    
+    const article = item.article; // the / my
+    const articleCap = article.charAt(0).toUpperCase() + article.slice(1); // The / My
+    const pronoun = item.pronoun; // It / He / She
+    const pronounS = pronoun + "'s"; // It's / He's / She's
+    const answerCn = item.answerCn; // 它/他/她
+    const prepCn = q.prep === 'on' ? '上' : q.prep === 'in' ? '里' : '下面';
+    
+    // 中文：我的爸爸 / 猫
+    const itemCnFull = article === 'my' ? '我的' + item.cn : item.cn;
+    
     return {
       ...q,
       itemCn: item.cn,
+      itemCnFull: itemCnFull,
       itemEmoji: item.emoji,
+      article: article,
+      articleCap: articleCap,
+      pronoun: pronoun,
+      pronounS: pronounS,
+      answerCn: answerCn,
+      prepCn: prepCn,
       containerCn: container.cn,
       containerCss: container.cssClass,
-      // 第三关连词成句用
-      sentenceWords: ['The', q.item, 'is', q.prep, 'the', q.container, '.'],
-      sentencePlain: `The ${q.item} is ${q.prep} the ${q.container}.`,
-      questionWords: ['Where', 'is', 'the', q.item, '?'],
-      answerWords: ['It', "'s", q.prep, 'the', q.container, '.'],
-      chinese: `${item.cn}在${container.cn}${q.prep === 'on' ? '上' : q.prep === 'in' ? '里' : '下面'}。`,
-      whereQuestionCn: `${item.cn}在哪里？`,
-      fullAnswerCn: `它在${container.cn}${q.prep === 'on' ? '上' : q.prep === 'in' ? '里' : '下面'}。`
+      // 第三关连词成句用（陈述句）
+      sentenceWords: [articleCap, q.item, 'is', q.prep, 'the', q.container, '.'],
+      sentencePlain: `${articleCap} ${q.item} is ${q.prep} the ${q.container}.`,
+      // 第一关问答句
+      questionWords: ['Where', "'s", article, q.item, '?'],
+      questionPlain: `Where's ${article} ${q.item}?`,
+      answerWords: [pronounS, q.prep, 'the', q.container, '.'],
+      answerPlain: `${pronounS} ${q.prep} the ${q.container}.`,
+      // 中文
+      chinese: `${itemCnFull}在${container.cn}${prepCn}。`,
+      whereQuestionCn: `${itemCnFull}在哪里？`,
+      fullAnswerCn: `${answerCn}在${container.cn}${prepCn}。`
     };
   });
 }
@@ -1111,7 +1136,7 @@ function loadL1() {
   renderScene(document.getElementById('l1-scene'), q);
   
   document.getElementById('l1-question').innerHTML = 
-    `Where is the <span class="word-highlight">${q.item}</span>?<br>It's <span class="blank">?</span> the ${q.container}.`;
+    `Where's <span class="word-highlight">${q.article} ${q.item}</span>?<br>${q.pronounS} <span class="blank">?</span> the ${q.container}.`;
   
   // Reset buttons
   document.querySelectorAll('#screen-level1 .option-btn').forEach(btn => {
@@ -1121,7 +1146,7 @@ function loadL1() {
   l1State.answered = false;
   
   // 读题
-  setTimeout(() => speakEnglish(`Where is the ${q.item}?`), 300);
+  setTimeout(() => speakEnglish(`Where's ${q.article} ${q.item}?`), 300);
 }
 
 function answerL1(prep, btn) {
@@ -1133,10 +1158,10 @@ function answerL1(prep, btn) {
     btn.classList.add('correct');
     document.querySelectorAll('#screen-level1 .option-btn').forEach(b => b.classList.add('disabled'));
     
-    document.getElementById('l1-feedback').textContent = `✓ 正确！It's ${q.prep} the ${q.container}.`;
+    document.getElementById('l1-feedback').textContent = `✓ 正确！${q.pronounS} ${q.prep} the ${q.container}.`;
     document.getElementById('l1-feedback').className = 'feedback correct-text';
     playCorrectSound();
-    speakEnglish(`It's ${q.prep} the ${q.container}.`);
+    speakEnglish(`${q.pronounS} ${q.prep} the ${q.container}.`);
     
     setTimeout(() => {
       l1State.currentIdx++;
@@ -1182,7 +1207,7 @@ function loadL2() {
   renderScene(document.getElementById('l2-scene'), q);
   
   document.getElementById('l2-question').innerHTML = 
-    `The <span class="word-highlight">${q.item}</span> is <span class="blank">?</span> the ${q.container}.`;
+    `<span class="word-highlight">${q.articleCap} ${q.item}</span> is <span class="blank">?</span> the ${q.container}.`;
   
   document.querySelectorAll('#screen-level2 .option-btn').forEach(btn => {
     btn.className = 'option-btn';
@@ -1190,7 +1215,7 @@ function loadL2() {
   
   l2State.answered = false;
   
-  setTimeout(() => speakEnglish(`The ${q.item} is ... the ${q.container}.`), 300);
+  setTimeout(() => speakEnglish(`${q.articleCap} ${q.item} is ... the ${q.container}.`), 300);
 }
 
 function answerL2(prep, btn) {
@@ -1205,10 +1230,10 @@ function answerL2(prep, btn) {
     // 填充空格
     document.querySelector('#l2-question .blank').textContent = q.prep;
     
-    document.getElementById('l2-feedback').textContent = `✓ 正确！The ${q.item} is ${q.prep} the ${q.container}.`;
+    document.getElementById('l2-feedback').textContent = `✓ 正确！${q.articleCap} ${q.item} is ${q.prep} the ${q.container}.`;
     document.getElementById('l2-feedback').className = 'feedback correct-text';
     playCorrectSound();
-    speakEnglish(`The ${q.item} is ${q.prep} the ${q.container}.`);
+    speakEnglish(`${q.articleCap} ${q.item} is ${q.prep} the ${q.container}.`);
     
     setTimeout(() => {
       l2State.currentIdx++;
