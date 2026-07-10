@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PU Start · U2 方位介词大冒险</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0F2B46;
+    min-height: 100vh;
+    color: #0F2B46;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 0; min-height: 100vh; display: flex; flex-direction: column; width: 100%; }
+
+  /* ===== Header ===== */
+  .level-header {
+    background: #0F2B46;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+  }
+  .btn-back {
+    color: white;
+    font-size: 14px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-back:hover { background: rgba(255,255,255,0.2); }
+  .btn-home {
+    color: white;
+    font-size: 14px;
+    padding: 6px 14px;
+    background: rgba(45, 212, 191, 0.2);
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all .2s;
+  }
+  .btn-home:hover { background: rgba(45, 212, 191, 0.35); }
+  .level-badge {
+    margin-left: auto;
+    padding: 6px 16px;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* ===== Screens ===== */
+  .screen { display: none; flex: 1; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* ===== Select Screen ===== */
+  .select-header {
+    text-align: center;
+    padding: 30px 20px 20px;
+  }
+  .select-header h1 {
+    font-size: 28px;
+    color: white;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .select-header .subtitle {
+    font-size: 15px;
+    color: #2DD4BF;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, #2DD4BF 0%, #0F2B46 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .level-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 16px;
+    padding: 0 20px;
+  }
+  .level-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 16px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: all .25s;
+    border-left: 5px solid #2DD4BF;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: relative;
+  }
+  .level-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+  .level-btn:active { transform: scale(0.98); }
+  .level-btn .emoji { font-size: 32px; flex-shrink: 0; }
+  .level-btn .level-content { flex: 1; }
+  .level-btn .level-content .title { font-size: 18px; font-weight: 700; color: #0F2B46; margin-bottom: 4px; }
+  .level-btn .level-content .desc { font-size: 13px; color: #64748B; line-height: 1.4; }
+  .level-btn .tag {
+    padding: 4px 12px;
+    background: #E6FFFA;
+    color: #0F2B46;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ===== Common ===== */
+  .main {
+    flex: 1;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .instruction {
+    text-align: center;
+    font-size: 16px;
+    color: #2DD4BF;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .progress-text {
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 12px;
+  }
+  .game-card {
+    width: 100%;
+    max-width: 440px;
+    background: white;
+    border-radius: 20px;
+    padding: 24px 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+
+  /* ===== Scene (CSS drawn) ===== */
+  .scene-wrap {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #E6FFFA 0%, #F7FAFC 100%);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .scene-item {
+    font-size: 56px;
+    position: absolute;
+    z-index: 5;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  }
+
+  /* Containers */
+  .container-box {
+    width: 120px;
+    height: 90px;
+    background: linear-gradient(180deg, #F6AD55 0%, #ED8936 100%);
+    border-radius: 0 0 12px 12px;
+    position: relative;
+    border: 3px solid #C05621;
+    border-top: none;
+  }
+  .container-box::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: -6px;
+    right: -6px;
+    height: 16px;
+    background: #C05621;
+    border-radius: 6px 6px 0 0;
+  }
+
+  .container-table {
+    width: 140px;
+    height: 70px;
+    position: relative;
+  }
+  .container-table::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: linear-gradient(180deg, #D69E2E 0%, #B7791F 100%);
+    border-radius: 4px;
+  }
+  .container-table::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    width: 8px;
+    height: 58px;
+    background: #B7791F;
+    box-shadow: 92px 0 0 #B7791F;
+  }
+
+  .container-chair {
+    width: 80px;
+    height: 110px;
+    position: relative;
+  }
+  .container-chair::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: #9F7AEA;
+    border-radius: 4px;
+  }
+  .container-chair::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 50px;
+    background: #805AD5;
+    border-radius: 4px;
+    box-shadow: 70px 0 0 #805AD5;
+  }
+  .chair-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 42px;
+    background: linear-gradient(180deg, #9F7AEA 0%, #805AD5 100%);
+    border-radius: 8px 8px 0 0;
+  }
+
+  .container-bookcase {
+    width: 100px;
+    height: 140px;
+    background: linear-gradient(180deg, #A0522D 0%, #8B4513 100%);
+    border-radius: 6px;
+    position: relative;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  .container-bookcase::before,
+  .container-bookcase::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    height: 4px;
+    background: #6B4423;
+  }
+  .container-bookcase::before { top: 45%; }
+  .container-bookcase::after { bottom: 8px; display: none; }
+  .bookcase-shelf {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    height: 4px;
+    background: #6B4423;
+  }
+  .shelf-top { top: 33%; }
+  .shelf-mid { top: 66%; }
+
+  .container-cupboard {
+    width: 90px;
+    height: 130px;
+    background: linear-gradient(180deg, #E2E8F0 0%, #A0AEC0 100%);
+    border-radius: 8px;
+    position: relative;
+    border: 2px solid #718096;
+  }
+  .container-cupboard::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -2px;
+    right: -2px;
+    height: 3px;
+    background: #718096;
+  }
+  .cupboard-handle {
+    position: absolute;
+    width: 6px;
+    height: 14px;
+    background: #4A5568;
+    border-radius: 3px;
+    right: 10px;
+    top: 25%;
+    box-shadow: 0 52px 0 #4A5568;
+  }
+
+  .container-bag {
+    width: 100px;
+    height: 85px;
+    background: linear-gradient(135deg, #FC8181 0%, #F56565 100%);
+    border-radius: 0 0 20px 20px;
+    position: relative;
+    border: 2px solid #C53030;
+  }
+  .container-bag::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 25px;
+    border: 4px solid #C53030;
+    border-bottom: none;
+    border-radius: 25px 25px 0 0;
+  }
+
+  .container-classroom {
+    width: 160px;
+    height: 110px;
+    background: linear-gradient(180deg, #BEE3F8 0%, #90CDF4 100%);
+    border-radius: 8px 8px 0 0;
+    position: relative;
+    border: 3px solid #2B6CB0;
+    border-bottom: none;
+  }
+  .classroom-floor {
+    position: absolute;
+    bottom: 0;
+    left: -3px;
+    right: -3px;
+    height: 20px;
+    background: #D69E2E;
+    border-radius: 0 0 6px 6px;
+  }
+
+  /* Position helper classes */
+  .pos-on-box { bottom: 85px; }
+  .pos-in-box { bottom: 30px; font-size: 40px; }
+  .pos-under-box { bottom: -10px; }
+
+  .pos-on-table { bottom: 95px; }
+  .pos-in-table { display: none; }
+  .pos-under-table { bottom: -5px; font-size: 44px; }
+
+  .pos-on-chair { bottom: 120px; font-size: 40px; }
+  .pos-in-chair { display: none; }
+  .pos-under-chair { bottom: 0px; font-size: 36px; }
+
+  .pos-on-bookcase { bottom: 145px; font-size: 36px; }
+  .pos-in-bookcase { bottom: 65px; font-size: 36px; }
+  .pos-under-bookcase { bottom: -5px; font-size: 32px; }
+
+  .pos-on-cupboard { bottom: 140px; font-size: 36px; }
+  .pos-in-cupboard { bottom: 55px; font-size: 36px; }
+  .pos-under-cupboard { bottom: -5px; font-size: 32px; }
+
+  .pos-on-bag { bottom: 95px; font-size: 36px; }
+  .pos-in-bag { bottom: 35px; font-size: 36px; }
+  .pos-under-bag { bottom: -5px; font-size: 32px; }
+
+  .pos-in-classroom {
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 32px;
+  }
+  .pos-on-classroom { bottom: 115px; font-size: 32px; }
+  .pos-under-classroom { bottom: -10px; font-size: 32px; }
+
+  /* ===== Question text ===== */
+  .question-text {
+    font-size: 20px;
+    color: #0F2B46;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.5;
+    min-height: 60px;
+  }
+  .question-text .blank {
+    display: inline-block;
+    min-width: 60px;
+    border-bottom: 3px solid #2DD4BF;
+    text-align: center;
+    color: #2DD4BF;
+    font-weight: 700;
+  }
+  .question-text .word-highlight {
+    background: linear-gradient(transparent 60%, rgba(45, 212, 191, 0.4) 60%);
+    padding: 0 4px;
+  }
+
+  /* ===== Options ===== */
+  .options-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .option-btn {
+    flex: 1;
+    max-width: 100px;
+    padding: 14px 10px;
+    background: #F7FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    color: #0F2B46;
+  }
+  .option-btn:hover { border-color: #2DD4BF; background: #E6FFFA; transform: translateY(-2px); }
+  .option-btn:active { transform: scale(0.95); }
+  .option-btn.correct { border-color: #2DD4BF; background: #DEF7EC; color: #276749; }
+  .option-btn.wrong { border-color: #FC8181; background: #FED7D7; color: #742A2A; animation: shake 0.4s; }
+  .option-btn.disabled { opacity: 0.4; pointer-events: none; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  .feedback {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 10px;
+    min-height: 24px;
+  }
+  .feedback.correct-text { color: #276749; }
+  .feedback.wrong-text { color: #742A2A; }
+
+  .sound-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #E6FFFA;
+    color: #0F2B46;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+  }
+  .sound-btn:hover { background: #2DD4BF; color: white; }
+  .sound-btn:active { transform: scale(0.95); }
+  .sound-btn:disabled { opacity: 0.5; cursor: wait; }
+
+  /* ===== Level 3: Word Order ===== */
+  .chinese-hint {
+    font-size: 17px;
+    color: #0F2B46;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding: 10px;
+    background: #E6FFFA;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .chinese-hint .cn-sound-btn {
+    background: #2DD4BF;
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+  .chinese-hint .cn-sound-btn:hover { background: #1FB8A3; transform: scale(1.1); }
+  .chinese-hint .cn-sound-btn:disabled { opacity: 0.5; cursor: wait; }
+
+  .sentence-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    min-height: 52px;
+    padding: 10px;
+    background: #F7FAFC;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    border: 2px dashed #2DD4BF;
+  }
+  .slot {
+    min-width: 44px;
+    padding: 6px 12px;
+    background: #E2E8F0;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0F2B46;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all .15s;
+  }
+  .slot.filled { background: #2DD4BF; color: #0F2B46; border-color: #1FB8A3; }
+  .slot.correct { background: #DEF7EC; border-color: #2DD4BF; color: #276749; }
+  .slot.wrong { animation: shake 0.4s; }
+  .slot:empty::after { content: '?'; color: #A0AEC0; }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .word-chip {
+    padding: 8px 16px;
+    background: #F7FAFC;
+    border: 2px solid #2DD4BF;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #0F2B46;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .word-chip:hover { transform: translateY(-2px); background: #E6FFFA; }
+  .word-chip.used { opacity: 0.3; pointer-events: none; transform: scale(0.95); }
+
+  .action-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  .check-btn, .reset-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .check-btn {
+    background: #2DD4BF;
+    color: #0F2B46;
+    flex: 1;
+  }
+  .check-btn:hover:not(:disabled) { background: #1FB8A3; }
+  .check-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .reset-btn {
+    background: #E2E8F0;
+    color: #0F2B46;
+  }
+  .reset-btn:hover { background: #CBD5E0; }
+
+  .next-btn {
+    margin-top: 12px;
+    width: 100%;
+    padding: 12px;
+    background: #0F2B46;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    display: none;
+  }
+  .next-btn.visible { display: block; }
+  .next-btn:hover { background: #1a3a5c; }
+
+  .sentence-meaning {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 12px;
+    min-height: 20px;
+    font-weight: 600;
+    white-space: pre-line;
+  }
+
+  /* ===== Result Overlay ===== */
+  .result-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 43, 70, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .result-overlay.show { opacity: 1; pointer-events: auto; }
+  .result-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    max-width: 340px;
+    width: 85%;
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  .result-overlay.show .result-card { transform: scale(1); }
+  .result-emoji { font-size: 70px; margin-bottom: 16px; }
+  .result-msg { font-size: 22px; font-weight: 700; color: #0F2B46; margin-bottom: 24px; }
+  .result-btn {
+    padding: 12px 32px;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .result-btn:hover { background: #1FB8A3; }
+
+  /* ===== Stars decoration ===== */
+  .stars-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    color: rgba(45, 212, 191, 0.3);
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.6; }
+  }
+
+  /* ===== Footer ===== */
+  .page-footer {
+    text-align: center;
+    padding: 16px 0;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 480px) {
+    .select-header h1 { font-size: 24px; }
+    .question-text { font-size: 17px; }
+    .option-btn { font-size: 16px; padding: 12px 8px; }
+    .scene-wrap { height: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars-bg" id="starsBg"></div>
+
+<div class="container">
+  <!-- ===== SELECT SCREEN ===== -->
+  <div id="screen-select" class="screen active">
+    <div class="level-header">
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">U2 方位介词</div>
+    </div>
+    <div class="select-header">
+      <div class="logo-circle">📦</div>
+      <h1>方位介词大冒险</h1>
+      <div class="subtitle">on · in · under 三关挑战</div>
+    </div>
+    <div class="level-cards">
+      <div class="level-btn" onclick="initLevel1()">
+        <div class="emoji">👀</div>
+        <div class="level-content">
+          <div class="title">第一关 · 方位小侦探</div>
+          <div class="desc">看图找出正确的方位介词！</div>
+        </div>
+        <div class="tag">入门</div>
+      </div>
+      <div class="level-btn" onclick="initLevel2()">
+        <div class="emoji">✏️</div>
+        <div class="level-content">
+          <div class="title">第二关 · 填空小高手</div>
+          <div class="desc">看图把句子填完整！</div>
+        </div>
+        <div class="tag">进阶</div>
+      </div>
+      <div class="level-btn" onclick="initLevel3()">
+        <div class="emoji">📝</div>
+        <div class="level-content">
+          <div class="title">第三关 · 连词成句</div>
+          <div class="desc">听中文，拼出完整的英文句子！</div>
+        </div>
+        <div class="tag">挑战</div>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- ===== LEVEL 1: 方位小侦探 ===== -->
+  <div id="screen-level1" class="screen">
+    <div class="level-header">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">第一关 · 方位小侦探</div>
+    </div>
+    <div class="main">
+      <div class="instruction">看图，选正确的方位词！</div>
+      <div class="progress-text" id="l1-progress">1 / 10</div>
+      <div class="game-card">
+        <div class="scene-wrap" id="l1-scene"></div>
+        <div class="question-text" id="l1-question">Where is the cat? <br>It's <span class="blank">?</span> the box.</div>
+        <div class="options-row">
+          <button class="option-btn" onclick="answerL1('on', this)">on</button>
+          <button class="option-btn" onclick="answerL1('in', this)">in</button>
+          <button class="option-btn" onclick="answerL1('under', this)">under</button>
+        </div>
+        <div class="feedback" id="l1-feedback"></div>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- ===== LEVEL 2: 填空小高手 ===== -->
+  <div id="screen-level2" class="screen">
+    <div class="level-header">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">第二关 · 填空小高手</div>
+    </div>
+    <div class="main">
+      <div class="instruction">看图，把句子填完整！</div>
+      <div class="progress-text" id="l2-progress">1 / 10</div>
+      <div class="game-card">
+        <div class="scene-wrap" id="l2-scene"></div>
+        <div class="question-text" id="l2-question">The book is <span class="blank">?</span> the table.</div>
+        <div class="options-row">
+          <button class="option-btn" onclick="answerL2('on', this)">on</button>
+          <button class="option-btn" onclick="answerL2('in', this)">in</button>
+          <button class="option-btn" onclick="answerL2('under', this)">under</button>
+        </div>
+        <div class="feedback" id="l2-feedback"></div>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- ===== LEVEL 3: 连词成句 ===== -->
+  <div id="screen-level3" class="screen">
+    <div class="level-header">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">第三关 · 连词成句</div>
+    </div>
+    <div class="main">
+      <div class="instruction">听中文，拼出正确的英文句子！</div>
+      <div class="progress-text" id="l3-progress">1 / 10</div>
+      <div class="game-card">
+        <div class="chinese-hint">
+          <span id="l3-chinese">猫在盒子里。</span>
+          <button class="cn-sound-btn" id="cn-sound-btn" onclick="playChinese()">🔊</button>
+        </div>
+        <div class="scene-wrap" id="l3-scene"></div>
+        <div class="sentence-slots" id="l3-slots"></div>
+        <div class="word-bank" id="l3-wordbank"></div>
+        <div class="action-row">
+          <button class="reset-btn" onclick="resetL3()">🔄 重来</button>
+          <button class="check-btn" id="l3-check-btn" onclick="checkL3()">✓ 检查</button>
+        </div>
+        <button class="next-btn" id="l3-next-btn" onclick="nextL3()">下一题 →</button>
+        <div class="sentence-meaning" id="l3-meaning"></div>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+</div>
+
+<!-- ===== RESULT OVERLAY ===== -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-card">
+    <div class="result-emoji" id="result-emoji">🎉</div>
+    <div class="result-msg" id="result-msg">太棒了！</div>
+    <button class="result-btn" onclick="closeResult()">继续</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+
+// 物品及其中文名、emoji
+const ITEMS = {
+  bus:    { cn: '公交车', emoji: '🚌' },
+  bird:   { cn: '鸟',    emoji: '🐦' },
+  cat:    { cn: '猫',    emoji: '🐱' },
+  book:   { cn: '书',    emoji: '📚' },
+  boat:   { cn: '船',    emoji: '🚤' },
+  dad:    { cn: '爸爸',  emoji: '👨' },
+  mum:    { cn: '妈妈',  emoji: '👩' },
+  sister: { cn: '姐姐',  emoji: '👧' },
+  brother:{ cn: '哥哥',  emoji: '👦' },
+  man:    { cn: '男人',  emoji: '👨' },
+  woman:  { cn: '女人',  emoji: '👩' },
+  grandpa:{ cn: '爷爷',  emoji: '👴' },
+  grandma:{ cn: '奶奶',  emoji: '👵' },
+  pet:    { cn: '宠物',  emoji: '🐶' },
+  bag:    { cn: '书包',  emoji: '👜' },
+  pencil: { cn: '铅笔',  emoji: '✏️' },
+  teacher:{ cn: '老师',  emoji: '👩‍🏫' }
+};
+
+// 容器及其中文名、CSS类名
+const CONTAINERS = {
+  box:       { cn: '盒子',   cssClass: 'container-box' },
+  table:     { cn: '桌子',   cssClass: 'container-table' },
+  chair:     { cn: '椅子',   cssClass: 'container-chair' },
+  bookcase:  { cn: '书架',   cssClass: 'container-bookcase' },
+  cupboard:  { cn: '橱柜',   cssClass: 'container-cupboard' },
+  bag:       { cn: '书包',   cssClass: 'container-bag' },
+  classroom: { cn: '教室',   cssClass: 'container-classroom' }
+};
+
+// 方位介词
+const PREPOSITIONS = ['on', 'in', 'under'];
+
+// 生成题目（item + prep + container 的组合）
+function generateQuestions(count) {
+  const questions = [];
+  // 挑选适合做方位题的物品（排除容器本身bag，避免bag in bag的奇怪组合）
+  const itemKeys = Object.keys(ITEMS).filter(k => k !== 'bag');
+  const containerKeys = Object.keys(CONTAINERS).filter(k => k !== 'bag'); // bag作为容器时物品不用bag
+  
+  const bagItems = itemKeys.filter(k => k !== 'bag');
+  const allContainers = Object.keys(CONTAINERS);
+  
+  // 每个容器配3个方位，打乱
+  const combos = [];
+  
+  // box - on/in/under 都合理
+  ['cat', 'bird', 'book', 'pencil', 'boat', 'bus', 'pet'].forEach(item => {
+    PREPOSITIONS.forEach(prep => {
+      combos.push({ item, prep, container: 'box' });
+    });
+  });
+  
+  // table - on/under 合理，in 不太合理，跳过 in for table
+  ['book', 'pencil', 'bag', 'cat', 'bird'].forEach(item => {
+    ['on', 'under'].forEach(prep => {
+      combos.push({ item, prep, container: 'table' });
+    });
+  });
+  
+  // chair - on/under 合理
+  ['bag', 'book', 'cat', 'bird', 'pencil'].forEach(item => {
+    ['on', 'under'].forEach(prep => {
+      combos.push({ item, prep, container: 'chair' });
+    });
+  });
+  
+  // bookcase - on/in 合理，under 也可以
+  ['book', 'pencil', 'bag', 'bird', 'cat'].forEach(item => {
+    PREPOSITIONS.forEach(prep => {
+      combos.push({ item, prep, container: 'bookcase' });
+    });
+  });
+  
+  // cupboard - in/on/under 都可以
+  ['book', 'pencil', 'bag', 'cat', 'bird'].forEach(item => {
+    PREPOSITIONS.forEach(prep => {
+      combos.push({ item, prep, container: 'cupboard' });
+    });
+  });
+  
+  // bag (容器) - in/on/under
+  ['book', 'pencil', 'cat', 'bird', 'boat', 'bus'].forEach(item => {
+    PREPOSITIONS.forEach(prep => {
+      combos.push({ item, prep, container: 'bag' });
+    });
+  });
+  
+  // classroom - in 最合理，on/under 有点怪，但也可以
+  ['teacher', 'dad', 'mum', 'sister', 'brother', 'cat', 'bird', 'man', 'woman', 'grandpa', 'grandma'].forEach(item => {
+    combos.push({ item, prep: 'in', container: 'classroom' });
+  });
+  
+  // 打乱并取count道
+  return shuffle(combos).slice(0, count).map(q => {
+    const item = ITEMS[q.item];
+    const container = CONTAINERS[q.container];
+    return {
+      ...q,
+      itemCn: item.cn,
+      itemEmoji: item.emoji,
+      containerCn: container.cn,
+      containerCss: container.cssClass,
+      // 第三关连词成句用
+      sentenceWords: ['The', q.item, 'is', q.prep, 'the', q.container, '.'],
+      sentencePlain: `The ${q.item} is ${q.prep} the ${q.container}.`,
+      questionWords: ['Where', 'is', 'the', q.item, '?'],
+      answerWords: ['It', "'s", q.prep, 'the', q.container, '.'],
+      chinese: `${item.cn}在${container.cn}${q.prep === 'on' ? '上' : q.prep === 'in' ? '里' : '下面'}。`,
+      whereQuestionCn: `${item.cn}在哪里？`,
+      fullAnswerCn: `它在${container.cn}${q.prep === 'on' ? '上' : q.prep === 'in' ? '里' : '下面'}。`
+    };
+  });
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goSelect() {
+  showScreen('screen-select');
+}
+
+// Stars background
+(function createStars() {
+  const bg = document.getElementById('starsBg');
+  const stars = ['⭐','✨','💫','🌟'];
+  for (let i = 0; i < 20; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.textContent = stars[Math.floor(Math.random() * stars.length)];
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.fontSize = (10 + Math.random() * 14) + 'px';
+    star.style.animationDelay = Math.random() * 2 + 's';
+    star.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+    bg.appendChild(star);
+  }
+})();
+
+/* ============================================================
+   AUDIO
+   ============================================================ */
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playTone(freq, duration) {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = freq;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  } catch(e) {}
+}
+function playCorrectSound() {
+  playTone(800, 0.1);
+  setTimeout(() => playTone(1000, 0.15), 100);
+}
+function playWrongSound() {
+  playTone(200, 0.15);
+  setTimeout(() => playTone(150, 0.2), 100);
+}
+
+// 英文发音（浏览器自带）
+function speakEnglish(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = 0.85;
+    window.speechSynthesis.speak(utter);
+  }
+}
+
+// 中文发音（有道接口）
+let chineseAudio = null;
+function playChinese() {
+  const q = l3State.questions[l3State.currentIdx];
+  if (!q) return;
+  
+  const btn = document.getElementById('cn-sound-btn');
+  btn.disabled = true;
+  
+  if (chineseAudio) {
+    chineseAudio.pause();
+    chineseAudio = null;
+  }
+  
+  const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(q.chinese)}&type=2`;
+  chineseAudio = new Audio(url);
+  chineseAudio.onended = () => { btn.disabled = false; };
+  chineseAudio.onerror = () => { 
+    btn.disabled = false;
+    // 失败时回退到浏览器TTS
+    if ('speechSynthesis' in window) {
+      const u = new SpeechSynthesisUtterance(q.chinese);
+      u.lang = 'zh-CN';
+      u.rate = 0.9;
+      window.speechSynthesis.speak(u);
+    }
+  };
+  chineseAudio.play().catch(() => { btn.disabled = false; });
+}
+
+/* ============================================================
+   SCENE RENDERER
+   ============================================================ */
+function renderScene(containerEl, question) {
+  const { containerCss, container: containerKey, itemEmoji, prep } = question;
+  
+  let extraHtml = '';
+  if (containerKey === 'chair') {
+    extraHtml = '<div class="chair-back"></div>';
+  } else if (containerKey === 'bookcase') {
+    extraHtml = '<div class="bookcase-shelf shelf-top"></div><div class="bookcase-shelf shelf-mid"></div>';
+  } else if (containerKey === 'cupboard') {
+    extraHtml = '<div class="cupboard-handle"></div>';
+  } else if (containerKey === 'classroom') {
+    extraHtml = '<div class="classroom-floor"></div>';
+  }
+  
+  const posClass = `pos-${prep}-${containerKey}`;
+  
+  containerEl.innerHTML = `
+    <div class="${containerCss}">
+      ${extraHtml}
+    </div>
+    <div class="scene-item ${posClass}">${itemEmoji}</div>
+  `;
+}
+
+/* ============================================================
+   LEVEL 1: 方位小侦探
+   ============================================================ */
+let l1State = { currentIdx: 0, questions: [], answered: false };
+
+function initLevel1() {
+  showScreen('screen-level1');
+  l1State.questions = generateQuestions(10);
+  l1State.currentIdx = 0;
+  l1State.answered = false;
+  loadL1();
+}
+
+function loadL1() {
+  const q = l1State.questions[l1State.currentIdx];
+  document.getElementById('l1-progress').textContent = `${l1State.currentIdx + 1} / ${l1State.questions.length}`;
+  document.getElementById('l1-feedback').textContent = '';
+  document.getElementById('l1-feedback').className = 'feedback';
+  
+  renderScene(document.getElementById('l1-scene'), q);
+  
+  document.getElementById('l1-question').innerHTML = 
+    `Where is the <span class="word-highlight">${q.item}</span>?<br>It's <span class="blank">?</span> the ${q.container}.`;
+  
+  // Reset buttons
+  document.querySelectorAll('#screen-level1 .option-btn').forEach(btn => {
+    btn.className = 'option-btn';
+  });
+  
+  l1State.answered = false;
+  
+  // 读题
+  setTimeout(() => speakEnglish(`Where is the ${q.item}?`), 300);
+}
+
+function answerL1(prep, btn) {
+  if (l1State.answered) return;
+  const q = l1State.questions[l1State.currentIdx];
+  
+  if (prep === q.prep) {
+    l1State.answered = true;
+    btn.classList.add('correct');
+    document.querySelectorAll('#screen-level1 .option-btn').forEach(b => b.classList.add('disabled'));
+    
+    document.getElementById('l1-feedback').textContent = `✓ 正确！It's ${q.prep} the ${q.container}.`;
+    document.getElementById('l1-feedback').className = 'feedback correct-text';
+    playCorrectSound();
+    speakEnglish(`It's ${q.prep} the ${q.container}.`);
+    
+    setTimeout(() => {
+      l1State.currentIdx++;
+      if (l1State.currentIdx < l1State.questions.length) {
+        loadL1();
+      } else {
+        showResult('🎉', '第一关完成！你是方位小侦探！', () => { goSelect(); });
+      }
+    }, 1500);
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('l1-feedback').textContent = '✗ 再想想~';
+    document.getElementById('l1-feedback').className = 'feedback wrong-text';
+    playWrongSound();
+    
+    setTimeout(() => {
+      btn.classList.add('disabled');
+      document.getElementById('l1-feedback').textContent = '';
+      document.getElementById('l1-feedback').className = 'feedback';
+    }, 800);
+  }
+}
+
+/* ============================================================
+   LEVEL 2: 填空小高手
+   ============================================================ */
+let l2State = { currentIdx: 0, questions: [], answered: false };
+
+function initLevel2() {
+  showScreen('screen-level2');
+  l2State.questions = generateQuestions(10);
+  l2State.currentIdx = 0;
+  l2State.answered = false;
+  loadL2();
+}
+
+function loadL2() {
+  const q = l2State.questions[l2State.currentIdx];
+  document.getElementById('l2-progress').textContent = `${l2State.currentIdx + 1} / ${l2State.questions.length}`;
+  document.getElementById('l2-feedback').textContent = '';
+  document.getElementById('l2-feedback').className = 'feedback';
+  
+  renderScene(document.getElementById('l2-scene'), q);
+  
+  document.getElementById('l2-question').innerHTML = 
+    `The <span class="word-highlight">${q.item}</span> is <span class="blank">?</span> the ${q.container}.`;
+  
+  document.querySelectorAll('#screen-level2 .option-btn').forEach(btn => {
+    btn.className = 'option-btn';
+  });
+  
+  l2State.answered = false;
+  
+  setTimeout(() => speakEnglish(`The ${q.item} is ... the ${q.container}.`), 300);
+}
+
+function answerL2(prep, btn) {
+  if (l2State.answered) return;
+  const q = l2State.questions[l2State.currentIdx];
+  
+  if (prep === q.prep) {
+    l2State.answered = true;
+    btn.classList.add('correct');
+    document.querySelectorAll('#screen-level2 .option-btn').forEach(b => b.classList.add('disabled'));
+    
+    // 填充空格
+    document.querySelector('#l2-question .blank').textContent = q.prep;
+    
+    document.getElementById('l2-feedback').textContent = `✓ 正确！The ${q.item} is ${q.prep} the ${q.container}.`;
+    document.getElementById('l2-feedback').className = 'feedback correct-text';
+    playCorrectSound();
+    speakEnglish(`The ${q.item} is ${q.prep} the ${q.container}.`);
+    
+    setTimeout(() => {
+      l2State.currentIdx++;
+      if (l2State.currentIdx < l2State.questions.length) {
+        loadL2();
+      } else {
+        showResult('🎊', '第二关完成！填空小高手就是你！', () => { goSelect(); });
+      }
+    }, 1500);
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('l2-feedback').textContent = '✗ 再想想~';
+    document.getElementById('l2-feedback').className = 'feedback wrong-text';
+    playWrongSound();
+    
+    setTimeout(() => {
+      btn.classList.add('disabled');
+      document.getElementById('l2-feedback').textContent = '';
+      document.getElementById('l2-feedback').className = 'feedback';
+    }, 800);
+  }
+}
+
+/* ============================================================
+   LEVEL 3: 连词成句
+   ============================================================ */
+let l3State = {
+  currentIdx: 0,
+  questions: [],
+  slotValues: [],
+  usedWordIndices: new Set(),
+  locked: false
+};
+
+function initLevel3() {
+  showScreen('screen-level3');
+  l3State.questions = generateQuestions(10);
+  l3State.currentIdx = 0;
+  loadL3();
+}
+
+function loadL3() {
+  const q = l3State.questions[l3State.currentIdx];
+  document.getElementById('l3-progress').textContent = `${l3State.currentIdx + 1} / ${l3State.questions.length}`;
+  document.getElementById('l3-chinese').textContent = q.chinese;
+  document.getElementById('l3-meaning').textContent = '';
+  document.getElementById('l3-meaning').style.color = '';
+  document.getElementById('l3-check-btn').disabled = false;
+  document.getElementById('l3-next-btn').classList.remove('visible');
+  
+  l3State.locked = false;
+  
+  // 用完整陈述句的单词
+  const wordCount = q.sentenceWords.length;
+  l3State.slotValues = new Array(wordCount).fill(null);
+  l3State.usedWordIndices = new Set();
+  
+  // Create slots
+  const slotsEl = document.getElementById('l3-slots');
+  slotsEl.innerHTML = '';
+  for (let i = 0; i < wordCount; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    slot.dataset.index = i;
+    slot.onclick = () => removeFromSlotL3(i);
+    slotsEl.appendChild(slot);
+  }
+  
+  // Create word bank
+  const bankEl = document.getElementById('l3-wordbank');
+  bankEl.innerHTML = '';
+  const shuffledWords = shuffle(q.sentenceWords.map((w, i) => ({ word: w, idx: i })));
+  shuffledWords.forEach(item => {
+    const chip = document.createElement('div');
+    chip.className = 'word-chip';
+    chip.textContent = item.word;
+    chip.dataset.idx = item.idx;
+    chip.onclick = () => addToSlotL3(item.word, item.idx, chip);
+    bankEl.appendChild(chip);
+  });
+  
+  // Render scene
+  renderScene(document.getElementById('l3-scene'), q);
+  
+  // 自动播中文
+  setTimeout(() => playChinese(), 500);
+}
+
+function addToSlotL3(word, wordIdx, chipEl) {
+  if (l3State.locked) return;
+  if (l3State.usedWordIndices.has(wordIdx)) return;
+  
+  const emptyIdx = l3State.slotValues.findIndex(v => v === null);
+  if (emptyIdx === -1) return;
+  
+  l3State.slotValues[emptyIdx] = { word, wordIdx };
+  l3State.usedWordIndices.add(wordIdx);
+  
+  chipEl.classList.add('used');
+  
+  const slot = document.querySelectorAll('#l3-slots .slot')[emptyIdx];
+  slot.textContent = word;
+  slot.classList.add('filled');
+  
+  playTone(500 + emptyIdx * 40, 0.08);
+}
+
+function removeFromSlotL3(slotIdx) {
+  if (l3State.locked) return;
+  const val = l3State.slotValues[slotIdx];
+  if (!val) return;
+  
+  l3State.slotValues[slotIdx] = null;
+  l3State.usedWordIndices.delete(val.wordIdx);
+  
+  const slot = document.querySelectorAll('#l3-slots .slot')[slotIdx];
+  slot.textContent = '';
+  slot.classList.remove('filled', 'correct');
+  
+  const chip = document.querySelector(`#l3-wordbank .word-chip[data-idx="${val.wordIdx}"]`);
+  if (chip) chip.classList.remove('used');
+}
+
+function resetL3() {
+  if (l3State.locked) return;
+  loadL3();
+}
+
+function checkL3() {
+  if (l3State.locked) return;
+  
+  const q = l3State.questions[l3State.currentIdx];
+  const slots = document.querySelectorAll('#l3-slots .slot');
+  
+  if (l3State.slotValues.some(v => v === null)) {
+    document.getElementById('l3-meaning').textContent = '先把所有单词都放进去哦~';
+    document.getElementById('l3-meaning').style.color = '#F6AD55';
+    return;
+  }
+  
+  const userWords = l3State.slotValues.map(v => v.word);
+  const correctWords = q.sentenceWords;
+  
+  let correct = true;
+  for (let i = 0; i < correctWords.length; i++) {
+    if (userWords[i] !== correctWords[i]) {
+      correct = false;
+      break;
+    }
+  }
+  
+  if (correct) {
+    l3State.locked = true;
+    slots.forEach(s => s.classList.add('correct'));
+    document.getElementById('l3-check-btn').disabled = true;
+    
+    const meaningEl = document.getElementById('l3-meaning');
+    meaningEl.textContent = `✓ 太棒了！\n${q.sentencePlain}\n${q.chinese}`;
+    meaningEl.style.color = '#276749';
+    
+    playCorrectSound();
+    speakEnglish(q.sentencePlain);
+    
+    document.getElementById('l3-next-btn').classList.add('visible');
+  } else {
+    playWrongSound();
+    slots.forEach(slot => {
+      slot.classList.add('wrong');
+      setTimeout(() => slot.classList.remove('wrong'), 400);
+    });
+    
+    const meaningEl = document.getElementById('l3-meaning');
+    meaningEl.textContent = '✗ 再想想~ 已清空，重新排！';
+    meaningEl.style.color = '#C53030';
+    
+    setTimeout(() => {
+      l3State.slotValues = new Array(q.sentenceWords.length).fill(null);
+      l3State.usedWordIndices = new Set();
+      slots.forEach(slot => {
+        slot.textContent = '';
+        slot.classList.remove('filled', 'correct');
+      });
+      document.querySelectorAll('#l3-wordbank .word-chip').forEach(chip => {
+        chip.classList.remove('used');
+      });
+      meaningEl.textContent = '';
+    }, 900);
+  }
+}
+
+function nextL3() {
+  l3State.currentIdx++;
+  if (l3State.currentIdx < l3State.questions.length) {
+    loadL3();
+  } else {
+    showResult('🏆', '第三关完成！你是造句小天才！', () => { goSelect(); });
+  }
+}
+
+/* ============================================================
+   RESULT OVERLAY
+   ============================================================ */
+let resultCallback = null;
+function showResult(emoji, msg, callback) {
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-msg').textContent = msg;
+  document.getElementById('result-overlay').classList.add('show');
+  resultCallback = callback;
+  playCorrectSound();
+  setTimeout(() => playTone(1200, 0.15), 120);
+}
+function closeResult() {
+  document.getElementById('result-overlay').classList.remove('show');
+  if (resultCallback) { resultCallback(); resultCallback = null; }
+}
+
+// Load voices
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+  };
+}
+</script>
+</body>
+</html>
