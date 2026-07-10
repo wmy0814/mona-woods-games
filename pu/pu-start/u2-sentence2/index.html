@@ -543,6 +543,7 @@
           <button class="option-btn" onclick="answerL1('under', this)">under</button>
         </div>
         <div class="feedback" id="l1-feedback"></div>
+        <button class="next-btn" id="l1-next-btn" onclick="nextL1()">下一题 →</button>
       </div>
     </div>
     <div class="page-footer">Mona Woods Games</div>
@@ -567,6 +568,7 @@
           <button class="option-btn" onclick="answerL2('under', this)">under</button>
         </div>
         <div class="feedback" id="l2-feedback"></div>
+        <button class="next-btn" id="l2-next-btn" onclick="nextL2()">下一题 →</button>
       </div>
     </div>
     <div class="page-footer">Mona Woods Games</div>
@@ -949,6 +951,7 @@ function loadL1() {
   document.getElementById('l1-progress').textContent = `${l1State.currentIdx + 1} / ${l1State.questions.length}`;
   document.getElementById('l1-feedback').textContent = '';
   document.getElementById('l1-feedback').className = 'feedback';
+  document.getElementById('l1-next-btn').classList.remove('visible');
   
   renderScene(document.getElementById('l1-scene'), q);
   
@@ -956,19 +959,19 @@ function loadL1() {
   // Answer hint: It's ___ the box. / They are ___ the table. / She is ___ the classroom.
   let answerStart;
   if (q.item === 'teacher' || q.item === 'father') {
-    answerStart = `${q.pronoun} ${q.verb} `; // She is / He is (full form for people)
+    answerStart = `${q.pronoun} ${q.verb} `;
   } else if (q.verb === 'are') {
-    answerStart = `${q.pronoun} ${q.verb} `; // They are (full form for plural)
+    answerStart = `${q.pronoun} ${q.verb} `;
   } else {
-    answerStart = `${q.pronoun}'s `; // It's (contraction for singular items)
+    answerStart = `${q.pronoun}'s `;
   }
   
   document.getElementById('l1-question').innerHTML = 
     `<span class="word-highlight">${q.questionPlain.replace('?', '')}</span>?<br>${answerStart}<span class="blank">?</span> the ${q.containerDisplay}.`;
   
-  // Reset buttons
+  // Reset all buttons completely
   document.querySelectorAll('#screen-level1 .option-btn').forEach(btn => {
-    btn.className = 'option-btn';
+    btn.classList.remove('correct', 'wrong', 'disabled');
   });
   
   l1State.answered = false;
@@ -979,6 +982,7 @@ function loadL1() {
 
 function answerL1(prep, btn) {
   if (l1State.answered) return;
+  if (btn.classList.contains('disabled')) return;
   const q = l1State.questions[l1State.currentIdx];
   
   if (prep === q.prep) {
@@ -991,25 +995,22 @@ function answerL1(prep, btn) {
     playCorrectSound();
     speakEnglish(q.answerPlain);
     
-    setTimeout(() => {
-      l1State.currentIdx++;
-      if (l1State.currentIdx < l1State.questions.length) {
-        loadL1();
-      } else {
-        showResult('🎉', '第一关完成！你是方位小侦探！', () => { goSelect(); });
-      }
-    }, 1500);
+    document.getElementById('l1-next-btn').classList.add('visible');
   } else {
     btn.classList.add('wrong');
+    btn.classList.add('disabled');
     document.getElementById('l1-feedback').textContent = '✗ 再想想~';
     document.getElementById('l1-feedback').className = 'feedback wrong-text';
     playWrongSound();
-    
-    setTimeout(() => {
-      btn.classList.add('disabled');
-      document.getElementById('l1-feedback').textContent = '';
-      document.getElementById('l1-feedback').className = 'feedback';
-    }, 800);
+  }
+}
+
+function nextL1() {
+  l1State.currentIdx++;
+  if (l1State.currentIdx < l1State.questions.length) {
+    loadL1();
+  } else {
+    showResult('🎉', '第一关完成！你是方位小侦探！', () => { goSelect(); });
   }
 }
 
@@ -1031,29 +1032,26 @@ function loadL2() {
   document.getElementById('l2-progress').textContent = `${l2State.currentIdx + 1} / ${l2State.questions.length}`;
   document.getElementById('l2-feedback').textContent = '';
   document.getElementById('l2-feedback').className = 'feedback';
+  document.getElementById('l2-next-btn').classList.remove('visible');
   
   renderScene(document.getElementById('l2-scene'), q);
   
-  // Use the full sentence but blank out the preposition
-  // We build the display manually to handle all cases properly
   let sentenceDisplay;
   if (q.item === 'teacher' || q.item === 'father') {
-    // She is ___ the classroom. / He is ___ the classroom.
     sentenceDisplay = `${q.pronoun} ${q.verb} <span class="blank">?</span> the ${q.containerDisplay}.`;
   } else {
-    // The cat is ___ the box. / The books are ___ the table.
     sentenceDisplay = `<span class="word-highlight">${q.articleCap} ${q.itemDisplay}</span> ${q.verb} <span class="blank">?</span> the ${q.containerDisplay}.`;
   }
   
   document.getElementById('l2-question').innerHTML = sentenceDisplay;
   
+  // Reset all buttons completely
   document.querySelectorAll('#screen-level2 .option-btn').forEach(btn => {
-    btn.className = 'option-btn';
+    btn.classList.remove('correct', 'wrong', 'disabled');
   });
   
   l2State.answered = false;
   
-  // Read the sentence with pause for blank
   const spokenSentence = q.item === 'teacher' || q.item === 'father'
     ? `${q.pronoun} ${q.verb} ... the ${q.containerDisplay}.`
     : `${q.articleCap} ${q.itemDisplay} ${q.verb} ... the ${q.containerDisplay}.`;
@@ -1063,6 +1061,7 @@ function loadL2() {
 
 function answerL2(prep, btn) {
   if (l2State.answered) return;
+  if (btn.classList.contains('disabled')) return;
   const q = l2State.questions[l2State.currentIdx];
   
   if (prep === q.prep) {
@@ -1070,7 +1069,6 @@ function answerL2(prep, btn) {
     btn.classList.add('correct');
     document.querySelectorAll('#screen-level2 .option-btn').forEach(b => b.classList.add('disabled'));
     
-    // 填充空格
     document.querySelector('#l2-question .blank').textContent = q.prep;
     
     document.getElementById('l2-feedback').textContent = `✓ 正确！${q.sentencePlain}`;
@@ -1078,25 +1076,22 @@ function answerL2(prep, btn) {
     playCorrectSound();
     speakEnglish(q.sentencePlain);
     
-    setTimeout(() => {
-      l2State.currentIdx++;
-      if (l2State.currentIdx < l2State.questions.length) {
-        loadL2();
-      } else {
-        showResult('🎊', '第二关完成！填空小高手就是你！', () => { goSelect(); });
-      }
-    }, 1500);
+    document.getElementById('l2-next-btn').classList.add('visible');
   } else {
     btn.classList.add('wrong');
+    btn.classList.add('disabled');
     document.getElementById('l2-feedback').textContent = '✗ 再想想~';
     document.getElementById('l2-feedback').className = 'feedback wrong-text';
     playWrongSound();
-    
-    setTimeout(() => {
-      btn.classList.add('disabled');
-      document.getElementById('l2-feedback').textContent = '';
-      document.getElementById('l2-feedback').className = 'feedback';
-    }, 800);
+  }
+}
+
+function nextL2() {
+  l2State.currentIdx++;
+  if (l2State.currentIdx < l2State.questions.length) {
+    loadL2();
+  } else {
+    showResult('🎊', '第二关完成！填空小高手就是你！', () => { goSelect(); });
   }
 }
 
