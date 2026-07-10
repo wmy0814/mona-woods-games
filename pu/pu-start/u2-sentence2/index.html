@@ -998,10 +998,15 @@ function answerL1(prep, btn) {
     document.getElementById('l1-next-btn').classList.add('visible');
   } else {
     btn.classList.add('wrong');
-    btn.classList.add('disabled');
     document.getElementById('l1-feedback').textContent = '✗ 再想想~';
     document.getElementById('l1-feedback').className = 'feedback wrong-text';
     playWrongSound();
+    
+    setTimeout(() => {
+      btn.classList.remove('wrong');
+      document.getElementById('l1-feedback').textContent = '';
+      document.getElementById('l1-feedback').className = 'feedback';
+    }, 800);
   }
 }
 
@@ -1079,10 +1084,15 @@ function answerL2(prep, btn) {
     document.getElementById('l2-next-btn').classList.add('visible');
   } else {
     btn.classList.add('wrong');
-    btn.classList.add('disabled');
     document.getElementById('l2-feedback').textContent = '✗ 再想想~';
     document.getElementById('l2-feedback').className = 'feedback wrong-text';
     playWrongSound();
+    
+    setTimeout(() => {
+      btn.classList.remove('wrong');
+      document.getElementById('l2-feedback').textContent = '';
+      document.getElementById('l2-feedback').className = 'feedback';
+    }, 800);
   }
 }
 
