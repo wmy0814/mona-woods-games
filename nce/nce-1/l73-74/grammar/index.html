@@ -24,19 +24,13 @@
     margin-bottom: 25px;
     padding-top: 10px;
   }
-  .logo-badge {
+  .logo-img {
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #F59E0B 0%, #EF4444 100%);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 1px;
     margin-bottom: 10px;
-    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
   }
   .logo-title {
     font-size: 22px;
@@ -380,7 +374,7 @@
 <div class="container">
   <!-- 顶部 Logo -->
   <div class="logo-section">
-    <div class="logo-badge">MW</div>
+    <img src="../../../../assets/logo.png" class="logo-img" alt="Mona Woods">
     <div class="logo-title">过去式语法大闯关</div>
     <div class="logo-sub">新概念 1 · <span>Lesson 73-74</span></div>
   </div>
@@ -419,7 +413,7 @@
           <div class="level-num">3</div>
           <div class="level-info">
             <div class="level-name">时间侦探</div>
-            <div class="level-desc">看时间标志词判断时态 · 15题</div>
+            <div class="level-desc">三时态辨析挑战 · 15题</div>
           </div>
           <div class="level-arrow">→</div>
         </div>
@@ -427,7 +421,7 @@
           <div class="level-num">4</div>
           <div class="level-info">
             <div class="level-name">时态大综合</div>
-            <div class="level-desc">四时态终极挑战 · 15题</div>
+            <div class="level-desc">三时态终极挑战 · 15题</div>
           </div>
           <div class="level-arrow">→</div>
         </div>
@@ -661,6 +655,26 @@ const questionBank = [
       { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">yesterday morning</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'yesterday morning 昨天早上，是过去的时间，用一般过去时。' },
       { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">right now</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'right now 就在此刻，用现在进行时。' },
       { scene: '看时间标志词，判断应该用什么时态', text: '时间词：<span class="time-keyword">always</span>', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'always 总是，表示习惯性动作，用一般现在时。' }
+      { scene: '判断句子使用的时态', text: 'He played football yesterday.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'played 是动词过去式，yesterday 也是过去时间标志，所以是一般过去时。' },
+      { scene: '判断句子使用的时态', text: 'She usually goes to school by bike.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'usually 通常，是习惯性动作，goes 是三单形式，所以是一般现在时。' },
+      { scene: '判断句子使用的时态', text: 'Look! They are swimming in the river.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'Look! + are swimming（be + 动词ing），是现在进行时。' },
+      { scene: '判断句子使用的时态', text: 'I had a dream last night.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'had 是 have 的过去式，last night 昨晚，所以是一般过去时。' },
+      { scene: '判断句子使用的时态', text: 'My mother cooks dinner every day.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'every day 每天，习惯动作，cooks 三单形式，所以是一般现在时。' },
+      { scene: '判断句子使用的时态', text: 'Listen! The girl is singing in the next room.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'Listen! + is singing（be + 动词ing），是现在进行时。' },
+      { scene: '判断句子使用的时态', text: 'We went to the park last Sunday.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'went 是 go 的过去式，last Sunday 上周日，所以是一般过去时。' },
+      { scene: '判断句子使用的时态', text: 'The earth goes around the sun.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: '地球绕着太阳转是客观真理，用一般现在时。' },
+      { scene: '判断句子使用的时态', text: 'What are you doing now?', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'are you doing（be + 动词ing）+ now，是现在进行时。' },
+      { scene: '判断句子使用的时态', text: 'They visited the Great Wall last year.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'visited 是过去式，last year 去年，所以是一般过去时。' },
+      { scene: '判断句子使用的时态', text: 'She is reading a book at the moment.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'is reading（be + 动词ing）+ at the moment，是现在进行时。' },
+      { scene: '判断句子使用的时态', text: 'He often helps his mother with housework.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'often 经常，习惯动作，helps 三单形式，所以是一般现在时。' },
+      { scene: '判断句子使用的时态', text: 'I bought a new pen three days ago.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'bought 是 buy 的过去式，three days ago 三天前，所以是一般过去时。' },
+      { scene: '判断句子使用的时态', text: 'The cat is sleeping on the sofa.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'is sleeping（be + 动词ing），正在进行的动作，是现在进行时。' },
+      { scene: '判断句子使用的时态', text: 'She speaks English very well.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: '描述人的能力特长，用一般现在时。speaks 是三单形式。' },
+      { scene: '判断句子使用的时态', text: 'We saw a film yesterday evening.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'saw 是 see 的过去式，yesterday evening 昨天晚上，所以是一般过去时。' },
+      { scene: '判断句子使用的时态', text: 'They are having breakfast now.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'are having（be + 动词ing）+ now，是现在进行时。' },
+      { scene: '判断句子使用的时态', text: 'Tom always gets up early.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 1, explain: 'always 总是，习惯性动作，gets 三单形式，所以是一般现在时。' },
+      { scene: '判断句子使用的时态', text: 'She wrote a letter to her friend just now.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 0, explain: 'wrote 是 write 的过去式，just now 刚才，所以是一般过去时。' },
+      { scene: '判断句子使用的时态', text: 'It is raining outside.', options: ['一般过去时', '一般现在时', '现在进行时'], answer: 2, explain: 'is raining（be + 动词ing），正在下雨，是现在进行时。' }
     ]
   },
   // ========== 第四关：时态大综合（四时态综合选择）==========
@@ -696,7 +710,27 @@ const questionBank = [
       { scene: '选择正确答案', text: 'Listen! The birds ______ in the tree.', options: ['sing', 'sings', 'sang', 'are singing'], answer: 3, explain: 'Listen! 是现在进行时的标志，birds 复数，用 are singing。' },
       { scene: '选择正确答案', text: 'I ______ a letter to my grandma last week.', options: ['write', 'writes', 'wrote', 'am writing'], answer: 2, explain: 'last week 上周，过去时间，write 的过去式是 wrote。' },
       { scene: '选择正确答案', text: 'He usually ______ his homework before dinner.', options: ['do', 'does', 'did', 'is doing'], answer: 1, explain: 'usually 通常，习惯动作，一般现在时。he 三单，用 does。' },
-      { scene: '选择正确答案', text: 'Be quiet! The baby ______ in the next room.', options: ['sleep', 'sleeps', 'slept', 'is sleeping'], answer: 3, explain: 'Be quiet! 安静！说明动作正在进行，用现在进行时。' },
+      { scene: '选择正确答案', text: 'Be quiet! The baby ______ in the next room.', options: ['sleep', 'sleeps', 'slept', 'is sleeping'], answer: 3, explain: 'Be quiet! 安静！说明动作正在进行，用现在进行时。' }
+      { scene: '选择正确答案', text: 'She ______ her grandparents last weekend.', options: ['visit', 'visits', 'visited', 'is visiting'], answer: 2, explain: 'last weekend 上周末，过去时间，visit 加 ed → visited。' },
+      { scene: '选择正确答案', text: 'They ______ lunch at school every day.', options: ['have', 'has', 'had', 'are having'], answer: 0, explain: 'every day 每天，习惯动作，一般现在时。they 复数，用 have。' },
+      { scene: '选择正确答案', text: 'Look! The bus ______.', options: ['come', 'comes', 'came', 'is coming'], answer: 3, explain: 'Look! 是现在进行时的标志，bus 三单，用 is coming。' },
+      { scene: '选择正确答案', text: 'I ______ up at 6:30 this morning.', options: ['get', 'gets', 'got', 'am getting'], answer: 2, explain: 'this morning 今天早上，已经过去的时间，get 的过去式是 got。' },
+      { scene: '选择正确答案', text: 'He ______ TV every evening.', options: ['watch', 'watches', 'watched', 'is watching'], answer: 1, explain: 'every evening 每天晚上，习惯动作，一般现在时。he 三单，watch 加 es → watches。' },
+      { scene: '选择正确答案', text: 'The students ______ in the classroom now.', options: ['read', 'reads', 'readed', 'are reading'], answer: 3, explain: 'now 现在，现在进行时。students 复数，用 are reading。' },
+      { scene: '选择正确答案', text: 'We ______ a good time at the party last Saturday.', options: ['have', 'has', 'had', 'are having'], answer: 2, explain: 'last Saturday 上周六，过去时间，have 的过去式是 had。' },
+      { scene: '选择正确答案', text: 'She ______ English very well.', options: ['speak', 'speaks', 'spoke', 'is speaking'], answer: 1, explain: '描述人的能力用一般现在时。she 三单，speak 加 s → speaks。' },
+      { scene: '选择正确答案', text: 'Listen! Someone ______ at the door.', options: ['knock', 'knocks', 'knocked', 'is knocking'], answer: 3, explain: 'Listen! 是现在进行时标志，someone 三单，用 is knocking。' },
+      { scene: '选择正确答案', text: 'He ______ to Shanghai two days ago.', options: ['go', 'goes', 'went', 'is going'], answer: 2, explain: 'two days ago 两天前，过去时间，go 的过去式是 went。' },
+      { scene: '选择正确答案', text: 'My sister ______ a beautiful dress yesterday.', options: ['buy', 'buys', 'bought', 'is buying'], answer: 2, explain: 'yesterday 昨天，过去时间，buy 的过去式是 bought。' },
+      { scene: '选择正确答案', text: 'They ______ games now.', options: ['play', 'plays', 'played', 'are playing'], answer: 3, explain: 'now 现在，现在进行时。they 复数，用 are playing。' },
+      { scene: '选择正确答案', text: 'My father ______ me a story before bed every night.', options: ['tell', 'tells', 'told', 'is telling'], answer: 1, explain: 'every night 每天晚上，习惯动作，一般现在时。father 三单，tell 加 s → tells。' },
+      { scene: '选择正确答案', text: 'She ______ her homework an hour ago.', options: ['finish', 'finishes', 'finished', 'is finishing'], answer: 2, explain: 'an hour ago 一小时前，过去时间，finish 加 ed → finished。' },
+      { scene: '选择正确答案', text: 'The rain ______ heavily now.', options: ['fall', 'falls', 'fell', 'is falling'], answer: 3, explain: 'now 现在，现在进行时。rain 三单，用 is falling。' },
+      { scene: '选择正确答案', text: 'We ______ to the zoo last month.', options: ['go', 'goes', 'went', 'are going'], answer: 2, explain: 'last month 上个月，过去时间，go 的过去式是 went。' },
+      { scene: '选择正确答案', text: 'He ______ for a walk after dinner every day.', options: ['go', 'goes', 'went', 'is going'], answer: 1, explain: 'every day 每天，习惯动作，一般现在时。he 三单，用 goes。' },
+      { scene: '选择正确答案', text: 'Look! The children ______ kites in the park.', options: ['fly', 'flies', 'flew', 'are flying'], answer: 3, explain: 'Look! 是现在进行时标志，children 复数，用 are flying。' },
+      { scene: '选择正确答案', text: 'I ______ a letter from my friend yesterday.', options: ['get', 'gets', 'got', 'am getting'], answer: 2, explain: 'yesterday 昨天，过去时间，get 的过去式是 got。' },
+      { scene: '选择正确答案', text: 'She ______ coffee every morning.', options: ['drink', 'drinks', 'drank', 'is drinking'], answer: 1, explain: 'every morning 每天早上，习惯动作，一般现在时。she 三单，drink 加 s → drinks。' },
       { scene: '选择正确答案', text: 'We ______ a great time at the party last Saturday.', options: ['have', 'has', 'had', 'are having'], answer: 2, explain: 'last Saturday 上周六，过去时间，have 的过去式是 had。' },
       { scene: '选择正确答案', text: 'The earth ______ around the sun.', options: ['go', 'goes', 'went', 'is going'], answer: 1, explain: '地球绕着太阳转是客观真理，用一般现在时。earth 三单，go 加 es → goes。' },
       { scene: '选择正确答案', text: 'She ______ breakfast at 7 o\'clock every morning.', options: ['have', 'has', 'had', 'is having'], answer: 1, explain: 'every morning 每天早上，习惯动作，一般现在时。she 三单，用 has。' },
