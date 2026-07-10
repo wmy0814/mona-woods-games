@@ -167,10 +167,10 @@
     text-align: center;
   }
 
-  /* ===== Scene (CSS drawn) ===== */
+  /* ===== Scene Image ===== */
   .scene-wrap {
     width: 100%;
-    height: 200px;
+    height: 220px;
     margin-bottom: 16px;
     display: flex;
     align-items: center;
@@ -180,229 +180,12 @@
     position: relative;
     overflow: hidden;
   }
-  .scene-item {
-    font-size: 56px;
-    position: absolute;
-    z-index: 5;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  .scene-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
   }
-
-  /* Containers */
-  .container-box {
-    width: 120px;
-    height: 90px;
-    background: linear-gradient(180deg, #F6AD55 0%, #ED8936 100%);
-    border-radius: 0 0 12px 12px;
-    position: relative;
-    border: 3px solid #C05621;
-    border-top: none;
-  }
-  .container-box::before {
-    content: '';
-    position: absolute;
-    top: -12px;
-    left: -6px;
-    right: -6px;
-    height: 16px;
-    background: #C05621;
-    border-radius: 6px 6px 0 0;
-  }
-
-  .container-table {
-    width: 140px;
-    height: 70px;
-    position: relative;
-  }
-  .container-table::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 12px;
-    background: linear-gradient(180deg, #D69E2E 0%, #B7791F 100%);
-    border-radius: 4px;
-  }
-  .container-table::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 20px;
-    width: 8px;
-    height: 58px;
-    background: #B7791F;
-    box-shadow: 92px 0 0 #B7791F;
-  }
-
-  .container-chair {
-    width: 80px;
-    height: 110px;
-    position: relative;
-  }
-  .container-chair::before {
-    content: '';
-    position: absolute;
-    top: 40px;
-    left: 0;
-    right: 0;
-    height: 10px;
-    background: #9F7AEA;
-    border-radius: 4px;
-  }
-  .container-chair::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 10px;
-    height: 50px;
-    background: #805AD5;
-    border-radius: 4px;
-    box-shadow: 70px 0 0 #805AD5;
-  }
-  .chair-back {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 42px;
-    background: linear-gradient(180deg, #9F7AEA 0%, #805AD5 100%);
-    border-radius: 8px 8px 0 0;
-  }
-
-  .container-bookcase {
-    width: 100px;
-    height: 140px;
-    background: linear-gradient(180deg, #A0522D 0%, #8B4513 100%);
-    border-radius: 6px;
-    position: relative;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-  }
-  .container-bookcase::before,
-  .container-bookcase::after {
-    content: '';
-    position: absolute;
-    left: 4px;
-    right: 4px;
-    height: 4px;
-    background: #6B4423;
-  }
-  .container-bookcase::before { top: 45%; }
-  .container-bookcase::after { bottom: 8px; display: none; }
-  .bookcase-shelf {
-    position: absolute;
-    left: 4px;
-    right: 4px;
-    height: 4px;
-    background: #6B4423;
-  }
-  .shelf-top { top: 33%; }
-  .shelf-mid { top: 66%; }
-
-  .container-cupboard {
-    width: 90px;
-    height: 130px;
-    background: linear-gradient(180deg, #E2E8F0 0%, #A0AEC0 100%);
-    border-radius: 8px;
-    position: relative;
-    border: 2px solid #718096;
-  }
-  .container-cupboard::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -2px;
-    right: -2px;
-    height: 3px;
-    background: #718096;
-  }
-  .cupboard-handle {
-    position: absolute;
-    width: 6px;
-    height: 14px;
-    background: #4A5568;
-    border-radius: 3px;
-    right: 10px;
-    top: 25%;
-    box-shadow: 0 52px 0 #4A5568;
-  }
-
-  .container-bag {
-    width: 100px;
-    height: 85px;
-    background: linear-gradient(135deg, #FC8181 0%, #F56565 100%);
-    border-radius: 0 0 20px 20px;
-    position: relative;
-    border: 2px solid #C53030;
-  }
-  .container-bag::before {
-    content: '';
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 25px;
-    border: 4px solid #C53030;
-    border-bottom: none;
-    border-radius: 25px 25px 0 0;
-  }
-
-  .container-classroom {
-    width: 160px;
-    height: 110px;
-    background: linear-gradient(180deg, #BEE3F8 0%, #90CDF4 100%);
-    border-radius: 8px 8px 0 0;
-    position: relative;
-    border: 3px solid #2B6CB0;
-    border-bottom: none;
-  }
-  .classroom-floor {
-    position: absolute;
-    bottom: 0;
-    left: -3px;
-    right: -3px;
-    height: 20px;
-    background: #D69E2E;
-    border-radius: 0 0 6px 6px;
-  }
-
-  /* Position helper classes */
-  .pos-on-box { bottom: 85px; }
-  .pos-in-box { bottom: 30px; font-size: 40px; }
-  .pos-under-box { bottom: -10px; }
-
-  .pos-on-table { bottom: 95px; }
-  .pos-in-table { display: none; }
-  .pos-under-table { bottom: -5px; font-size: 44px; }
-
-  .pos-on-chair { bottom: 120px; font-size: 40px; }
-  .pos-in-chair { display: none; }
-  .pos-under-chair { bottom: 0px; font-size: 36px; }
-
-  .pos-on-bookcase { bottom: 145px; font-size: 36px; }
-  .pos-in-bookcase { bottom: 65px; font-size: 36px; }
-  .pos-under-bookcase { bottom: -5px; font-size: 32px; }
-
-  .pos-on-cupboard { bottom: 140px; font-size: 36px; }
-  .pos-in-cupboard { bottom: 55px; font-size: 36px; }
-  .pos-under-cupboard { bottom: -5px; font-size: 32px; }
-
-  .pos-on-bag { bottom: 95px; font-size: 36px; }
-  .pos-in-bag { bottom: 35px; font-size: 36px; }
-  .pos-under-bag { bottom: -5px; font-size: 32px; }
-
-  .pos-in-classroom {
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 32px;
-  }
-  .pos-on-classroom { bottom: 115px; font-size: 32px; }
-  .pos-under-classroom { bottom: -10px; font-size: 32px; }
 
   /* ===== Question text ===== */
   .question-text {
@@ -692,7 +475,7 @@
     .select-header h1 { font-size: 24px; }
     .question-text { font-size: 17px; }
     .option-btn { font-size: 16px; padding: 12px 8px; }
-    .scene-wrap { height: 180px; }
+    .scene-wrap { height: 200px; }
   }
 </style>
 </head>
@@ -830,149 +613,201 @@
 
 <script>
 /* ============================================================
-   DATA
+   SCENE DATA (30 scenes from mapping.json)
    ============================================================ */
+const SCENE_DATA = [
+  {"id":1,"item":"cat","prep":"on","container":"box","file":"scene_01.jpg","cn":"猫在盒子上","en":"The cat is on the box."},
+  {"id":2,"item":"cat","prep":"in","container":"box","file":"scene_02.jpg","cn":"猫在盒子里","en":"The cat is in the box."},
+  {"id":3,"item":"cat","prep":"under","container":"box","file":"scene_03.jpg","cn":"猫在盒子下面","en":"The cat is under the box."},
+  {"id":4,"item":"bird","prep":"on","container":"box","file":"scene_04.jpg","cn":"鸟在盒子上","en":"The bird is on the box."},
+  {"id":5,"item":"bird","prep":"in","container":"box","file":"scene_05.jpg","cn":"鸟在盒子里","en":"The bird is in the box."},
+  {"id":6,"item":"bird","prep":"under","container":"box","file":"scene_06.jpg","cn":"鸟在盒子下面","en":"The bird is under the box."},
+  {"id":7,"item":"books","prep":"on","container":"box","file":"scene_07.jpg","cn":"书在盒子上","en":"The books are on the box."},
+  {"id":8,"item":"books","prep":"in","container":"box","file":"scene_08.jpg","cn":"书在盒子里","en":"The books are in the box."},
+  {"id":9,"item":"book","prep":"under","container":"box","file":"scene_09.jpg","cn":"书在盒子下面","en":"The book is under the box."},
+  {"id":10,"item":"bag","prep":"on","container":"table","file":"scene_10.jpg","cn":"书包在桌子上","en":"The school bag is on the table."},
+  {"id":11,"item":"bag","prep":"under","container":"table","file":"scene_11.jpg","cn":"书包在桌子下面","en":"The school bag is under the table."},
+  {"id":12,"item":"pencils","prep":"on","container":"table","file":"scene_12.jpg","cn":"铅笔在桌子上","en":"The pencils are on the table."},
+  {"id":13,"item":"pencil","prep":"under","container":"table","file":"scene_13.jpg","cn":"铅笔在桌子下面","en":"The pencil is under the table."},
+  {"id":14,"item":"cat","prep":"on","container":"table","file":"scene_14.jpg","cn":"猫在桌子上","en":"The cat is on the table."},
+  {"id":15,"item":"cat","prep":"under","container":"table","file":"scene_15.jpg","cn":"猫在桌子下面","en":"The cat is under the table."},
+  {"id":16,"item":"bag","prep":"on","container":"chair","file":"scene_16.jpg","cn":"书包在椅子上","en":"The school bag is on the chair."},
+  {"id":17,"item":"bag","prep":"under","container":"chair","file":"scene_17.jpg","cn":"书包在椅子下面","en":"The school bag is under the chair."},
+  {"id":18,"item":"book","prep":"on","container":"chair","file":"scene_18.jpg","cn":"书在椅子上","en":"The book is on the chair."},
+  {"id":19,"item":"book","prep":"under","container":"chair","file":"scene_19.jpg","cn":"书在椅子下面","en":"The book is under the chair."},
+  {"id":20,"item":"cat","prep":"on","container":"chair","file":"scene_20.jpg","cn":"猫在椅子上","en":"The cat is on the chair."},
+  {"id":21,"item":"cat","prep":"under","container":"chair","file":"scene_21.jpg","cn":"猫在椅子下面","en":"The cat is under the chair."},
+  {"id":22,"item":"books","prep":"on","container":"bookshelf","file":"scene_22.jpg","cn":"书在书架上","en":"The books are on the bookshelf."},
+  {"id":23,"item":"books","prep":"in","container":"bookshelf","file":"scene_23.jpg","cn":"书在书架里","en":"The books are in the bookshelf."},
+  {"id":24,"item":"cat","prep":"under","container":"bookshelf","file":"scene_24.jpg","cn":"猫在书架下面","en":"The cat is under the bookshelf."},
+  {"id":25,"item":"pencils","prep":"in","container":"bag","file":"scene_25.jpg","cn":"铅笔在书包里","en":"The pencils are in the school bag."},
+  {"id":26,"item":"books","prep":"in","container":"bag","file":"scene_26.jpg","cn":"书在书包里","en":"The books are in the school bag."},
+  {"id":27,"item":"pencil","prep":"under","container":"bag","file":"scene_27.jpg","cn":"铅笔在书包下面","en":"The pencil is under the school bag."},
+  {"id":28,"item":"teacher","prep":"in","container":"classroom","file":"scene_28.jpg","cn":"老师在教室里","en":"She is in the classroom."},
+  {"id":29,"item":"father","prep":"in","container":"classroom","file":"scene_29.jpg","cn":"爸爸在教室里","en":"He is in the classroom."},
+  {"id":30,"item":"cat","prep":"in","container":"classroom","file":"scene_30.jpg","cn":"猫在教室里","en":"The cat is in the classroom."}
+];
 
-// 物品及其中文名、emoji、冠词、代词
-// article: 名词前用 the 还是 my
-// pronoun: 回答用的主语代词 (It / He / She)
-// answerCn: 中文回答的主语（它/他/她）
-const ITEMS = {
-  bus:    { cn: '公交车', emoji: '🚌', article: 'the', pronoun: 'It',    answerCn: '它' },
-  bird:   { cn: '鸟',    emoji: '🐦', article: 'the', pronoun: 'It',    answerCn: '它' },
-  cat:    { cn: '猫',    emoji: '🐱', article: 'the', pronoun: 'It',    answerCn: '它' },
-  book:   { cn: '书',    emoji: '📚', article: 'the', pronoun: 'It',    answerCn: '它' },
-  boat:   { cn: '船',    emoji: '🚤', article: 'the', pronoun: 'It',    answerCn: '它' },
-  dad:    { cn: '爸爸',  emoji: '👨', article: 'my',  pronoun: 'He',    answerCn: '他' },
-  mum:    { cn: '妈妈',  emoji: '👩', article: 'my',  pronoun: 'She',   answerCn: '她' },
-  sister: { cn: '姐姐',  emoji: '👧', article: 'my',  pronoun: 'She',   answerCn: '她' },
-  brother:{ cn: '哥哥',  emoji: '👦', article: 'my',  pronoun: 'He',    answerCn: '他' },
-  man:    { cn: '男人',  emoji: '👨', article: 'the', pronoun: 'He',    answerCn: '他' },
-  woman:  { cn: '女人',  emoji: '👩', article: 'the', pronoun: 'She',   answerCn: '她' },
-  grandpa:{ cn: '爷爷',  emoji: '👴', article: 'my',  pronoun: 'He',    answerCn: '他' },
-  grandma:{ cn: '奶奶',  emoji: '👵', article: 'my',  pronoun: 'She',   answerCn: '她' },
-  pet:    { cn: '宠物',  emoji: '🐶', article: 'the', pronoun: 'It',    answerCn: '它' },
-  bag:    { cn: '书包',  emoji: '👜', article: 'the', pronoun: 'It',    answerCn: '它' },
-  pencil: { cn: '铅笔',  emoji: '✏️', article: 'the', pronoun: 'It',    answerCn: '它' },
-  teacher:{ cn: '老师',  emoji: '👩‍🏫', article: 'the', pronoun: 'She',   answerCn: '她' }
+/* ============================================================
+   ITEM METADATA
+   ============================================================ */
+// article: the / my (before item in question/sentence)
+// pronoun: It / He / She / They (for answer sentences)
+// verb: is / are
+// displayName: full display name (e.g. "school bag" for bag)
+// answerCn: 它/他/她/它们
+const ITEM_META = {
+  cat:     { article: 'the', pronoun: 'It',    verb: 'is', displayName: 'cat',     answerCn: '它' },
+  bird:    { article: 'the', pronoun: 'It',    verb: 'is', displayName: 'bird',    answerCn: '它' },
+  book:    { article: 'the', pronoun: 'It',    verb: 'is', displayName: 'book',    answerCn: '它' },
+  books:   { article: 'the', pronoun: 'They',  verb: 'are', displayName: 'books',   answerCn: '它们' },
+  bag:     { article: 'the', pronoun: 'It',    verb: 'is', displayName: 'school bag', answerCn: '它' },
+  pencil:  { article: 'the', pronoun: 'It',    verb: 'is', displayName: 'pencil',  answerCn: '它' },
+  pencils: { article: 'the', pronoun: 'They',  verb: 'are', displayName: 'pencils', answerCn: '它们' },
+  teacher: { article: 'the', pronoun: 'She',   verb: 'is', displayName: 'teacher', answerCn: '她' },
+  father:  { article: 'my',  pronoun: 'He',    verb: 'is', displayName: 'father',  answerCn: '他' }
 };
 
-// 容器及其中文名、CSS类名
-const CONTAINERS = {
-  box:       { cn: '盒子',   cssClass: 'container-box' },
-  table:     { cn: '桌子',   cssClass: 'container-table' },
-  chair:     { cn: '椅子',   cssClass: 'container-chair' },
-  bookcase:  { cn: '书架',   cssClass: 'container-bookcase' },
-  cupboard:  { cn: '橱柜',   cssClass: 'container-cupboard' },
-  bag:       { cn: '书包',   cssClass: 'container-bag' },
-  classroom: { cn: '教室',   cssClass: 'container-classroom' }
+// Container display names (for full sentences)
+const CONTAINER_META = {
+  box:       'box',
+  table:     'table',
+  chair:     'chair',
+  bookshelf: 'bookshelf',
+  bag:       'school bag',
+  classroom: 'classroom'
 };
 
-// 方位介词
+/* ============================================================
+   QUESTION GENERATION
+   ============================================================ */
 const PREPOSITIONS = ['on', 'in', 'under'];
 
-// 生成题目（item + prep + container 的组合）
+// Process scene data into full question objects
+function buildQuestion(scene) {
+  const meta = ITEM_META[scene.item];
+  const containerName = CONTAINER_META[scene.container];
+  const article = meta.article;
+  const articleCap = article.charAt(0).toUpperCase() + article.slice(1);
+  const pronoun = meta.pronoun;
+  const pronounS = pronoun + "'s"; // It's / He's / She's / They're
+  const verb = meta.verb;
+  const itemDisplay = meta.displayName;
+  const answerCn = meta.answerCn;
+  const prepCn = scene.prep === 'on' ? '上' : scene.prep === 'in' ? '里' : '下面';
+  
+  // Full sentence (陈述句): The cat is on the box. / She is in the classroom.
+  const sentencePlain = scene.en;
+  
+  // Split sentence into words for level 3 word order game
+  // Handle the period as a separate token
+  const sentenceWords = splitSentence(sentencePlain);
+  
+  // Question: Where's the cat? / Where's my father? / Where are the books?
+  const questionPlain = buildQuestionSentence(scene, meta);
+  
+  // Question words for display
+  const questionWords = splitSentence(questionPlain);
+  
+  // Answer: It's on the box. / She is in the classroom. / They are on the table.
+  const answerPlain = buildAnswerSentence(scene, meta);
+  const answerWords = splitSentence(answerPlain);
+  
+  // Chinese
+  const chinese = scene.cn + '。';
+  const whereQuestionCn = (article === 'my' ? '我的' : '') + getItemCn(scene.item) + '在哪里？';
+  const fullAnswerCn = answerCn + '在' + getContainerCn(scene.container) + prepCn + '。';
+  
+  return {
+    ...scene,
+    image: 'images/' + scene.file,
+    article: article,
+    articleCap: articleCap,
+    pronoun: pronoun,
+    pronounS: pronounS,
+    verb: verb,
+    itemDisplay: itemDisplay,
+    containerDisplay: containerName,
+    prepCn: prepCn,
+    answerCn: answerCn,
+    sentenceWords: sentenceWords,
+    sentencePlain: sentencePlain,
+    questionWords: questionWords,
+    questionPlain: questionPlain,
+    answerWords: answerWords,
+    answerPlain: answerPlain,
+    chinese: chinese,
+    whereQuestionCn: whereQuestionCn,
+    fullAnswerCn: fullAnswerCn
+  };
+}
+
+function splitSentence(sentence) {
+  // Split sentence into words, keeping period as separate token
+  // e.g. "The cat is on the box." -> ["The", "cat", "is", "on", "the", "box", "."]
+  // Handle contractions like "It's", "Where's", "They're"
+  const trimmed = sentence.trim();
+  const hasPeriod = trimmed.endsWith('.');
+  const text = hasPeriod ? trimmed.slice(0, -1) : trimmed;
+  const words = text.split(/\s+/);
+  if (hasPeriod) words.push('.');
+  return words;
+}
+
+function buildQuestionSentence(scene, meta) {
+  const verb = meta.verb; // is / are
+  const article = meta.article;
+  const itemDisplay = meta.displayName;
+  
+  if (verb === 'are') {
+    // Where are the books?
+    return `Where are ${article} ${itemDisplay}?`;
+  } else {
+    // Where's the cat? / Where's my father?
+    return `Where's ${article} ${itemDisplay}?`;
+  }
+}
+
+function buildAnswerSentence(scene, meta) {
+  const pronoun = meta.pronoun; // It / He / She / They
+  const verb = meta.verb;       // is / are
+  const container = CONTAINER_META[scene.container];
+  const prep = scene.prep;
+  
+  // It's on the box. / She is in the classroom. / They are on the table.
+  // For people (teacher/father), use full pronoun + verb
+  if (scene.item === 'teacher' || scene.item === 'father') {
+    return `${pronoun} ${verb} ${prep} the ${container}.`;
+  }
+  // For items with "is", use contraction
+  if (verb === 'is') {
+    return `${pronoun}'s ${prep} the ${container}.`;
+  }
+  // For plural (are), use full form
+  return `${pronoun} ${verb} ${prep} the ${container}.`;
+}
+
+function getItemCn(item) {
+  const map = {
+    cat: '猫', bird: '鸟', book: '书', books: '书',
+    bag: '书包', pencil: '铅笔', pencils: '铅笔',
+    teacher: '老师', father: '爸爸'
+  };
+  return map[item] || item;
+}
+
+function getContainerCn(container) {
+  const map = {
+    box: '盒子', table: '桌子', chair: '椅子',
+    bookshelf: '书架', bag: '书包', classroom: '教室'
+  };
+  return map[container] || container;
+}
+
+// Generate N random questions from the 30 scenes (no repeats)
 function generateQuestions(count) {
-  const questions = [];
-  // 挑选适合做方位题的物品（排除容器本身bag，避免bag in bag的奇怪组合）
-  const itemKeys = Object.keys(ITEMS).filter(k => k !== 'bag');
-  const containerKeys = Object.keys(CONTAINERS).filter(k => k !== 'bag'); // bag作为容器时物品不用bag
-  
-  const bagItems = itemKeys.filter(k => k !== 'bag');
-  const allContainers = Object.keys(CONTAINERS);
-  
-  // 每个容器配3个方位，打乱
-  const combos = [];
-  
-  // box - on/in/under 都合理
-  ['cat', 'bird', 'book', 'pencil', 'boat', 'bus', 'pet'].forEach(item => {
-    PREPOSITIONS.forEach(prep => {
-      combos.push({ item, prep, container: 'box' });
-    });
-  });
-  
-  // table - on/under 合理，in 不太合理，跳过 in for table
-  ['book', 'pencil', 'bag', 'cat', 'bird'].forEach(item => {
-    ['on', 'under'].forEach(prep => {
-      combos.push({ item, prep, container: 'table' });
-    });
-  });
-  
-  // chair - on/under 合理
-  ['bag', 'book', 'cat', 'bird', 'pencil'].forEach(item => {
-    ['on', 'under'].forEach(prep => {
-      combos.push({ item, prep, container: 'chair' });
-    });
-  });
-  
-  // bookcase - on/in 合理，under 也可以
-  ['book', 'pencil', 'bag', 'bird', 'cat'].forEach(item => {
-    PREPOSITIONS.forEach(prep => {
-      combos.push({ item, prep, container: 'bookcase' });
-    });
-  });
-  
-  // cupboard - in/on/under 都可以
-  ['book', 'pencil', 'bag', 'cat', 'bird'].forEach(item => {
-    PREPOSITIONS.forEach(prep => {
-      combos.push({ item, prep, container: 'cupboard' });
-    });
-  });
-  
-  // bag (容器) - in/on/under
-  ['book', 'pencil', 'cat', 'bird', 'boat', 'bus'].forEach(item => {
-    PREPOSITIONS.forEach(prep => {
-      combos.push({ item, prep, container: 'bag' });
-    });
-  });
-  
-  // classroom - in 最合理，on/under 有点怪，但也可以
-  ['teacher', 'dad', 'mum', 'sister', 'brother', 'cat', 'bird', 'man', 'woman', 'grandpa', 'grandma'].forEach(item => {
-    combos.push({ item, prep: 'in', container: 'classroom' });
-  });
-  
-  // 打乱并取count道
-  return shuffle(combos).slice(0, count).map(q => {
-    const item = ITEMS[q.item];
-    const container = CONTAINERS[q.container];
-    
-    const article = item.article; // the / my
-    const articleCap = article.charAt(0).toUpperCase() + article.slice(1); // The / My
-    const pronoun = item.pronoun; // It / He / She
-    const pronounS = pronoun + "'s"; // It's / He's / She's
-    const answerCn = item.answerCn; // 它/他/她
-    const prepCn = q.prep === 'on' ? '上' : q.prep === 'in' ? '里' : '下面';
-    
-    // 中文：我的爸爸 / 猫
-    const itemCnFull = article === 'my' ? '我的' + item.cn : item.cn;
-    
-    return {
-      ...q,
-      itemCn: item.cn,
-      itemCnFull: itemCnFull,
-      itemEmoji: item.emoji,
-      article: article,
-      articleCap: articleCap,
-      pronoun: pronoun,
-      pronounS: pronounS,
-      answerCn: answerCn,
-      prepCn: prepCn,
-      containerCn: container.cn,
-      containerCss: container.cssClass,
-      // 第三关连词成句用（陈述句）
-      sentenceWords: [articleCap, q.item, 'is', q.prep, 'the', q.container, '.'],
-      sentencePlain: `${articleCap} ${q.item} is ${q.prep} the ${q.container}.`,
-      // 第一关问答句
-      questionWords: ['Where', "'s", article, q.item, '?'],
-      questionPlain: `Where's ${article} ${q.item}?`,
-      answerWords: [pronounS, q.prep, 'the', q.container, '.'],
-      answerPlain: `${pronounS} ${q.prep} the ${q.container}.`,
-      // 中文
-      chinese: `${itemCnFull}在${container.cn}${prepCn}。`,
-      whereQuestionCn: `${itemCnFull}在哪里？`,
-      fullAnswerCn: `${answerCn}在${container.cn}${prepCn}。`
-    };
-  });
+  const shuffled = shuffle([...SCENE_DATA]);
+  return shuffled.slice(0, count).map(scene => buildQuestion(scene));
 }
 
 /* ============================================================
@@ -1088,34 +923,16 @@ function playChinese() {
 }
 
 /* ============================================================
-   SCENE RENDERER
+   SCENE RENDERER (Image-based)
    ============================================================ */
 function renderScene(containerEl, question) {
-  const { containerCss, container: containerKey, itemEmoji, prep } = question;
-  
-  let extraHtml = '';
-  if (containerKey === 'chair') {
-    extraHtml = '<div class="chair-back"></div>';
-  } else if (containerKey === 'bookcase') {
-    extraHtml = '<div class="bookcase-shelf shelf-top"></div><div class="bookcase-shelf shelf-mid"></div>';
-  } else if (containerKey === 'cupboard') {
-    extraHtml = '<div class="cupboard-handle"></div>';
-  } else if (containerKey === 'classroom') {
-    extraHtml = '<div class="classroom-floor"></div>';
-  }
-  
-  const posClass = `pos-${prep}-${containerKey}`;
-  
   containerEl.innerHTML = `
-    <div class="${containerCss}">
-      ${extraHtml}
-    </div>
-    <div class="scene-item ${posClass}">${itemEmoji}</div>
+    <img class="scene-img" src="${question.image}" alt="${question.cn}" loading="lazy">
   `;
 }
 
 /* ============================================================
-   LEVEL 1: 方位小侦探
+   LEVEL 1: 方位小侦探 (看图选介词)
    ============================================================ */
 let l1State = { currentIdx: 0, questions: [], answered: false };
 
@@ -1135,8 +952,19 @@ function loadL1() {
   
   renderScene(document.getElementById('l1-scene'), q);
   
+  // Question text: Where's the cat? / Where are the books?
+  // Answer hint: It's ___ the box. / They are ___ the table. / She is ___ the classroom.
+  let answerStart;
+  if (q.item === 'teacher' || q.item === 'father') {
+    answerStart = `${q.pronoun} ${q.verb} `; // She is / He is (full form for people)
+  } else if (q.verb === 'are') {
+    answerStart = `${q.pronoun} ${q.verb} `; // They are (full form for plural)
+  } else {
+    answerStart = `${q.pronoun}'s `; // It's (contraction for singular items)
+  }
+  
   document.getElementById('l1-question').innerHTML = 
-    `Where's <span class="word-highlight">${q.article} ${q.item}</span>?<br>${q.pronounS} <span class="blank">?</span> the ${q.container}.`;
+    `<span class="word-highlight">${q.questionPlain.replace('?', '')}</span>?<br>${answerStart}<span class="blank">?</span> the ${q.containerDisplay}.`;
   
   // Reset buttons
   document.querySelectorAll('#screen-level1 .option-btn').forEach(btn => {
@@ -1146,7 +974,7 @@ function loadL1() {
   l1State.answered = false;
   
   // 读题
-  setTimeout(() => speakEnglish(`Where's ${q.article} ${q.item}?`), 300);
+  setTimeout(() => speakEnglish(q.questionPlain), 300);
 }
 
 function answerL1(prep, btn) {
@@ -1158,10 +986,10 @@ function answerL1(prep, btn) {
     btn.classList.add('correct');
     document.querySelectorAll('#screen-level1 .option-btn').forEach(b => b.classList.add('disabled'));
     
-    document.getElementById('l1-feedback').textContent = `✓ 正确！${q.pronounS} ${q.prep} the ${q.container}.`;
+    document.getElementById('l1-feedback').textContent = `✓ 正确！${q.answerPlain}`;
     document.getElementById('l1-feedback').className = 'feedback correct-text';
     playCorrectSound();
-    speakEnglish(`${q.pronounS} ${q.prep} the ${q.container}.`);
+    speakEnglish(q.answerPlain);
     
     setTimeout(() => {
       l1State.currentIdx++;
@@ -1186,7 +1014,7 @@ function answerL1(prep, btn) {
 }
 
 /* ============================================================
-   LEVEL 2: 填空小高手
+   LEVEL 2: 填空小高手 (看图填空)
    ============================================================ */
 let l2State = { currentIdx: 0, questions: [], answered: false };
 
@@ -1206,8 +1034,18 @@ function loadL2() {
   
   renderScene(document.getElementById('l2-scene'), q);
   
-  document.getElementById('l2-question').innerHTML = 
-    `<span class="word-highlight">${q.articleCap} ${q.item}</span> is <span class="blank">?</span> the ${q.container}.`;
+  // Use the full sentence but blank out the preposition
+  // We build the display manually to handle all cases properly
+  let sentenceDisplay;
+  if (q.item === 'teacher' || q.item === 'father') {
+    // She is ___ the classroom. / He is ___ the classroom.
+    sentenceDisplay = `${q.pronoun} ${q.verb} <span class="blank">?</span> the ${q.containerDisplay}.`;
+  } else {
+    // The cat is ___ the box. / The books are ___ the table.
+    sentenceDisplay = `<span class="word-highlight">${q.articleCap} ${q.itemDisplay}</span> ${q.verb} <span class="blank">?</span> the ${q.containerDisplay}.`;
+  }
+  
+  document.getElementById('l2-question').innerHTML = sentenceDisplay;
   
   document.querySelectorAll('#screen-level2 .option-btn').forEach(btn => {
     btn.className = 'option-btn';
@@ -1215,7 +1053,12 @@ function loadL2() {
   
   l2State.answered = false;
   
-  setTimeout(() => speakEnglish(`${q.articleCap} ${q.item} is ... the ${q.container}.`), 300);
+  // Read the sentence with pause for blank
+  const spokenSentence = q.item === 'teacher' || q.item === 'father'
+    ? `${q.pronoun} ${q.verb} ... the ${q.containerDisplay}.`
+    : `${q.articleCap} ${q.itemDisplay} ${q.verb} ... the ${q.containerDisplay}.`;
+  
+  setTimeout(() => speakEnglish(spokenSentence), 300);
 }
 
 function answerL2(prep, btn) {
@@ -1230,10 +1073,10 @@ function answerL2(prep, btn) {
     // 填充空格
     document.querySelector('#l2-question .blank').textContent = q.prep;
     
-    document.getElementById('l2-feedback').textContent = `✓ 正确！${q.articleCap} ${q.item} is ${q.prep} the ${q.container}.`;
+    document.getElementById('l2-feedback').textContent = `✓ 正确！${q.sentencePlain}`;
     document.getElementById('l2-feedback').className = 'feedback correct-text';
     playCorrectSound();
-    speakEnglish(`${q.articleCap} ${q.item} is ${q.prep} the ${q.container}.`);
+    speakEnglish(q.sentencePlain);
     
     setTimeout(() => {
       l2State.currentIdx++;
@@ -1258,7 +1101,7 @@ function answerL2(prep, btn) {
 }
 
 /* ============================================================
-   LEVEL 3: 连词成句
+   LEVEL 3: 连词成句 (看图+中文拼句子)
    ============================================================ */
 let l3State = {
   currentIdx: 0,
@@ -1315,7 +1158,7 @@ function loadL3() {
     bankEl.appendChild(chip);
   });
   
-  // Render scene
+  // Render scene image
   renderScene(document.getElementById('l3-scene'), q);
   
   // 自动播中文
