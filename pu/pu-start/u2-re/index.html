@@ -258,7 +258,8 @@
     flex-wrap: wrap;
   }
   .l2-slot-letter {
-    width: 36px;
+    min-width: 36px;
+    padding: 0 10px;
     height: 36px;
     background: #2DD4BF;
     color: #0F2B46;
@@ -266,7 +267,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
   }
@@ -278,7 +279,8 @@
     width: 100%;
   }
   .l2-letter {
-    width: 40px;
+    min-width: 40px;
+    padding: 0 12px;
     height: 40px;
     background: #E0F2FE;
     color: #0369A1;
@@ -286,7 +288,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 700;
     cursor: pointer;
     transition: all .2s;
@@ -534,7 +536,7 @@
       <div class="level-badge">第二关 · 单词拼写</div>
     </div>
     <div class="main">
-      <div class="instruction">看图，把字母排成正确的单词</div>
+      <div class="instruction">看图，把词块拼成正确的单词</div>
       <div class="progress-text" id="l2-progress">1 / 10</div>
       <div class="score-text" id="l2-score">得分：0</div>
       <div class="game-card">
@@ -635,40 +637,56 @@
 <script>
 // ===== 数据 =====
 const UNIT2_WORDS = [
-  { en: 'cat', cn: '猫', img: 'cat.jpg' },
-  { en: 'dog', cn: '狗', img: 'dog.jpg' },
-  { en: 'bird', cn: '鸟', img: 'bird.jpg' },
-  { en: 'book', cn: '书', img: 'book.jpg' },
-  { en: 'bag', cn: '书包', img: 'bag.jpg' },
-  { en: 'pencil', cn: '铅笔', img: 'pencil.jpg' },
-  { en: 'pen', cn: '钢笔', img: 'pen.jpg' },
-  { en: 'ruler', cn: '尺子', img: 'ruler.jpg' },
-  { en: 'rubber', cn: '橡皮', img: 'rubber.jpg' },
-  { en: 'crayon', cn: '蜡笔', img: 'crayon.jpg' }
+  { en: 'chair', cn: '椅子', img: 'chair.png', syllables: ['ch', 'air'] },
+  { en: 'table', cn: '桌子', img: 'table.png', syllables: ['ta', 'ble'] },
+  { en: 'playground', cn: '操场', img: 'playground.png', syllables: ['play', 'ground'] },
+  { en: 'teacher', cn: '老师', img: 'teacher.png', syllables: ['tea', 'cher'] },
+  { en: 'pencil', cn: '铅笔', img: 'pencil.png', syllables: ['pen', 'cil'] },
+  { en: 'bag', cn: '书包', img: 'bag.png', syllables: ['b', 'a', 'g'] },
+  { en: 'classroom', cn: '教室', img: 'classroom.png', syllables: ['class', 'room'] },
+  { en: 'board', cn: '黑板', img: 'board.png', syllables: ['b', 'oar', 'd'] },
+  { en: 'cupboard', cn: '橱柜', img: 'cupboard.png', syllables: ['cup', 'board'] },
+  { en: 'bookcase', cn: '书架', img: 'bookcase.png', syllables: ['book', 'case'] }
 ];
 
-// 复数句型题
+// 复数句型题（问答两行，含标点）
 const L3_QUESTIONS = [
-  { cn: '它们是什么？它们是猫。', en: ['What', 'are', 'they', 'They', 'are', 'cats'], img: 'cat.jpg', type: 'plural_q_a' },
-  { cn: '它们是什么？它们是鸟。', en: ['What', 'are', 'they', 'They', 'are', 'birds'], img: 'bird.jpg', type: 'plural_q_a' },
-  { cn: '它们是书吗？是的，它们是。', en: ['Are', 'they', 'books', 'Yes', 'they', 'are'], img: 'book.jpg', type: 'yesno_yes' },
-  { cn: '它们是钢笔吗？不，它们不是。', en: ['Are', 'they', 'pens', 'No', 'they', "aren't"], img: 'pen.jpg', type: 'yesno_no' },
-  { cn: '它们是什么？它们是铅笔。', en: ['What', 'are', 'they', 'They', 'are', 'pencils'], img: 'pencil.jpg', type: 'plural_q_a' },
-  { cn: '它们是书包吗？是的，它们是。', en: ['Are', 'they', 'bags', 'Yes', 'they', 'are'], img: 'bag.jpg', type: 'yesno_yes' },
-  { cn: '它们是什么？它们是尺子。', en: ['What', 'are', 'they', 'They', 'are', 'rulers'], img: 'ruler.jpg', type: 'plural_q_a' },
-  { cn: '它们是蜡笔吗？不，它们不是。', en: ['Are', 'they', 'crayons', 'No', 'they', "aren't"], img: 'crayon.jpg', type: 'yesno_no' }
+  { cn: '它们是什么？它们是椅子。',
+    q: ['What', 'are', 'they', '?'], a: ['They', 'are', 'chairs', '.'],
+    img: 'chair.png' },
+  { cn: '它们是什么？它们是桌子。',
+    q: ['What', 'are', 'they', '?'], a: ['They', 'are', 'tables', '.'],
+    img: 'table.png' },
+  { cn: '它们是什么？它们是老师。',
+    q: ['What', 'are', 'they', '?'], a: ['They', 'are', 'teachers', '.'],
+    img: 'teacher.png' },
+  { cn: '它们是书包吗？是的，它们是。',
+    q: ['Are', 'they', 'bags', '?'], a: ['Yes', 'they', 'are', '.'],
+    img: 'bag.png' },
+  { cn: '它们是什么？它们是铅笔。',
+    q: ['What', 'are', 'they', '?'], a: ['They', 'are', 'pencils', '.'],
+    img: 'pencil.png' },
+  { cn: '它们是教室吗？是的，它们是。',
+    q: ['Are', 'they', 'classrooms', '?'], a: ['Yes', 'they', 'are', '.'],
+    img: 'classroom.png' },
+  { cn: '它们是什么？它们是橱柜。',
+    q: ['What', 'are', 'they', '?'], a: ['They', 'are', 'cupboards', '.'],
+    img: 'cupboard.png' },
+  { cn: '它们是书架吗？不，它们不是。',
+    q: ['Are', 'they', 'bookcases', '?'], a: ['No', 'they', "aren't", '.'],
+    img: 'bookcase.png' }
 ];
 
-// 介词句型题（8道精选，覆盖on/in/under）
+// 介词句型题（全单数，含标点）
 const L4_QUESTIONS = [
-  { cn: '猫在盒子上。', en: ['The', 'cat', 'is', 'on', 'the', 'box'], scene: 'scene_01.jpg' },
-  { cn: '猫在盒子里。', en: ['The', 'cat', 'is', 'in', 'the', 'box'], scene: 'scene_02.jpg' },
-  { cn: '猫在盒子下面。', en: ['The', 'cat', 'is', 'under', 'the', 'box'], scene: 'scene_03.jpg' },
-  { cn: '鸟在盒子上。', en: ['The', 'bird', 'is', 'on', 'the', 'box'], scene: 'scene_04.jpg' },
-  { cn: '书在盒子上。', en: ['The', 'books', 'are', 'on', 'the', 'box'], scene: 'scene_07.jpg' },
-  { cn: '书包在桌子上。', en: ['The', 'school', 'bag', 'is', 'on', 'the', 'table'], scene: 'scene_10.jpg' },
-  { cn: '书包在椅子下面。', en: ['The', 'school', 'bag', 'is', 'under', 'the', 'chair'], scene: 'scene_17.jpg' },
-  { cn: '铅笔在书包里。', en: ['The', 'pencils', 'are', 'in', 'the', 'school', 'bag'], scene: 'scene_25.jpg' }
+  { cn: '书包在书桌上。', en: ['The', 'bag', 'is', 'on', 'the', 'desk', '.'] },
+  { cn: '书包在桌子上。', en: ['The', 'bag', 'is', 'on', 'the', 'table', '.'] },
+  { cn: '书包在椅子下面。', en: ['The', 'bag', 'is', 'under', 'the', 'chair', '.'] },
+  { cn: '椅子在教室里。', en: ['The', 'chair', 'is', 'in', 'the', 'classroom', '.'] },
+  { cn: '铅笔在教室里。', en: ['The', 'pencil', 'is', 'in', 'the', 'classroom', '.'] },
+  { cn: '老师在教室里。', en: ['The', 'teacher', 'is', 'in', 'the', 'classroom', '.'] },
+  { cn: '老师在操场上。', en: ['The', 'teacher', 'is', 'on', 'the', 'playground', '.'] },
+  { cn: '书架在教室里。', en: ['The', 'bookcase', 'is', 'in', 'the', 'classroom', '.'] }
 ];
 
 // 缺失图片的单词用emoji替代
@@ -866,12 +884,12 @@ function loadL2() {
   };
   imgEl.style.display = 'block';
 
-  // 打乱字母
-  const letters = q.en.split('');
-  let shuffled = shuffle(letters);
-  // 避免打乱后和原单词一样
-  if (shuffled.join('') === q.en && q.en.length > 1) {
-    shuffled = shuffle(letters);
+  // 打乱词块
+  const chunks = q.syllables;
+  let shuffled = shuffle(chunks);
+  // 避免打乱后和原顺序一样
+  if (shuffled.join('') === chunks.join('') && chunks.length > 1) {
+    shuffled = shuffle(chunks);
   }
   l2State.letterStates = shuffled.map((l, i) => ({ letter: l, used: false }));
 
@@ -890,7 +908,7 @@ function renderL2() {
     slot.appendChild(el);
   });
   if (l2State.slotLetters.length === 0) {
-    slot.innerHTML = '<span style="color:#94A3B8;font-size:13px;align-self:center;">点击下方字母</span>';
+    slot.innerHTML = '<span style="color:#94A3B8;font-size:13px;align-self:center;">点击下方词块</span>';
   }
 
   // 渲染字母池
@@ -1003,8 +1021,8 @@ function loadL3() {
     this.alt = word || '📦';
   };
 
-  // 打乱单词
-  const words = q.en;
+  // 打乱单词（问句词+答句词混合）
+  const words = [...q.q, ...q.a];
   l3State.bankStates = shuffle(words).map((w, i) => ({ word: w, used: false, origIdx: i }));
 
   renderL3();
@@ -1070,7 +1088,8 @@ function checkL3() {
   if (l3State.locked) return;
   const q = l3State.questions[l3State.idx];
   const user = l3State.slotWords.map(x => x.word).join(' ');
-  const answer = q.en.join(' ');
+  const answer = [...q.q, ...q.a].join(' ');
+  const answerDisplay = q.q.join(' ') + '\n' + q.a.join(' ');
   const fb = document.getElementById('l3-feedback');
   if (l3State.slotWords.length === 0) {
     fb.textContent = '先把句子拼起来呀～';
@@ -1081,12 +1100,15 @@ function checkL3() {
   if (user === answer) {
     fb.textContent = '✅ 完全正确！句子读得真好！';
     fb.className = 'feedback ok';
+    fb.style.whiteSpace = 'pre-line';
     l3State.score++;
-    // 读一遍英文
-    speak(answer.replace(/[^a-zA-Z' ]/g, ''), 'en-US');
+    // 读一遍英文（去掉标点）
+    const speakText = [...q.q, ...q.a].join(' ').replace(/[?.,]/g, '');
+    speak(speakText, 'en-US');
   } else {
-    fb.textContent = '❌ 再想想哦，正确句子是：' + answer;
+    fb.textContent = '❌ 再想想哦，正确句子是：\n' + answerDisplay;
     fb.className = 'feedback no';
+    fb.style.whiteSpace = 'pre-line';
   }
   document.getElementById('l3-next').style.display = 'inline-block';
   document.querySelector('#screen-level3 .btn-primary').style.display = 'none';
@@ -1133,9 +1155,14 @@ function loadL4() {
   document.querySelector('#screen-level4 .btn-primary').style.display = 'inline-block';
   document.querySelector('#screen-level4 .btn-secondary').style.display = 'inline-block';
 
-  // 场景图
+  // 场景图（无匹配图时隐藏，靠中文提示）
   const imgEl = document.getElementById('l4-img');
-  imgEl.src = 'images/' + q.scene;
+  if (q.scene) {
+    imgEl.src = 'images/' + q.scene;
+    imgEl.style.display = 'block';
+  } else {
+    imgEl.style.display = 'none';
+  }
 
   // 打乱单词
   const words = q.en;
@@ -1216,7 +1243,7 @@ function checkL4() {
     fb.textContent = '✅ 完全正确！介词用得真准！';
     fb.className = 'feedback ok';
     l4State.score++;
-    speak(answer, 'en-US');
+    speak(answer.replace(/[.]/g, ''), 'en-US');
   } else {
     fb.textContent = '❌ 再想想哦，正确句子是：' + answer;
     fb.className = 'feedback no';
