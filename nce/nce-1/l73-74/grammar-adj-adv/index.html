@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L1-L74 · 形容词副词大闯关</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Verdana', 'PingFang SC', sans-serif;
+    background: #0F2B46;
+    color: #fff;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* 顶部 Logo 区 */
+  .logo-section {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-top: 10px;
+  }
+  .logo-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    object-fit: cover;
+  }
+  .logo-title {
+    font-size: 22px;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .logo-sub {
+    font-size: 13px;
+    color: #94A3B8;
+  }
+  .logo-sub span { color: #F59E0B; }
+
+  /* 首页选关 */
+  .welcome-card {
+    background: #fff;
+    color: #1E293B;
+    border-radius: 20px;
+    padding: 30px 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  .welcome-card h1 {
+    font-size: 24px;
+    color: #0F2B46;
+    margin-bottom: 8px;
+  }
+  .welcome-card .subtitle {
+    font-size: 14px;
+    color: #64748B;
+    margin-bottom: 20px;
+  }
+  .welcome-card .intro {
+    text-align: left;
+    background: #FFFBEB;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #92400E;
+  }
+  .welcome-card .intro strong { color: #0F2B46; }
+  .level-select-title {
+    text-align: left;
+    font-size: 15px;
+    color: #0F2B46;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  .level-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .level-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: #F8FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .level-item:hover {
+    border-color: #F59E0B;
+    background: #FFFBEB;
+    transform: translateX(4px);
+  }
+  .level-item.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .level-item.locked:hover {
+    transform: none;
+    border-color: #E2E8F0;
+    background: #F8FAFC;
+  }
+  .level-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #F59E0B;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-right: 14px;
+    flex-shrink: 0;
+  }
+  .level-item.locked .level-num {
+    background: #CBD5E1;
+  }
+  .level-info { flex: 1; }
+  .level-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #0F2B46;
+    margin-bottom: 2px;
+  }
+  .level-desc {
+    font-size: 13px;
+    color: #64748B;
+  }
+  .level-arrow {
+    color: #94A3B8;
+    font-size: 18px;
+  }
+
+  /* 游戏区 */
+  .game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  .back-btn {
+    color: #F59E0B;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .back-btn:hover { text-decoration: underline; }
+  .score-display {
+    font-size: 14px;
+    color: #94A3B8;
+  }
+  .score-display .num { color: #F59E0B; font-weight: bold; }
+
+  .card {
+    background: #fff;
+    color: #1E293B;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  }
+  .card h2 {
+    font-size: 18px;
+    color: #0F2B46;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  .progress {
+    text-align: center;
+    color: #64748B;
+    font-size: 13px;
+    margin-bottom: 15px;
+  }
+  .question {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    min-height: 50px;
+  }
+  .question .scene {
+    display: block;
+    font-size: 13px;
+    color: #64748B;
+    margin-bottom: 8px;
+  }
+  .question .word-highlight {
+    font-size: 24px;
+    font-weight: bold;
+    color: #0F2B46;
+    text-align: center;
+    display: block;
+    padding: 12px 0;
+    margin: 8px 0;
+    background: #FFFBEB;
+    border-radius: 10px;
+    letter-spacing: 2px;
+  }
+  .question .sentence-text {
+    font-size: 17px;
+    line-height: 1.8;
+    text-align: center;
+    display: block;
+    padding: 10px 0;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option {
+    padding: 14px 18px;
+    background: #F1F5F9;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+    text-align: left;
+  }
+  .option:hover {
+    background: #E2E8F0;
+    border-color: #F59E0B;
+  }
+  .option.correct {
+    background: #DCFCE7;
+    border-color: #22C55E;
+    color: #166534;
+  }
+  .option.wrong {
+    background: #FEE2E2;
+    border-color: #EF4444;
+    color: #991B1B;
+  }
+  .option.disabled {
+    pointer-events: none;
+  }
+  .fill-blank {
+    display: inline-block;
+    min-width: 80px;
+    border-bottom: 2px solid #F59E0B;
+    padding: 2px 8px;
+    color: #0F2B46;
+    font-weight: bold;
+  }
+  .next-btn {
+    width: 100%;
+    padding: 14px;
+    background: #0F2B46;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+  }
+  .next-btn:hover {
+    background: #1E3A5F;
+  }
+  .feedback {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-top: 15px;
+    font-size: 14px;
+    display: none;
+    line-height: 1.5;
+    white-space: pre-line;
+  }
+  .feedback.show { display: block; }
+  .feedback.good {
+    background: #DCFCE7;
+    color: #166534;
+  }
+  .feedback.bad {
+    background: #FEE2E2;
+    color: #991B1B;
+  }
+  .result-card {
+    text-align: center;
+    padding: 40px 25px;
+  }
+  .result-card .score {
+    font-size: 48px;
+    font-weight: bold;
+    color: #F59E0B;
+    margin: 15px 0;
+  }
+  .result-card .msg {
+    font-size: 16px;
+    color: #64748B;
+    margin-bottom: 25px;
+  }
+  .result-btn-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .result-btn {
+    padding: 12px 24px;
+    background: #F59E0B;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .result-btn:hover { background: #D97706; }
+  .result-btn.secondary {
+    background: #0F2B46;
+  }
+  .result-btn.secondary:hover { background: #1E3A5F; }
+  .emoji { font-size: 28px; margin-bottom: 10px; }
+  .hidden { display: none !important; }
+
+  /* 词性标签 */
+  .pos-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 6px;
+  }
+  .pos-adj { background: #DBEAFE; color: #1E40AF; }
+  .pos-adv { background: #D1FAE5; color: #065F46; }
+
+  /* 底部 */
+  .footer {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(245, 158, 11, 0.15);
+  }
+  .footer .provided {
+    font-size: 12px;
+    color: #475569;
+  }
+  .footer .provided strong {
+    color: #F59E0B;
+    font-weight: normal;
+  }
+  .footer .brand {
+    font-size: 14px;
+    color: #94A3B8;
+    margin-top: 4px;
+    letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 顶部 Logo -->
+  <div class="logo-section">
+    <img src="../../../../assets/logo.png" class="logo-img" alt="Mona Woods">
+    <div class="logo-title">形容词副词大闯关</div>
+    <div class="logo-sub">新概念 1 · <span>Lesson 1-74</span></div>
+  </div>
+
+  <!-- 首页选关 -->
+  <div id="homeScreen">
+    <div class="welcome-card">
+      <h1>L1-L74 · 形容词副词大闯关 🌈</h1>
+      <div class="subtitle">形容词和副词的辨析、变形与运用，全册核心词汇一锅端！</div>
+      <div class="intro">
+        <strong>🎯 你将掌握：</strong><br>
+        ✅ 快速识别形容词（adj）和副词（adv）<br>
+        ✅ 形容词变副词的 5 大规则<br>
+        ✅ 句子中正确使用形容词和副词<br>
+        ✅ 连词成句，综合运用 adj &amp; adv
+      </div>
+      <div class="level-select-title">选择关卡开始挑战：</div>
+      <div class="level-list">
+        <div class="level-item" onclick="startLevel(0)">
+          <div class="level-num">1</div>
+          <div class="level-info">
+            <div class="level-name">词性辨辨辨</div>
+            <div class="level-desc">判断形容词还是副词 · 20题</div>
+          </div>
+          <div class="level-arrow">→</div>
+        </div>
+        <div class="level-item" id="level2Item" onclick="startLevel(1)">
+          <div class="level-num">2</div>
+          <div class="level-info">
+            <div class="level-name">变形连连看</div>
+            <div class="level-desc">形容词变副词规则 · 20题</div>
+          </div>
+          <div class="level-arrow">→</div>
+        </div>
+        <div class="level-item" id="level3Item" onclick="startLevel(2)">
+          <div class="level-num">3</div>
+          <div class="level-info">
+            <div class="level-name">句子挖空选</div>
+            <div class="level-desc">语境中选 adj 还是 adv · 20题</div>
+          </div>
+          <div class="level-arrow">→</div>
+        </div>
+        <div class="level-item" id="level4Item" onclick="startLevel(3)">
+          <div class="level-num">4</div>
+          <div class="level-info">
+            <div class="level-name">综合连词成句</div>
+            <div class="level-desc">形容词副词终极挑战 · 20题</div>
+          </div>
+          <div class="level-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 游戏区域 -->
+  <div id="gameScreen" class="hidden">
+    <div class="game-header">
+      <button class="back-btn" onclick="backToHome()">← 返回选关</button>
+      <div class="score-display">得分：<span class="num" id="scoreText">0</span></div>
+    </div>
+
+    <div class="card">
+      <h2 id="levelTitle">第一关：词性辨辨辨</h2>
+      <div class="progress" id="progress">第 1 / 20 题</div>
+      <div class="question" id="question"></div>
+      <div id="optionArea"></div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn hidden" id="nextBtn">下一题 →</button>
+    </div>
+  </div>
+
+  <!-- 结果区域 -->
+  <div id="resultScreen" class="hidden">
+    <div class="card result-card">
+      <div class="emoji" id="resultEmoji">🎉</div>
+      <div style="font-size: 20px; color: #0F2B46; font-weight: bold;" id="resultTitle">闯关成功！</div>
+      <div class="score"><span id="score">0</span> / <span id="total">0</span></div>
+      <div class="msg" id="resultMsg"></div>
+      <div class="result-btn-group">
+        <button class="result-btn secondary" onclick="backToHome()">🏠 返回选关</button>
+        <button class="result-btn" onclick="restartLevel()">🔄 再玩一次</button>
+        <button class="result-btn" onclick="nextLevel()" id="nextLevelBtn">➡️ 下一关</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer">
+    <div class="provided">Provided by <strong>Mona Woods</strong></div>
+    <div class="brand">MONA · ENGLISH</div>
+  </div>
+</div>
+
+<script>
+// 工具：随机打乱数组
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// 每关从题库抽几道
+const QUESTIONS_PER_LEVEL = 20;
+
+// 四关题库
+const questionBank = [
+  // ========== 第一关：词性辨辨辨（判断 adj / adv / 动词 / 名词）==========
+  {
+    title: '第一关：词性辨辨辨',
+    type: 'choice',
+    bank: [
+      // 成对 adj/adv 的 adj
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">quick</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'quick 是形容词，意思是"快的"，用来修饰名词。它的副词形式是 quickly。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">slow</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'slow 是形容词，意思是"慢的"，用来修饰名词。它的副词形式是 slowly。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">careful</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'careful 是形容词，意思是"小心的、仔细的"。它的副词形式是 carefully。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">happy</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'happy 是形容词，意思是"开心的"。它的副词形式是 happily（变y为i+ly）。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">easy</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'easy 是形容词，意思是"容易的"。它的副词形式是 easily（变y为i+ly）。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">angry</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'angry 是形容词，意思是"生气的"。它的副词形式是 angrily（变y为i+ly）。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">sudden</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'sudden 是形容词，意思是"突然的"。它的副词形式是 suddenly。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">pleasant</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'pleasant 是形容词，意思是"令人愉快的"。它的副词形式是 pleasantly。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">warm</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'warm 是形容词，意思是"温暖的"。它的副词形式是 warmly。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">bad</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'bad 是形容词，意思是"坏的、糟糕的"。它的副词形式是 badly。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">loud</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'loud 是形容词，意思是"大声的"。它的副词形式是 loudly。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">quiet</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'quiet 是形容词，意思是"安静的"。它的副词形式是 quietly。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">usual</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'usual 是形容词，意思是"通常的"。它的副词形式是 usually。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">real</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'real 是形容词，意思是"真的"。它的副词形式是 really。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">final</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'final 是形容词，意思是"最后的"。它的副词形式是 finally。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">exact</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'exact 是形容词，意思是"精确的"。它的副词形式是 exactly。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">different</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'different 是形容词，意思是"不同的"。它的副词形式是 differently。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">terrible</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'terrible 是形容词，意思是"可怕的、糟糕的"。它的副词形式是 terribly。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">possible</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'possible 是形容词，意思是"可能的"。它的副词形式是 possibly（去e+y）。' },
+      // 成对 adj/adv 的 adv
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">quickly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'quickly 是副词，意思是"快地"，用来修饰动词。它的形容词形式是 quick。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">slowly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'slowly 是副词，意思是"慢地"，用来修饰动词。它的形容词形式是 slow。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">carefully</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'carefully 是副词，意思是"小心地、仔细地"。它的形容词形式是 careful。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">happily</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'happily 是副词，意思是"开心地"。它的形容词形式是 happy。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">easily</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'easily 是副词，意思是"容易地"。它的形容词形式是 easy。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">angrily</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'angrily 是副词，意思是"生气地"。它的形容词形式是 angry。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">suddenly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'suddenly 是副词，意思是"突然地"。它的形容词形式是 sudden。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">pleasantly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'pleasantly 是副词，意思是"愉快地"。它的形容词形式是 pleasant。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">warmly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'warmly 是副词，意思是"温暖地"。它的形容词形式是 warm。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">badly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'badly 是副词，意思是"糟糕地、严重地"。它的形容词形式是 bad。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">loudly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'loudly 是副词，意思是"大声地"。它的形容词形式是 loud。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">quietly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'quietly 是副词，意思是"安静地"。它的形容词形式是 quiet。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">usually</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'usually 是副词，意思是"通常"。它的形容词形式是 usual。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">really</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'really 是副词，意思是"真地、非常"。它的形容词形式是 real。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">finally</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'finally 是副词，意思是"最后、终于"。它的形容词形式是 final。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">exactly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'exactly 是副词，意思是"精确地"。它的形容词形式是 exact。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">differently</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'differently 是副词，意思是"不同地"。它的形容词形式是 different。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">terribly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'terribly 是副词，意思是"可怕地、非常"。它的形容词形式是 terrible。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">possibly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'possibly 是副词，意思是"可能地"。它的形容词形式是 possible。' },
+      // 纯形容词
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">big</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'big 是形容词，意思是"大的"，用来修饰名词，如 a big apple。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">small</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'small 是形容词，意思是"小的"，用来修饰名词。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">tall</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'tall 是形容词，意思是"高的"，用来修饰人或物的高度。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">short</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'short 是形容词，意思是"矮的、短的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">long</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'long 是形容词，意思是"长的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">young</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'young 是形容词，意思是"年轻的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">good</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'good 是形容词，意思是"好的"。它的副词形式是 well（不规则变化）。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">beautiful</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'beautiful 是形容词，意思是"美丽的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">clever</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'clever 是形容词，意思是"聪明的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">kind</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'kind 是形容词，意思是"善良的、和蔼的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">funny</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'funny 是形容词，意思是"有趣的、滑稽的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">fat</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'fat 是形容词，意思是"胖的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">thin</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'thin 是形容词，意思是"瘦的、薄的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">strong</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'strong 是形容词，意思是"强壮的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">hot</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'hot 是形容词，意思是"热的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">cold</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'cold 是形容词，意思是"冷的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">hungry</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'hungry 是形容词，意思是"饿的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">tired</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'tired 是形容词，意思是"累的、疲倦的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">sad</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'sad 是形容词，意思是"伤心的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">excited</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'excited 是形容词，意思是"兴奋的"（修饰人）。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">bored</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'bored 是形容词，意思是"感到无聊的"（修饰人）。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">surprised</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'surprised 是形容词，意思是"感到惊讶的"（修饰人）。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">healthy</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'healthy 是形容词，意思是"健康的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">busy</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'busy 是形容词，意思是"忙碌的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">clean</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'clean 是形容词，意思是"干净的"。（也可作动词"打扫"，但最常用词性是形容词）' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">dirty</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'dirty 是形容词，意思是"脏的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">safe</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'safe 是形容词，意思是"安全的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">dangerous</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'dangerous 是形容词，意思是"危险的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">interesting</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'interesting 是形容词，意思是"有趣的"（修饰物）。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">boring</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'boring 是形容词，意思是"无聊的"（修饰物）。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">expensive</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'expensive 是形容词，意思是"昂贵的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">cheap</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'cheap 是形容词，意思是"便宜的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">early</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'early 既是形容词也是副词！意思是"早的/早地"。这题作为形容词考察，如 an early bus。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">late</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'late 既是形容词也是副词！意思是"晚的/晚地"。这题作为形容词考察，如 a late arrival。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">fast</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'fast 既是形容词也是副词！意思是"快的/快地"。这题作为形容词考察，如 a fast car。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">high</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'high 既是形容词也是副词！意思是"高的/高地"。这题作为形容词考察，如 a high mountain。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">right</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'right 是形容词，意思是"正确的、右边的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">wrong</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'wrong 是形容词，意思是"错误的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">delicious</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'delicious 是形容词，意思是"美味的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">lovely</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'lovely 是形容词，意思是"可爱的、美好的"。注意：虽然以 ly 结尾，但它是形容词！' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">friendly</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'friendly 是形容词，意思是"友好的"。注意：虽然以 ly 结尾，但它是形容词！如 a friendly person。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">bright</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'bright 是形容词，意思是"明亮的、聪明的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">dark</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'dark 是形容词，意思是"黑暗的、深色的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">soft</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'soft 是形容词，意思是"柔软的、轻柔的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">hard</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'hard 既是形容词也是副词！意思是"硬的/努力地"。这题作为形容词考察，如 a hard bed。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">wide</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'wide 是形容词，意思是"宽的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">deep</span>', options: ['形容词', '副词', '动词', '名词'], answer: 0, explain: 'deep 是形容词，意思是"深的"。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">well</span>', options: ['形容词', '副词', '动词', '名词'], answer: 1, explain: 'well 通常作副词，意思是"好地"，修饰动词，如 sing well。它也是 good 的副词形式。' },
+      // 动词干扰项（作为选项出现的验证题，增加到题库中）
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">run</span>', options: ['形容词', '副词', '动词', '名词'], answer: 2, explain: 'run 是动词，意思是"跑"。动词表示动作。' },
+      { scene: '判断这个单词是什么词性', text: '<span class="word-highlight">teacher</span>', options: ['形容词', '副词', '动词', '名词'], answer: 3, explain: 'teacher 是名词，意思是"老师"。名词表示人、事、物。' },
+    ]
+  },
+  // ========== 第二关：变形连连看（adj → adv 变形规则）==========
+  {
+    title: '第二关：变形连连看',
+    type: 'choice',
+    bank: [
+      // 1. 直接 +ly
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">quick</span>', options: ['quickly', 'quicklye', 'quicky', 'quickily'], answer: 0, explain: '直接加 ly 规则：quick + ly → quickly。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">slow</span>', options: ['slowly', 'slowliy', 'slowlye', 'slowy'], answer: 0, explain: '直接加 ly 规则：slow + ly → slowly。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">careful</span>', options: ['carefully', 'carefuly', 'carefullly', 'carefuliy'], answer: 0, explain: '直接加 ly 规则：careful + ly → carefully。以 ful 结尾的形容词直接加 ly。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">sudden</span>', options: ['suddenly', 'suddeny', 'sudenly', 'suddenliy'], answer: 0, explain: '直接加 ly 规则：sudden + ly → suddenly。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">pleasant</span>', options: ['pleasantly', 'pleasanty', 'pleasent', 'pleasently'], answer: 0, explain: '直接加 ly 规则：pleasant + ly → pleasantly。注意 pleasant 的拼写。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">warm</span>', options: ['warmly', 'warmy', 'warmily', 'warmelly'], answer: 0, explain: '直接加 ly 规则：warm + ly → warmly。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">loud</span>', options: ['loudly', 'loudy', 'loudily', 'loudelly'], answer: 0, explain: '直接加 ly 规则：loud + ly → loudly。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">quiet</span>', options: ['quietly', 'quiety', 'quietily', 'quietlye'], answer: 0, explain: '直接加 ly 规则：quiet + ly → quietly。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">usual</span>', options: ['usually', 'usualy', 'usuallly', 'usualiy'], answer: 0, explain: '直接加 ly 规则：usual + ly → usually。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">real</span>', options: ['really', 'realy', 'realily', 'reallly'], answer: 0, explain: '直接加 ly 规则：real + ly → really。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">final</span>', options: ['finally', 'finaly', 'finallly', 'finaliy'], answer: 0, explain: '直接加 ly 规则：final + ly → finally。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">exact</span>', options: ['exactly', 'exacty', 'exactily', 'exacttly'], answer: 0, explain: '直接加 ly 规则：exact + ly → exactly。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">different</span>', options: ['differently', 'differenty', 'differentily', 'diffrently'], answer: 0, explain: '直接加 ly 规则：different + ly → differently。大多数形容词直接加 ly 变成副词。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">bad</span>', options: ['badly', 'bady', 'badily', 'baddly'], answer: 0, explain: '直接加 ly 规则：bad + ly → badly。大多数形容词直接加 ly 变成副词。' },
+      // 2. 辅音 + y 结尾 → 变 y 为 i + ly
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">happy</span>', options: ['happily', 'happyly', 'happilly', 'happyily'], answer: 0, explain: '辅音+y结尾规则：变y为i，再加ly → happy 变 y 为 i + ly = happily。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">easy</span>', options: ['easily', 'easyly', 'easilly', 'easyily'], answer: 0, explain: '辅音+y结尾规则：变y为i，再加ly → easy 变 y 为 i + ly = easily。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">angry</span>', options: ['angrily', 'angryly', 'angrill', 'angryily'], answer: 0, explain: '辅音+y结尾规则：变y为i，再加ly → angry 变 y 为 i + ly = angrily。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">hungry</span>', options: ['hungrily', 'hungryly', 'hungrilly', 'hungryily'], answer: 0, explain: '辅音+y结尾规则：变y为i，再加ly → hungry 变 y 为 i + ly = hungrily。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">heavy</span>', options: ['heavily', 'heavyly', 'heavilly', 'heavyily'], answer: 0, explain: '辅音+y结尾规则：变y为i，再加ly → heavy 变 y 为 i + ly = heavily。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">lucky</span>', options: ['luckily', 'luckyly', 'luckilly', 'luckyily'], answer: 0, explain: '辅音+y结尾规则：变y为i，再加ly → lucky 变 y 为 i + ly = luckily。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">busy</span>', options: ['busily', 'busyly', 'busilly', 'busyily'], answer: 0, explain: '辅音+y结尾规则：变y为i，再加ly → busy 变 y 为 i + ly = busily。' },
+      // 3. 以 le 结尾 → 去 e + y
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">possible</span>', options: ['possibly', 'possiblely', 'possiblie', 'possiblly'], answer: 0, explain: 'le结尾规则：以 le 结尾的形容词，去 e 加 y → possible 去 e + y = possibly。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">terrible</span>', options: ['terribly', 'terriblely', 'terriblie', 'terriblly'], answer: 0, explain: 'le结尾规则：以 le 结尾的形容词，去 e 加 y → terrible 去 e + y = terribly。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">comfortable</span>', options: ['comfortably', 'comfortablely', 'comfortablie', 'comfortablly'], answer: 0, explain: 'le结尾规则：以 le 结尾的形容词，去 e 加 y → comfortable 去 e + y = comfortably。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">simple</span>', options: ['simply', 'simplely', 'simlie', 'simlly'], answer: 0, explain: 'le结尾规则：以 le 结尾的形容词，去 e 加 y → simple 去 e + y = simply。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">gentle</span>', options: ['gently', 'gentlely', 'gentlie', 'gentlly'], answer: 0, explain: 'le结尾规则：以 le 结尾的形容词，去 e 加 y → gentle 去 e + y = gently。' },
+      // 4. 同形（adj 和 adv 一样）
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">fast</span>', options: ['fast', 'fastly', 'fastly', 'fastily'], answer: 0, explain: '同形词：fast 既是形容词也是副词，形式不变。a fast car（形修名），run fast（副修动）。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">hard</span>', options: ['hard', 'hardly', 'hardly', 'hardily'], answer: 0, explain: '同形词：hard 既是形容词也是副词。注意：hardly 意思是"几乎不"，不是 hard 的副词！work hard = 努力工作。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">early</span>', options: ['early', 'erly', 'earlily', 'earrly'], answer: 0, explain: '同形词：early 既是形容词也是副词，形式不变。an early bus（形修名），get up early（副修动）。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">late</span>', options: ['late', 'lately', 'latly', 'latily'], answer: 0, explain: '同形词：late 既是形容词也是副词。注意：lately 意思是"最近"，不是 late 的副词！arrive late = 到晚了。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">high</span>', options: ['high', 'highly', 'higly', 'highely'], answer: 0, explain: '同形词：high 既是形容词也是副词。jump high = 跳得高。highly 表示"高度地、非常"，意思不同。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">low</span>', options: ['low', 'lowly', 'lowlly', 'lowily'], answer: 0, explain: '同形词：low 既是形容词也是副词，形式不变。a low voice（形修名），speak low（副修动）。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">far</span>', options: ['far', 'farly', 'farly', 'farliy'], answer: 0, explain: '同形词：far 既是形容词也是副词，形式不变。a far place（形修名），run far（副修动）。' },
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">straight</span>', options: ['straight', 'straightly', 'strait', 'straigtly'], answer: 0, explain: '同形词：straight 既是形容词也是副词，形式不变。a straight line（形修名），go straight（副修动）。' },
+      // 5. 不规则变化
+      { scene: '选出形容词对应的副词形式', text: '形容词：<span class="word-highlight">good</span>', options: ['well', 'goodly', 'goodily', 'goodlly'], answer: 0, explain: '不规则变化：good 的副词是 well，完全不同。a good student（形修名），study well（副修动）。' },
+    ]
+  },
+  // ========== 第三关：句子挖空选（语境判断 adj vs adv）==========
+  {
+    title: '第三关：句子挖空选',
+    type: 'choice',
+    bank: [
+      // be + adj
+      { scene: '选择正确答案', text: 'She is a <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> driver.', options: ['careful', 'carefully', 'care', 'cares'], answer: 0, explain: '这里修饰名词 driver，应该用形容词 careful。口诀：形修名。' },
+      { scene: '选择正确答案', text: 'She drives <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['careful', 'carefully', 'care', 'cares'], answer: 1, explain: '这里修饰动词 drives，应该用副词 carefully。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'The boy is very <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['happy', 'happily', 'happiness', 'happied'], answer: 0, explain: 'be 动词（is）后面跟形容词作表语，用 happy。口诀：be + 形容词。' },
+      { scene: '选择正确答案', text: 'The children are playing <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['happy', 'happily', 'happiness', 'happier'], answer: 1, explain: '修饰动词 playing 用副词 happily。孩子们玩得很开心。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'The food tastes <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['good', 'well', 'nicely', 'badly'], answer: 0, explain: 'taste（尝起来）是感官动词，后面跟形容词 good。感官动词 + 形容词。' },
+      { scene: '选择正确答案', text: 'She sings very <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['good', 'well', 'nice', 'happy'], answer: 1, explain: '修饰动词 sings 用副词 well。她唱歌很好听。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'The music sounds <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['beautiful', 'beautifully', 'nicely', 'differently'], answer: 0, explain: 'sound（听起来）是感官动词，后面跟形容词 beautiful。感官动词 + 形容词。' },
+      { scene: '选择正确答案', text: 'She danced <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> at the party.', options: ['beautiful', 'beautifully', 'beauty', 'beautifuly'], answer: 1, explain: '修饰动词 danced 用副词 beautifully。她舞跳得很美。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'The flowers smell <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['nice', 'nicely', 'well', 'differently'], answer: 0, explain: 'smell（闻起来）是感官动词，后面跟形容词 nice。感官动词 + 形容词。' },
+      { scene: '选择正确答案', text: 'He looked at me <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['angry', 'angrily', 'anger', 'angrily'], answer: 1, explain: '修饰动词短语 looked at 用副词 angrily。他生气地看着我。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'He looks <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> today.', options: ['angry', 'angrily', 'anger', 'angried'], answer: 0, explain: 'look（看起来）是感官动词，后面跟形容词 angry。他看起来很生气。' },
+      { scene: '选择正确答案', text: 'I feel <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> today.', options: ['tired', 'tiredly', 'tire', 'tiring'], answer: 0, explain: 'feel（感觉）是感官动词，后面跟形容词 tired。我感觉很累。' },
+      { scene: '选择正确答案', text: 'He works very <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['hard', 'hardly', 'hardy', 'hardful'], answer: 0, explain: '修饰动词 works 用副词 hard。hard 既是形容词也是副词。注意 hardly = 几乎不。work hard = 努力工作。' },
+      { scene: '选择正确答案', text: 'It is a <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> question.', options: ['difficult', 'difficultly', 'difficulty', 'difficulter'], answer: 0, explain: '修饰名词 question 用形容词 difficult。一个难的问题。口诀：形修名。' },
+      { scene: '选择正确答案', text: 'He can solve the problem <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['easy', 'easily', 'ease', 'easiness'], answer: 1, explain: '修饰动词 solve 用副词 easily。他能轻松地解决这个问题。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'She is a <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> girl.', options: ['pretty', 'prettily', 'prettiness', 'prettyly'], answer: 0, explain: '修饰名词 girl 用形容词 pretty。一个漂亮的女孩。口诀：形修名。' },
+      { scene: '选择正确答案', text: 'The car is going <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['fast', 'fastly', 'fastly', 'fasterly'], answer: 0, explain: '修饰动词 going 用副词 fast。fast 既是形容词也是副词，副修动用 fast。' },
+      { scene: '选择正确答案', text: 'It is a <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> car.', options: ['fast', 'fastly', 'fastly', 'fastlye'], answer: 0, explain: '修饰名词 car 用形容词 fast。一辆快车。口诀：形修名。fast 既是形容词也是副词。' },
+      { scene: '选择正确答案', text: 'You must get up <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> tomorrow.', options: ['early', 'earlily', 'earlierly', 'earlly'], answer: 0, explain: '修饰动词短语 get up 用副词 early。early 既是形容词也是副词。早起 = get up early。' },
+      { scene: '选择正确答案', text: 'It is an <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> bus.', options: ['early', 'earlily', 'earlierly', 'earlly'], answer: 0, explain: '修饰名词 bus 用形容词 early。早班车。early 既是形容词也是副词。口诀：形修名。' },
+      { scene: '选择正确答案', text: 'He arrived <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> for school.', options: ['late', 'lately', 'latly', 'latest'], answer: 0, explain: '修饰动词 arrived 用副词 late。late 既是形容词也是副词。上学迟到 = arrive late for school。' },
+      { scene: '选择正确答案', text: 'The cake tastes <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['sweet', 'sweetly', 'sweety', 'sweetness'], answer: 0, explain: 'taste（尝起来）是感官动词，后面跟形容词 sweet。蛋糕尝起来很甜。' },
+      { scene: '选择正确答案', text: 'She spoke in a <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> voice.', options: ['soft', 'softly', 'softness', 'softy'], answer: 0, explain: '修饰名词 voice 用形容词 soft。一个轻柔的声音。口诀：形修名。' },
+      { scene: '选择正确答案', text: 'She spoke <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> to the baby.', options: ['soft', 'softly', 'softness', 'softlye'], answer: 1, explain: '修饰动词 spoke 用副词 softly。她轻柔地对宝宝说话。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'The room is very <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['clean', 'cleanly', 'cleanness', 'cleanily'], answer: 0, explain: 'be 动词（is）后面跟形容词作表语，用 clean。房间很干净。' },
+      { scene: '选择正确答案', text: 'He <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> the room every day.', options: ['clean', 'cleans', 'cleanly', 'cleaner'], answer: 1, explain: '这里 clean 是动词"打扫"，he 三单，所以用 cleans。注意区分词性！' },
+      { scene: '选择正确答案', text: 'The boy is <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> at English.', options: ['good', 'well', 'nicely', 'badly'], answer: 0, explain: 'be good at 是固定搭配，表示"擅长"。be 动词后面用形容词 good。' },
+      { scene: '选择正确答案', text: 'She does <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> in English.', options: ['good', 'well', 'nice', 'happy'], answer: 1, explain: 'do well in 是固定搭配，表示"在...方面做得好"。修饰动词 does 用副词 well。' },
+      { scene: '选择正确答案', text: 'It is <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> today.', options: ['sunny', 'sunnily', 'sun', 'sunnilye'], answer: 0, explain: 'be 动词（is）后面跟形容词作表语，描述天气用 sunny（晴朗的）。' },
+      { scene: '选择正确答案', text: 'The sun is shining <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['bright', 'brightly', 'brightness', 'brightily'], answer: 1, explain: '修饰动词 shining 用副词 brightly。阳光明媚地照耀着。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'This is a <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> story.', options: ['funny', 'funnily', 'funnilye', 'funniness'], answer: 0, explain: '修饰名词 story 用形容词 funny。一个有趣的故事。口诀：形修名。' },
+      { scene: '选择正确答案', text: 'He told the story <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['funny', 'funnily', 'funniness', 'funnyly'], answer: 1, explain: '修饰动词 told 用副词 funnily。他讲这个故事讲得很有趣。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'The baby is <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['asleep', 'sleepily', 'sleepyly', 'asleeply'], answer: 0, explain: 'be 动词后面用形容词 asleep（睡着的）作表语。宝宝睡着了。' },
+      { scene: '选择正确答案', text: 'The little girl smiled <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['sweet', 'sweetly', 'sweety', 'sweetily'], answer: 1, explain: '修饰动词 smiled 用副词 sweetly。小女孩甜甜地笑了。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'It is very <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> in the room.', options: ['quiet', 'quietly', 'quietness', 'quietily'], answer: 0, explain: 'be 动词（is）后面跟形容词作表语，用 quiet。房间里很安静。' },
+      { scene: '选择正确答案', text: 'Please sit <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['quiet', 'quietly', 'quietness', 'quietily'], answer: 1, explain: '修饰动词 sit 用副词 quietly。请安静地坐着。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'The exam was <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['surprising', 'surprisingly', 'surprised', 'surprise'], answer: 0, explain: 'be 动词后面用形容词作表语。exam 是物，用 surprising（令人惊讶的）。注意：surprised 修饰人。' },
+      { scene: '选择正确答案', text: 'She was <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> to hear the news.', options: ['surprised', 'surprisingly', 'surprising', 'surprise'], answer: 0, explain: 'be 动词后面用形容词作表语。she 是人，用 surprised（感到惊讶的）。注意：surprising 修饰物。' },
+      { scene: '选择正确答案', text: 'He ran <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> to catch the bus.', options: ['quick', 'quickly', 'quickness', 'quicky'], answer: 1, explain: '修饰动词 ran 用副词 quickly。他快速地跑去赶公交车。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'He is a <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> runner.', options: ['quick', 'quickly', 'quickness', 'quicky'], answer: 0, explain: '修饰名词 runner 用形容词 quick。一个跑得快的人。口诀：形修名。' },
+      { scene: '选择正确答案', text: 'The old man walks <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['slow', 'slowly', 'slowness', 'slowy'], answer: 1, explain: '修饰动词 walks 用副词 slowly。老人走得很慢。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'It is a very <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> train.', options: ['slow', 'slowly', 'slowness', 'slowy'], answer: 0, explain: '修饰名词 train 用形容词 slow。一列很慢的火车。口诀：形修名。' },
+      { scene: '选择正确答案', text: 'The soup is <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['hot', 'hotly', 'hotlye', 'heat'], answer: 0, explain: 'be 动词（is）后面跟形容词作表语，用 hot。汤很烫。' },
+      { scene: '选择正确答案', text: 'The weather is <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> today.', options: ['warm', 'warmly', 'warmth', 'warmily'], answer: 0, explain: 'be 动词后面跟形容词作表语，描述天气用 warm（温暖的）。' },
+      { scene: '选择正确答案', text: 'She welcomed us <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['warm', 'warmly', 'warmth', 'warmily'], answer: 1, explain: '修饰动词 welcomed 用副词 warmly。她热情地欢迎我们。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'The answer is <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['correct', 'correctly', 'correctness', 'correctily'], answer: 0, explain: 'be 动词（is）后面跟形容词作表语，用 correct。答案是正确的。' },
+      { scene: '选择正确答案', text: 'Can you spell it <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>?', options: ['correct', 'correctly', 'correctness', 'correctily'], answer: 1, explain: '修饰动词 spell 用副词 correctly。你能正确地拼写它吗？口诀：副修动。' },
+      { scene: '选择正确答案', text: 'The movie was very <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['boring', 'boringly', 'bored', 'bore'], answer: 0, explain: 'be 动词后面用形容词作表语。movie 是物，用 boring（令人无聊的）。注意：bored 修饰人。' },
+      { scene: '选择正确答案', text: 'I felt very <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> in class.', options: ['bored', 'boringly', 'boring', 'bore'], answer: 0, explain: 'feel（感觉）是感官动词，后面跟形容词。I 是人，用 bored（感到无聊的）。' },
+      { scene: '选择正确答案', text: 'He opened the door <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>.', options: ['sudden', 'suddenly', 'suddenness', 'suddeny'], answer: 1, explain: '修饰动词 opened 用副词 suddenly。他突然打开了门。口诀：副修动。' },
+      { scene: '选择正确答案', text: 'It was a <span class="fill-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> visit.', options: ['sudden', 'suddenly', 'suddenness', 'suddeny'], answer: 0, explain: '修饰名词 visit 用形容词 sudden。一次突然的拜访。口诀：形修名。' },
+    ]
+  },
+  // ========== 第四关：综合连词成句（含 adj + adv）==========
+  {
+    title: '第四关：综合连词成句',
+    type: 'choice',
+    bank: [
+      { scene: '连词成句', text: 'the / ran / boy / quickly / fast', options: ['The boy ran fast quickly.', 'The fast boy ran quickly.', 'Fast the boy ran quickly.', 'The boy quickly ran fast.'], answer: 1, explain: 'fast 是形容词，修饰名词 boy（a fast boy = 一个跑得快的男孩）；quickly 是副词，修饰动词 ran（ran quickly = 跑得很快）。口诀：形修名，副修动。' },
+      { scene: '连词成句', text: 'sings / well / she / very', options: ['She sings well very.', 'She very well sings.', 'She sings very well.', 'Very well she sings.'], answer: 2, explain: 'well 是副词，修饰动词 sings（sings well = 唱得好）；very 也是副词，修饰 well（very well = 非常好）。' },
+      { scene: '连词成句', text: 'happy / is / the / girl / very', options: ['The girl is very happy.', 'The very happy girl is.', 'The girl very is happy.', 'Very the girl is happy.'], answer: 0, explain: 'very 是副词，修饰形容词 happy（very happy = 非常开心）。be + 形容词：is happy。' },
+      { scene: '连词成句', text: 'carefully / she / her / does / homework', options: ['She carefully does her homework.', 'She does her homework carefully.', 'She does carefully her homework.', 'Carefully she does her homework.'], answer: 1, explain: 'carefully 是副词，修饰动词 does，通常放在句末。do one's homework carefully = 认真做作业。' },
+      { scene: '连词成句', text: 'a / what / day / beautiful', options: ['A beautiful what day!', 'What a beautiful day!', 'What beautiful a day!', 'Beautiful what a day!'], answer: 1, explain: 'beautiful 是形容词，修饰名词 day（a beautiful day = 美丽的一天）。感叹句：What a + 形容词 + 名词！' },
+      { scene: '连词成句', text: 'hard / very / works / he', options: ['He very hard works.', 'He works very hard.', 'He works hard very.', 'Very he works hard.'], answer: 1, explain: 'hard 是副词，修饰动词 works（works hard = 努力工作）；very 修饰 hard（very hard = 非常努力）。' },
+      { scene: '连词成句', text: 'early / gets / he / always / up', options: ['He always gets up early.', 'He gets always up early.', 'He gets up always early.', 'Always he gets up early.'], answer: 0, explain: 'always 是频率副词，放在动词前；early 是副词，修饰动词短语 gets up，放在句末。' },
+      { scene: '连词成句', text: 'slowly / the / walks / man / old', options: ['The old man walks slowly.', 'The man old walks slowly.', 'Old the man walks slowly.', 'The man walks old slowly.'], answer: 0, explain: 'old 是形容词，修饰名词 man（the old man = 那个老人）；slowly 是副词，修饰动词 walks（walks slowly = 走得慢）。' },
+      { scene: '连词成句', text: 'hot / is / today / it / very', options: ['It very is hot today.', 'It is very hot today.', 'It is hot very today.', 'Very it is hot today.'], answer: 1, explain: 'hot 是形容词，放在 be 动词 is 后作表语；very 是副词，修饰形容词 hot（very hot = 非常热）。' },
+      { scene: '连词成句', text: 'tastes / the / good / cake', options: ['The cake tastes good.', 'The good cake tastes.', 'The cake good tastes.', 'Good the cake tastes.'], answer: 0, explain: 'taste 是感官动词，后面跟形容词 good。taste good = 尝起来好吃。' },
+      { scene: '连词成句', text: 'quietly / please / talk', options: ['Talk quietly please.', 'Please talk quietly.', 'Quietly please talk.', 'Please quietly talk.'], answer: 1, explain: 'quietly 是副词，修饰动词 talk，通常放在动词后面或句末。talk quietly = 小声说话。' },
+      { scene: '连词成句', text: 'an / it / interesting / is / book', options: ['An interesting book it is.', 'It is an interesting book.', 'It is an interesting book.（正确）', 'Interesting it is an book.'], answer: 1, explain: 'interesting 是形容词，修饰名词 book（an interesting book = 一本有趣的书）。be + 形容词 + 名词。' },
+      { scene: '连词成句', text: 'she / happily / played / the / with / cat', options: ['She happily played with the cat.', 'She played happily with the cat.', 'Happily she played the cat with.', 'She played with happily the cat.'], answer: 1, explain: 'happily 是副词，修饰动词 played，通常放在动词后或句末。play with the cat happily = 开心地和猫玩。' },
+      { scene: '连词成句', text: 'high / can / jump / you / how', options: ['How high can you jump?', 'How can you jump high?', 'How high you can jump?', 'Can you jump how high?'], answer: 0, explain: 'how + 副词（high）构成特殊疑问句"多高"。high 在这里是副词，修饰动词 jump。' },
+      { scene: '连词成句', text: 'a / he / student / good / is', options: ['A good student he is.', 'He is a good student.', 'He is a student good.', 'Good he is a student.'], answer: 1, explain: 'good 是形容词，修饰名词 student（a good student = 一个好学生）。be 动词后接表语。' },
+      { scene: '连词成句', text: 'late / don\'t / arrive / please', options: ['Please arrive late don\'t.', 'Don\'t arrive late please.', 'Please don\'t arrive late.', 'Don\'t late arrive please.'], answer: 2, explain: 'late 是副词，修饰动词 arrive，放在句末。祈使句否定形式：Please don\'t + 动词原形。' },
+      { scene: '连词成句', text: 'fast / can / run / very / he', options: ['He can run very fast.', 'He can very fast run.', 'He very fast can run.', 'Very fast he can run.'], answer: 0, explain: 'fast 是副词，修饰动词 run（run fast = 跑得快）；very 修饰 fast（very fast = 非常快）。can + 动词原形。' },
+      { scene: '连词成句', text: 'the / beautiful / looks / dress', options: ['The beautiful dress looks.', 'The dress looks beautiful.', 'Beautiful the dress looks.', 'The dress beautiful looks.'], answer: 1, explain: 'look 是感官动词，后面跟形容词 beautiful。look beautiful = 看起来很漂亮。' },
+      { scene: '连词成句', text: 'easy / the / is / question', options: ['The easy question is.', 'The question is easy.', 'Easy the question is.', 'Is the question easy.'], answer: 1, explain: 'easy 是形容词，放在 be 动词 is 后作表语。问题很简单。' },
+      { scene: '连词成句', text: 'easily / can / you / it / do', options: ['You can easily do it.', 'You can do it easily.', 'Easily you can do it.', 'You can easily it do.'], answer: 1, explain: 'easily 是副词，修饰动词 do，通常放在句末。do it easily = 轻松地做这件事。' },
+      { scene: '连词成句', text: 'warm / it / today / is', options: ['It warm is today.', 'It is warm today.', 'Warm it is today.', 'Today it warm is.'], answer: 1, explain: 'warm 是形容词，放在 be 动词 is 后作表语，描述天气。今天很暖和。' },
+      { scene: '连词成句', text: 'angrily / looked / man / the / at / me', options: ['The man angrily looked at me.', 'The man looked at me angrily.', 'Angrily the man looked at me.', 'The man looked at angrily me.'], answer: 1, explain: 'angrily 是副词，修饰动词短语 looked at，通常放在句末。look at sb angrily = 生气地看着某人。' },
+      { scene: '连词成句', text: 'sound / the / sweet / songs', options: ['The sweet songs sound.', 'The songs sound sweet.', 'Sound the sweet songs.', 'The songs sweet sound.'], answer: 1, explain: 'sound 是感官动词，后面跟形容词 sweet。歌听起来很甜美。' },
+      { scene: '连词成句', text: 'loudly / are / they / talking', options: ['They are talking loudly.', 'They are loudly talking.', 'Loudly they are talking.', 'They loudly are talking.'], answer: 0, explain: 'loudly 是副词，修饰动词 talking，放在句末。现在进行时：be + 动词ing。' },
+      { scene: '连词成句', text: 'soft / has / she / voice / a', options: ['She a soft voice has.', 'She has a soft voice.', 'A soft voice she has.', 'She has soft a voice.'], answer: 1, explain: 'soft 是形容词，修饰名词 voice（a soft voice = 轻柔的声音）。have/has + 名词。' },
+      { scene: '连词成句', text: 'suddenly / it / started / rain / to', options: ['Suddenly it started to rain.', 'It started to rain suddenly.', 'It suddenly started to rain.', 'It started suddenly to rain.'], answer: 1, explain: 'suddenly 是副词，修饰动词 started，放在句末最自然。突然开始下雨了。' },
+      { scene: '连词成句', text: 'clever / is / boy / the / very', options: ['The very clever boy is.', 'The boy is very clever.', 'The boy very is clever.', 'Very the boy is clever.'], answer: 1, explain: 'clever 是形容词，放在 be 动词 is 后；very 是副词，修饰形容词 clever（very clever = 非常聪明）。' },
+      { scene: '连词成句', text: 'badly / he / played / game / the', options: ['He badly played the game.', 'He played the game badly.', 'Badly he played the game.', 'He played badly the game.'], answer: 1, explain: 'badly 是副词，修饰动词 played，放在句末。他比赛打得很糟糕。' },
+      { scene: '连词成句', text: 'excited / were / very / we', options: ['We very were excited.', 'We were very excited.', 'Very we were excited.', 'We were excited very.'], answer: 1, explain: 'excited 是形容词，放在 be 动词 were 后；very 修饰 excited（very excited = 非常兴奋）。excited 修饰人。' },
+      { scene: '连词成句', text: 'bright / sun / the / is / shining', options: ['The bright sun is shining.', 'The sun is shining brightly.', 'Bright the sun is shining.', 'The sun is bright shining.'], answer: 1, explain: 'brightly 是副词，修饰动词 shining（is shining brightly = 明亮地照耀着）。注意：bright 是形容词，不能直接修饰动词。' },
+    ]
+  }
+];
+
+let currentLevel = 0;
+let currentQuestions = [];
+let currentQ = 0;
+let score = 0;
+let answered = false;
+
+// 解锁进度
+function getMaxUnlocked() {
+  const saved = localStorage.getItem('nce1_l73_adj_adv_unlocked');
+  return saved ? parseInt(saved) : 0;
+}
+
+function saveUnlocked(level) {
+  const current = getMaxUnlocked();
+  if (level > current) {
+    localStorage.setItem('nce1_l73_adj_adv_unlocked', level);
+  }
+  updateLevelLockStatus();
+}
+
+function updateLevelLockStatus() {
+  const max = getMaxUnlocked();
+  document.querySelectorAll('#homeScreen .level-item').forEach((item, i) => {
+    if (i > max) {
+      item.classList.add('locked');
+    } else {
+      item.classList.remove('locked');
+    }
+  });
+}
+
+function startLevel(levelIndex) {
+  if (levelIndex > getMaxUnlocked()) return;
+  currentLevel = levelIndex;
+  const bank = questionBank[levelIndex].bank;
+  currentQuestions = shuffle(bank).slice(0, QUESTIONS_PER_LEVEL);
+  currentQ = 0;
+  score = 0;
+  answered = false;
+
+  document.getElementById('homeScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('gameScreen').classList.remove('hidden');
+
+  document.getElementById('levelTitle').textContent = questionBank[levelIndex].title;
+  updateScoreDisplay();
+  showQuestion();
+}
+
+function backToHome() {
+  document.getElementById('gameScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('homeScreen').classList.remove('hidden');
+  updateLevelLockStatus();
+}
+
+function updateScoreDisplay() {
+  document.getElementById('scoreText').textContent = score;
+}
+
+function showQuestion() {
+  const q = currentQuestions[currentQ];
+  answered = false;
+
+  document.getElementById('progress').textContent = `第 ${currentQ + 1} / ${currentQuestions.length} 题`;
+  document.getElementById('feedback').classList.remove('show');
+  document.getElementById('nextBtn').classList.add('hidden');
+
+  const qEl = document.getElementById('question');
+  if (q.scene) {
+    qEl.innerHTML = `<span class="scene">${q.scene}</span>${q.text}`;
+  } else {
+    qEl.innerHTML = q.text;
+  }
+
+  const optionArea = document.getElementById('optionArea');
+  optionArea.innerHTML = '';
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'option';
+    btn.innerHTML = opt;
+    btn.onclick = () => checkAnswer(i, btn);
+    optionArea.appendChild(btn);
+  });
+}
+
+function checkAnswer(selectedIndex, btnElement) {
+  if (answered) return;
+  answered = true;
+
+  const q = currentQuestions[currentQ];
+  const options = document.querySelectorAll('.option');
+  
+  options.forEach(opt => opt.classList.add('disabled'));
+
+  if (selectedIndex === q.answer) {
+    btnElement.classList.add('correct');
+    score++;
+    updateScoreDisplay();
+    showFeedback('good', '✅ 答对啦！\n' + q.explain);
+  } else {
+    btnElement.classList.add('wrong');
+    options[q.answer].classList.add('correct');
+    showFeedback('bad', '❌ 不对哦～正确答案是：' + q.options[q.answer] + '\n' + q.explain);
+  }
+
+  document.getElementById('nextBtn').classList.remove('hidden');
+}
+
+function showFeedback(type, text) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + type;
+  fb.textContent = text;
+}
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+  currentQ++;
+  if (currentQ >= currentQuestions.length) {
+    showResult();
+  } else {
+    showQuestion();
+  }
+});
+
+function showResult() {
+  document.getElementById('gameScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('hidden');
+
+  const total = currentQuestions.length;
+  const percentage = score / total;
+
+  document.getElementById('score').textContent = score;
+  document.getElementById('total').textContent = total;
+
+  let emoji, title, msg;
+  if (percentage >= 0.8) {
+    emoji = '🎉';
+    title = '太棒了！';
+    msg = '你掌握得非常好，继续保持！';
+    if (currentLevel < questionBank.length - 1) {
+      saveUnlocked(currentLevel + 1);
+    }
+  } else if (percentage >= 0.6) {
+    emoji = '👍';
+    title = '不错哦！';
+    msg = '大部分都掌握了，再复习一下错题吧～';
+    if (currentLevel < questionBank.length - 1) {
+      saveUnlocked(currentLevel + 1);
+    }
+  } else {
+    emoji = '💪';
+    title = '再接再厉！';
+    msg = '再多练几遍，一定可以的！';
+  }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMsg').textContent = msg;
+
+  document.getElementById('nextLevelBtn').style.display = 
+    currentLevel >= questionBank.length - 1 ? 'none' : 'inline-block';
+}
+
+function restartLevel() {
+  startLevel(currentLevel);
+}
+
+function nextLevel() {
+  if (currentLevel < questionBank.length - 1) {
+    startLevel(currentLevel + 1);
+  }
+}
+
+// 初始化
+updateLevelLockStatus();
+</script>
+</body>
+</html>
