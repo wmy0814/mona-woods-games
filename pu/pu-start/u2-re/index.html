@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PU Start · U2 复习闯关</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0F2B46;
+    min-height: 100vh;
+    color: #0F2B46;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 0; min-height: 100vh; display: flex; flex-direction: column; width: 100%; }
+
+  /* ===== Header ===== */
+  .level-header {
+    background: #0F2B46;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+  }
+  .btn-back {
+    color: white;
+    font-size: 14px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-back:hover { background: rgba(255,255,255,0.2); }
+  .btn-home {
+    color: white;
+    font-size: 14px;
+    padding: 6px 14px;
+    background: rgba(45, 212, 191, 0.2);
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all .2s;
+  }
+  .btn-home:hover { background: rgba(45, 212, 191, 0.35); }
+  .level-badge {
+    margin-left: auto;
+    padding: 6px 16px;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* ===== Screens ===== */
+  .screen { display: none; flex: 1; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* ===== Select Screen ===== */
+  .select-header {
+    text-align: center;
+    padding: 30px 20px 16px;
+  }
+  .select-header h1 {
+    font-size: 28px;
+    color: white;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .select-header .subtitle {
+    font-size: 15px;
+    color: #2DD4BF;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, #2DD4BF 0%, #0F2B46 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .module-title {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px 20px 8px;
+    max-width: 440px;
+    margin: 0 auto;
+    text-align: left;
+    letter-spacing: 1px;
+  }
+  .level-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px 10px;
+  }
+  .level-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-radius: 14px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: all .25s;
+    border-left: 5px solid #2DD4BF;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: relative;
+  }
+  .level-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+  .level-btn:active { transform: scale(0.98); }
+  .level-btn .emoji { font-size: 28px; flex-shrink: 0; }
+  .level-btn .level-content { flex: 1; }
+  .level-btn .level-content .title { font-size: 16px; font-weight: 700; color: #0F2B46; margin-bottom: 2px; }
+  .level-btn .level-content .desc { font-size: 12px; color: #64748B; line-height: 1.4; }
+  .level-btn .tag {
+    padding: 3px 10px;
+    background: #E6FFFA;
+    color: #0F2B46;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ===== Common ===== */
+  .main {
+    flex: 1;
+    padding: 16px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .instruction {
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .progress-text {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .score-text {
+    color: #2DD4BF;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .page-footer {
+    text-align: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 11px;
+    padding: 12px;
+  }
+
+  /* ===== Card ===== */
+  .game-card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  /* ===== Level 1: Listen & Choose ===== */
+  .l1-sound-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2DD4BF, #0D9488);
+    color: white;
+    font-size: 32px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(45, 212, 191, 0.4);
+    transition: all .2s;
+  }
+  .l1-sound-btn:active { transform: scale(0.92); }
+  .l1-chinese {
+    font-size: 16px;
+    color: #64748B;
+    text-align: center;
+  }
+  .l1-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+  .l1-option {
+    padding: 14px 10px;
+    background: #F1F5F9;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #0F2B46;
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s;
+  }
+  .l1-option:active { transform: scale(0.97); }
+  .l1-option.correct { background: #DCFCE7; border-color: #22C55E; color: #166534; }
+  .l1-option.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+
+  /* ===== Level 2: Spell Word ===== */
+  .l2-word-img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+  .l2-word-cn {
+    font-size: 15px;
+    color: #64748B;
+  }
+  .l2-slot {
+    display: flex;
+    gap: 6px;
+    min-height: 48px;
+    padding: 8px;
+    background: #F1F5F9;
+    border-radius: 12px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .l2-slot-letter {
+    width: 36px;
+    height: 36px;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .l2-letters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+  .l2-letter {
+    width: 40px;
+    height: 40px;
+    background: #E0F2FE;
+    color: #0369A1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .l2-letter:active { transform: scale(0.92); }
+  .l2-letter.used { visibility: hidden; }
+
+  /* ===== Level 3 & 4: Sentence Build ===== */
+  .l3-img {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+  .l3-cn {
+    font-size: 15px;
+    color: #0F2B46;
+    font-weight: 600;
+    text-align: center;
+  }
+  .l3-sound-mini {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .l3-sentence-slot {
+    display: flex;
+    gap: 6px;
+    min-height: 44px;
+    padding: 8px;
+    background: #F1F5F9;
+    border-radius: 12px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .l3-slot-word {
+    padding: 6px 12px;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .l3-word-bank {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+  .l3-word {
+    padding: 8px 14px;
+    background: #E0F2FE;
+    color: #0369A1;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .l3-word:active { transform: scale(0.95); }
+  .l3-word.used { visibility: hidden; }
+
+  /* ===== Buttons ===== */
+  .action-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-primary {
+    padding: 10px 28px;
+    background: linear-gradient(135deg, #2DD4BF, #0D9488);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 4px 14px rgba(45, 212, 191, 0.4);
+  }
+  .btn-primary:active { transform: scale(0.96); }
+  .btn-secondary {
+    padding: 10px 20px;
+    background: #F1F5F9;
+    color: #64748B;
+    border: none;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .btn-next {
+    padding: 10px 28px;
+    background: linear-gradient(135deg, #A78BFA, #7C3AED);
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(167, 139, 250, 0.4);
+  }
+  .btn-next:active { transform: scale(0.96); }
+
+  /* ===== Feedback ===== */
+  .feedback {
+    min-height: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .feedback.ok { color: #16A34A; }
+  .feedback.no { color: #DC2626; }
+
+  /* ===== Result ===== */
+  .result-card {
+    text-align: center;
+    padding: 20px 10px;
+  }
+  .result-emoji { font-size: 64px; margin-bottom: 10px; }
+  .result-title { font-size: 22px; font-weight: 700; color: #0F2B46; margin-bottom: 6px; }
+  .result-score { font-size: 32px; font-weight: 700; color: #2DD4BF; margin: 10px 0; }
+  .result-desc { font-size: 14px; color: #64748B; margin-bottom: 16px; }
+
+  /* ===== Stars BG ===== */
+  .stars-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.6; }
+  }
+  .container { position: relative; z-index: 1; }
+</style>
+</head>
+<body>
+<div class="stars-bg" id="starsBg"></div>
+
+<div class="container">
+  <!-- ===== SELECT SCREEN ===== -->
+  <div id="screen-select" class="screen active">
+    <div class="level-header">
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">U2 复习闯关</div>
+    </div>
+    <div class="select-header">
+      <div class="logo-circle">🌟</div>
+      <h1>Unit 2 复习课</h1>
+      <div class="subtitle">单词 · 拼写 · 句型 · 介词 · 四关通关</div>
+    </div>
+
+    <div class="level-cards">
+      <div class="level-btn" onclick="initLevel1()">
+        <div class="emoji">👂</div>
+        <div class="level-content">
+          <div class="title">第一关 · 听音选词</div>
+          <div class="desc">听中文，选出正确的英文单词</div>
+        </div>
+        <div class="tag">单词</div>
+      </div>
+      <div class="level-btn" onclick="initLevel2()">
+        <div class="emoji">🔤</div>
+        <div class="level-content">
+          <div class="title">第二关 · 单词拼写</div>
+          <div class="desc">看图把字母排成正确的单词</div>
+        </div>
+        <div class="tag">拼写</div>
+      </div>
+      <div class="level-btn" onclick="initLevel3()">
+        <div class="emoji">💬</div>
+        <div class="level-content">
+          <div class="title">第三关 · 复数句型</div>
+          <div class="desc">听中文，连词成句 What are they?</div>
+        </div>
+        <div class="tag">句型</div>
+      </div>
+      <div class="level-btn" onclick="initLevel4()">
+        <div class="emoji">📍</div>
+        <div class="level-content">
+          <div class="title">第四关 · 方位介词</div>
+          <div class="desc">听中文，连词成句 on/in/under</div>
+        </div>
+        <div class="tag">介词</div>
+      </div>
+    </div>
+
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- ===== LEVEL 1: Listen & Choose Word ===== -->
+  <div id="screen-level1" class="screen">
+    <div class="level-header">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">第一关 · 听音选词</div>
+    </div>
+    <div class="main">
+      <div class="instruction">听中文，选正确的英文单词</div>
+      <div class="progress-text" id="l1-progress">1 / 10</div>
+      <div class="score-text" id="l1-score">得分：0</div>
+      <div class="game-card">
+        <button class="l1-sound-btn" onclick="speakL1()">🔊</button>
+        <div class="l1-chinese" id="l1-chinese">点击喇叭听中文</div>
+        <div class="l1-options" id="l1-options"></div>
+        <div class="feedback" id="l1-feedback"></div>
+        <button class="btn-next" id="l1-next" style="display:none;" onclick="nextL1()">下一题 →</button>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- ===== LEVEL 2: Spell Word ===== -->
+  <div id="screen-level2" class="screen">
+    <div class="level-header">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">第二关 · 单词拼写</div>
+    </div>
+    <div class="main">
+      <div class="instruction">看图，把字母排成正确的单词</div>
+      <div class="progress-text" id="l2-progress">1 / 10</div>
+      <div class="score-text" id="l2-score">得分：0</div>
+      <div class="game-card">
+        <img class="l2-word-img" id="l2-img" src="" alt="">
+        <div class="l2-word-cn" id="l2-cn"></div>
+        <div class="l2-slot" id="l2-slot"></div>
+        <div class="l2-letters" id="l2-letters"></div>
+        <div class="feedback" id="l2-feedback"></div>
+        <div class="action-row">
+          <button class="btn-secondary" onclick="resetL2()">🔄 重排</button>
+          <button class="btn-primary" onclick="checkL2()">✓ 提交</button>
+          <button class="btn-next" id="l2-next" style="display:none;" onclick="nextL2()">下一题 →</button>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- ===== LEVEL 3: Plural Sentence Build ===== -->
+  <div id="screen-level3" class="screen">
+    <div class="level-header">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">第三关 · 复数句型</div>
+    </div>
+    <div class="main">
+      <div class="instruction">听中文，把单词排成正确的句子</div>
+      <div class="progress-text" id="l3-progress">1 / 8</div>
+      <div class="score-text" id="l3-score">得分：0</div>
+      <div class="game-card">
+        <img class="l3-img" id="l3-img" src="" alt="">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="l3-sound-mini" onclick="speakL3()">🔊</button>
+          <div class="l3-cn" id="l3-cn"></div>
+        </div>
+        <div class="l3-sentence-slot" id="l3-slot"></div>
+        <div class="l3-word-bank" id="l3-bank"></div>
+        <div class="feedback" id="l3-feedback"></div>
+        <div class="action-row">
+          <button class="btn-secondary" onclick="resetL3()">🔄 重排</button>
+          <button class="btn-primary" onclick="checkL3()">✓ 提交</button>
+          <button class="btn-next" id="l3-next" style="display:none;" onclick="nextL3()">下一题 →</button>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- ===== LEVEL 4: Prep Sentence Build ===== -->
+  <div id="screen-level4" class="screen">
+    <div class="level-header">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">第四关 · 方位介词</div>
+    </div>
+    <div class="main">
+      <div class="instruction">看图和中文，把单词排成正确的句子</div>
+      <div class="progress-text" id="l4-progress">1 / 8</div>
+      <div class="score-text" id="l4-score">得分：0</div>
+      <div class="game-card">
+        <img class="l3-img" id="l4-img" src="" alt="">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="l3-sound-mini" onclick="speakL4()">🔊</button>
+          <div class="l3-cn" id="l4-cn"></div>
+        </div>
+        <div class="l3-sentence-slot" id="l4-slot"></div>
+        <div class="l3-word-bank" id="l4-bank"></div>
+        <div class="feedback" id="l4-feedback"></div>
+        <div class="action-row">
+          <button class="btn-secondary" onclick="resetL4()">🔄 重排</button>
+          <button class="btn-primary" onclick="checkL4()">✓ 提交</button>
+          <button class="btn-next" id="l4-next" style="display:none;" onclick="nextL4()">下一题 →</button>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- ===== RESULT SCREEN ===== -->
+  <div id="screen-result" class="screen">
+    <div class="level-header">
+      <button class="btn-back" onclick="goSelect()">← 返回选关</button>
+      <div class="level-badge">闯关结果</div>
+    </div>
+    <div class="main">
+      <div class="game-card result-card">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <div class="result-title" id="result-title">恭喜通关！</div>
+        <div class="result-score" id="result-score">10 / 10</div>
+        <div class="result-desc" id="result-desc">你真棒！全部答对啦～</div>
+        <button class="btn-primary" onclick="goSelect()">🔄 再玩一次</button>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+</div>
+
+<script>
+// ===== 数据 =====
+const UNIT2_WORDS = [
+  { en: 'cat', cn: '猫', img: 'cat.jpg' },
+  { en: 'dog', cn: '狗', img: 'dog.jpg' },
+  { en: 'bird', cn: '鸟', img: 'bird.jpg' },
+  { en: 'book', cn: '书', img: 'book.jpg' },
+  { en: 'bag', cn: '书包', img: 'bag.jpg' },
+  { en: 'pencil', cn: '铅笔', img: 'pencil.jpg' },
+  { en: 'pen', cn: '钢笔', img: 'pen.jpg' },
+  { en: 'ruler', cn: '尺子', img: 'ruler.jpg' },
+  { en: 'rubber', cn: '橡皮', img: 'rubber.jpg' },
+  { en: 'crayon', cn: '蜡笔', img: 'crayon.jpg' }
+];
+
+// 复数句型题
+const L3_QUESTIONS = [
+  { cn: '它们是什么？它们是猫。', en: ['What', 'are', 'they', 'They', 'are', 'cats'], img: 'cat.jpg', type: 'plural_q_a' },
+  { cn: '它们是什么？它们是鸟。', en: ['What', 'are', 'they', 'They', 'are', 'birds'], img: 'bird.jpg', type: 'plural_q_a' },
+  { cn: '它们是书吗？是的，它们是。', en: ['Are', 'they', 'books', 'Yes', 'they', 'are'], img: 'book.jpg', type: 'yesno_yes' },
+  { cn: '它们是钢笔吗？不，它们不是。', en: ['Are', 'they', 'pens', 'No', 'they', "aren't"], img: 'pen.jpg', type: 'yesno_no' },
+  { cn: '它们是什么？它们是铅笔。', en: ['What', 'are', 'they', 'They', 'are', 'pencils'], img: 'pencil.jpg', type: 'plural_q_a' },
+  { cn: '它们是书包吗？是的，它们是。', en: ['Are', 'they', 'bags', 'Yes', 'they', 'are'], img: 'bag.jpg', type: 'yesno_yes' },
+  { cn: '它们是什么？它们是尺子。', en: ['What', 'are', 'they', 'They', 'are', 'rulers'], img: 'ruler.jpg', type: 'plural_q_a' },
+  { cn: '它们是蜡笔吗？不，它们不是。', en: ['Are', 'they', 'crayons', 'No', 'they', "aren't"], img: 'crayon.jpg', type: 'yesno_no' }
+];
+
+// 介词句型题（8道精选，覆盖on/in/under）
+const L4_QUESTIONS = [
+  { cn: '猫在盒子上。', en: ['The', 'cat', 'is', 'on', 'the', 'box'], scene: 'scene_01.jpg' },
+  { cn: '猫在盒子里。', en: ['The', 'cat', 'is', 'in', 'the', 'box'], scene: 'scene_02.jpg' },
+  { cn: '猫在盒子下面。', en: ['The', 'cat', 'is', 'under', 'the', 'box'], scene: 'scene_03.jpg' },
+  { cn: '鸟在盒子上。', en: ['The', 'bird', 'is', 'on', 'the', 'box'], scene: 'scene_04.jpg' },
+  { cn: '书在盒子上。', en: ['The', 'books', 'are', 'on', 'the', 'box'], scene: 'scene_07.jpg' },
+  { cn: '书包在桌子上。', en: ['The', 'school', 'bag', 'is', 'on', 'the', 'table'], scene: 'scene_10.jpg' },
+  { cn: '书包在椅子下面。', en: ['The', 'school', 'bag', 'is', 'under', 'the', 'chair'], scene: 'scene_17.jpg' },
+  { cn: '铅笔在书包里。', en: ['The', 'pencils', 'are', 'in', 'the', 'school', 'bag'], scene: 'scene_25.jpg' }
+];
+
+// 缺失图片的单词用emoji替代
+const WORD_EMOJI = {
+  'dog': '🐶', 'ruler': '📏', 'rubber': '🧽', 'pen': '🖊️', 'crayon': '🖍️'
+};
+
+// ===== 工具函数 =====
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickRandom(arr, n, exclude=[]) {
+  const pool = arr.filter(x => !exclude.includes(x));
+  return shuffle(pool).slice(0, n);
+}
+
+function speak(text, lang='zh-CN') {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang;
+  u.rate = 0.9;
+  window.speechSynthesis.speak(u);
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goSelect() {
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  showScreen('screen-select');
+}
+
+function showResult(score, total, levelName) {
+  document.getElementById('result-score').textContent = score + ' / ' + total;
+  const pct = score / total;
+  if (pct >= 0.9) {
+    document.getElementById('result-emoji').textContent = '🏆';
+    document.getElementById('result-title').textContent = '太厉害啦！';
+    document.getElementById('result-desc').textContent = levelName + '几乎全对，继续保持！';
+  } else if (pct >= 0.7) {
+    document.getElementById('result-emoji').textContent = '🎉';
+    document.getElementById('result-title').textContent = '做得不错！';
+    document.getElementById('result-desc').textContent = levelName + '完成啦，再练练更熟练～';
+  } else {
+    document.getElementById('result-emoji').textContent = '💪';
+    document.getElementById('result-title').textContent = '加油哦！';
+    document.getElementById('result-desc').textContent = '多练几遍就熟了，再来一次吧！';
+  }
+  showScreen('screen-result');
+}
+
+// ===== 星空背景 =====
+function initStars() {
+  const bg = document.getElementById('starsBg');
+  for (let i = 0; i < 30; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = Math.random() * 3 + 's';
+    bg.appendChild(s);
+  }
+}
+
+// ===== 单词图片 =====
+function getWordImg(word) {
+  // 检查图片是否存在，不存在返回null用emoji
+  return 'images/' + word.img;
+}
+
+// =====================================================
+// Level 1: 听中文选英文单词
+// =====================================================
+let l1State = { idx: 0, score: 0, questions: [], locked: false };
+
+function initLevel1() {
+  l1State = {
+    idx: 0,
+    score: 0,
+    questions: shuffle(UNIT2_WORDS),
+    locked: false
+  };
+  loadL1();
+  showScreen('screen-level1');
+}
+
+function loadL1() {
+  const q = l1State.questions[l1State.idx];
+  l1State.locked = false;
+  document.getElementById('l1-progress').textContent = `${l1State.idx + 1} / ${l1State.questions.length}`;
+  document.getElementById('l1-score').textContent = '得分：' + l1State.score;
+  document.getElementById('l1-chinese').textContent = q.cn;
+  document.getElementById('l1-feedback').textContent = '';
+  document.getElementById('l1-feedback').className = 'feedback';
+  document.getElementById('l1-next').style.display = 'none';
+
+  // 4个选项，1对3错
+  const wrongs = pickRandom(UNIT2_WORDS, 3, [q]);
+  const options = shuffle([q, ...wrongs]);
+  const box = document.getElementById('l1-options');
+  box.innerHTML = '';
+  options.forEach(opt => {
+    const btn = document.createElement('div');
+    btn.className = 'l1-option';
+    btn.textContent = opt.en;
+    btn.onclick = () => answerL1(btn, opt.en === q.en);
+    box.appendChild(btn);
+  });
+
+  // 自动播放一次中文
+  setTimeout(() => speak(q.cn, 'zh-CN'), 300);
+}
+
+function speakL1() {
+  const q = l1State.questions[l1State.idx];
+  speak(q.cn, 'zh-CN');
+}
+
+function answerL1(btn, isCorrect) {
+  if (l1State.locked) return;
+  l1State.locked = true;
+  const fb = document.getElementById('l1-feedback');
+  if (isCorrect) {
+    btn.classList.add('correct');
+    fb.textContent = '✅ 答对了！';
+    fb.className = 'feedback ok';
+    l1State.score++;
+  } else {
+    btn.classList.add('wrong');
+    // 高亮正确答案
+    document.querySelectorAll('.l1-option').forEach(b => {
+      if (b.textContent === l1State.questions[l1State.idx].en) b.classList.add('correct');
+    });
+    fb.textContent = '❌ 不对哦，正确答案是 ' + l1State.questions[l1State.idx].en;
+    fb.className = 'feedback no';
+  }
+  document.getElementById('l1-next').style.display = 'inline-block';
+}
+
+function nextL1() {
+  l1State.idx++;
+  if (l1State.idx >= l1State.questions.length) {
+    showResult(l1State.score, l1State.questions.length, '第一关');
+  } else {
+    loadL1();
+  }
+}
+
+// =====================================================
+// Level 2: 单词拼写
+// =====================================================
+let l2State = { idx: 0, score: 0, questions: [], slotLetters: [], letterStates: [], locked: false };
+
+function initLevel2() {
+  l2State = {
+    idx: 0,
+    score: 0,
+    questions: shuffle(UNIT2_WORDS),
+    slotLetters: [],
+    letterStates: [],
+    locked: false
+  };
+  loadL2();
+  showScreen('screen-level2');
+}
+
+function loadL2() {
+  const q = l2State.questions[l2State.idx];
+  l2State.locked = false;
+  l2State.slotLetters = [];
+  document.getElementById('l2-progress').textContent = `${l2State.idx + 1} / ${l2State.questions.length}`;
+  document.getElementById('l2-score').textContent = '得分：' + l2State.score;
+  document.getElementById('l2-cn').textContent = q.cn;
+  document.getElementById('l2-feedback').textContent = '';
+  document.getElementById('l2-feedback').className = 'feedback';
+  document.getElementById('l2-next').style.display = 'none';
+  document.querySelector('#screen-level2 .btn-primary').style.display = 'inline-block';
+  document.querySelector('#screen-level2 .btn-secondary').style.display = 'inline-block';
+
+  // 图片
+  const imgEl = document.getElementById('l2-img');
+  imgEl.src = 'images/' + q.img;
+  imgEl.onerror = function() {
+    this.style.display = 'none';
+  };
+  imgEl.style.display = 'block';
+
+  // 打乱字母
+  const letters = q.en.split('');
+  let shuffled = shuffle(letters);
+  // 避免打乱后和原单词一样
+  if (shuffled.join('') === q.en && q.en.length > 1) {
+    shuffled = shuffle(letters);
+  }
+  l2State.letterStates = shuffled.map((l, i) => ({ letter: l, used: false }));
+
+  renderL2();
+}
+
+function renderL2() {
+  // 渲染slot
+  const slot = document.getElementById('l2-slot');
+  slot.innerHTML = '';
+  l2State.slotLetters.forEach((item, sIdx) => {
+    const el = document.createElement('div');
+    el.className = 'l2-slot-letter';
+    el.textContent = item.letter;
+    el.onclick = () => removeFromSlotL2(sIdx);
+    slot.appendChild(el);
+  });
+  if (l2State.slotLetters.length === 0) {
+    slot.innerHTML = '<span style="color:#94A3B8;font-size:13px;align-self:center;">点击下方字母</span>';
+  }
+
+  // 渲染字母池
+  const bank = document.getElementById('l2-letters');
+  bank.innerHTML = '';
+  l2State.letterStates.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'l2-letter' + (item.used ? ' used' : '');
+    el.textContent = item.letter;
+    if (!item.used) {
+      el.onclick = () => addToSlotL2(i);
+    }
+    bank.appendChild(el);
+  });
+}
+
+function addToSlotL2(letterIdx) {
+  if (l2State.locked) return;
+  l2State.letterStates[letterIdx].used = true;
+  l2State.slotLetters.push({ letter: l2State.letterStates[letterIdx].letter, fromIdx: letterIdx });
+  renderL2();
+}
+
+function removeFromSlotL2(slotIdx) {
+  if (l2State.locked) return;
+  const item = l2State.slotLetters[slotIdx];
+  l2State.letterStates[item.fromIdx].used = false;
+  l2State.slotLetters.splice(slotIdx, 1);
+  renderL2();
+}
+
+function resetL2() {
+  if (l2State.locked) return;
+  l2State.slotLetters = [];
+  l2State.letterStates.forEach(l => l.used = false);
+  renderL2();
+}
+
+function checkL2() {
+  if (l2State.locked) return;
+  const q = l2State.questions[l2State.idx];
+  const userWord = l2State.slotLetters.map(x => x.letter).join('');
+  const fb = document.getElementById('l2-feedback');
+  if (userWord.length === 0) {
+    fb.textContent = '先拼单词呀～';
+    fb.className = 'feedback no';
+    return;
+  }
+  l2State.locked = true;
+  if (userWord === q.en) {
+    fb.textContent = '✅ 太棒了！拼写正确！';
+    fb.className = 'feedback ok';
+    l2State.score++;
+  } else {
+    fb.textContent = '❌ 不对哦，正确答案是 ' + q.en;
+    fb.className = 'feedback no';
+  }
+  document.getElementById('l2-next').style.display = 'inline-block';
+  document.querySelector('#screen-level2 .btn-primary').style.display = 'none';
+  document.querySelector('#screen-level2 .btn-secondary').style.display = 'none';
+}
+
+function nextL2() {
+  l2State.idx++;
+  if (l2State.idx >= l2State.questions.length) {
+    showResult(l2State.score, l2State.questions.length, '第二关');
+  } else {
+    loadL2();
+  }
+}
+
+// =====================================================
+// Level 3: 复数句型连词成句
+// =====================================================
+let l3State = { idx: 0, score: 0, questions: [], slotWords: [], bankStates: [], locked: false };
+
+function initLevel3() {
+  l3State = {
+    idx: 0,
+    score: 0,
+    questions: shuffle(L3_QUESTIONS),
+    slotWords: [],
+    bankStates: [],
+    locked: false
+  };
+  loadL3();
+  showScreen('screen-level3');
+}
+
+function loadL3() {
+  const q = l3State.questions[l3State.idx];
+  l3State.locked = false;
+  l3State.slotWords = [];
+  document.getElementById('l3-progress').textContent = `${l3State.idx + 1} / ${l3State.questions.length}`;
+  document.getElementById('l3-score').textContent = '得分：' + l3State.score;
+  document.getElementById('l3-cn').textContent = q.cn;
+  document.getElementById('l3-feedback').textContent = '';
+  document.getElementById('l3-feedback').className = 'feedback';
+  document.getElementById('l3-next').style.display = 'none';
+  document.querySelector('#screen-level3 .btn-primary').style.display = 'inline-block';
+  document.querySelector('#screen-level3 .btn-secondary').style.display = 'inline-block';
+
+  // 图片
+  const imgEl = document.getElementById('l3-img');
+  imgEl.src = 'images/' + q.img;
+  imgEl.onerror = function() {
+    // 图片不存在时显示emoji
+    const word = q.en.find(w => /^[a-z]+s?$/.test(w) && w.length > 3);
+    this.src = '';
+    this.alt = word || '📦';
+  };
+
+  // 打乱单词
+  const words = q.en;
+  l3State.bankStates = shuffle(words).map((w, i) => ({ word: w, used: false, origIdx: i }));
+
+  renderL3();
+  // 自动播放中文
+  setTimeout(() => speak(q.cn, 'zh-CN'), 300);
+}
+
+function renderL3() {
+  const slot = document.getElementById('l3-slot');
+  slot.innerHTML = '';
+  l3State.slotWords.forEach((item, sIdx) => {
+    const el = document.createElement('div');
+    el.className = 'l3-slot-word';
+    el.textContent = item.word;
+    el.onclick = () => removeFromSlotL3(sIdx);
+    slot.appendChild(el);
+  });
+  if (l3State.slotWords.length === 0) {
+    slot.innerHTML = '<span style="color:#94A3B8;font-size:13px;">点击下方单词组句</span>';
+  }
+
+  const bank = document.getElementById('l3-bank');
+  bank.innerHTML = '';
+  l3State.bankStates.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'l3-word' + (item.used ? ' used' : '');
+    el.textContent = item.word;
+    if (!item.used) {
+      el.onclick = () => addToSlotL3(i);
+    }
+    bank.appendChild(el);
+  });
+}
+
+function addToSlotL3(bankIdx) {
+  if (l3State.locked) return;
+  l3State.bankStates[bankIdx].used = true;
+  l3State.slotWords.push({ word: l3State.bankStates[bankIdx].word, fromIdx: bankIdx });
+  renderL3();
+}
+
+function removeFromSlotL3(slotIdx) {
+  if (l3State.locked) return;
+  const item = l3State.slotWords[slotIdx];
+  l3State.bankStates[item.fromIdx].used = false;
+  l3State.slotWords.splice(slotIdx, 1);
+  renderL3();
+}
+
+function resetL3() {
+  if (l3State.locked) return;
+  l3State.slotWords = [];
+  l3State.bankStates.forEach(b => b.used = false);
+  renderL3();
+}
+
+function speakL3() {
+  const q = l3State.questions[l3State.idx];
+  speak(q.cn, 'zh-CN');
+}
+
+function checkL3() {
+  if (l3State.locked) return;
+  const q = l3State.questions[l3State.idx];
+  const user = l3State.slotWords.map(x => x.word).join(' ');
+  const answer = q.en.join(' ');
+  const fb = document.getElementById('l3-feedback');
+  if (l3State.slotWords.length === 0) {
+    fb.textContent = '先把句子拼起来呀～';
+    fb.className = 'feedback no';
+    return;
+  }
+  l3State.locked = true;
+  if (user === answer) {
+    fb.textContent = '✅ 完全正确！句子读得真好！';
+    fb.className = 'feedback ok';
+    l3State.score++;
+    // 读一遍英文
+    speak(answer.replace(/[^a-zA-Z' ]/g, ''), 'en-US');
+  } else {
+    fb.textContent = '❌ 再想想哦，正确句子是：' + answer;
+    fb.className = 'feedback no';
+  }
+  document.getElementById('l3-next').style.display = 'inline-block';
+  document.querySelector('#screen-level3 .btn-primary').style.display = 'none';
+  document.querySelector('#screen-level3 .btn-secondary').style.display = 'none';
+}
+
+function nextL3() {
+  l3State.idx++;
+  if (l3State.idx >= l3State.questions.length) {
+    showResult(l3State.score, l3State.questions.length, '第三关');
+  } else {
+    loadL3();
+  }
+}
+
+// =====================================================
+// Level 4: 介词句型连词成句
+// =====================================================
+let l4State = { idx: 0, score: 0, questions: [], slotWords: [], bankStates: [], locked: false };
+
+function initLevel4() {
+  l4State = {
+    idx: 0,
+    score: 0,
+    questions: shuffle(L4_QUESTIONS),
+    slotWords: [],
+    bankStates: [],
+    locked: false
+  };
+  loadL4();
+  showScreen('screen-level4');
+}
+
+function loadL4() {
+  const q = l4State.questions[l4State.idx];
+  l4State.locked = false;
+  l4State.slotWords = [];
+  document.getElementById('l4-progress').textContent = `${l4State.idx + 1} / ${l4State.questions.length}`;
+  document.getElementById('l4-score').textContent = '得分：' + l4State.score;
+  document.getElementById('l4-cn').textContent = q.cn;
+  document.getElementById('l4-feedback').textContent = '';
+  document.getElementById('l4-feedback').className = 'feedback';
+  document.getElementById('l4-next').style.display = 'none';
+  document.querySelector('#screen-level4 .btn-primary').style.display = 'inline-block';
+  document.querySelector('#screen-level4 .btn-secondary').style.display = 'inline-block';
+
+  // 场景图
+  const imgEl = document.getElementById('l4-img');
+  imgEl.src = 'images/' + q.scene;
+
+  // 打乱单词
+  const words = q.en;
+  l4State.bankStates = shuffle(words).map((w, i) => ({ word: w, used: false, origIdx: i }));
+
+  renderL4();
+  // 自动播放中文
+  setTimeout(() => speak(q.cn, 'zh-CN'), 300);
+}
+
+function renderL4() {
+  const slot = document.getElementById('l4-slot');
+  slot.innerHTML = '';
+  l4State.slotWords.forEach((item, sIdx) => {
+    const el = document.createElement('div');
+    el.className = 'l3-slot-word';
+    el.textContent = item.word;
+    el.onclick = () => removeFromSlotL4(sIdx);
+    slot.appendChild(el);
+  });
+  if (l4State.slotWords.length === 0) {
+    slot.innerHTML = '<span style="color:#94A3B8;font-size:13px;">点击下方单词组句</span>';
+  }
+
+  const bank = document.getElementById('l4-bank');
+  bank.innerHTML = '';
+  l4State.bankStates.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'l3-word' + (item.used ? ' used' : '');
+    el.textContent = item.word;
+    if (!item.used) {
+      el.onclick = () => addToSlotL4(i);
+    }
+    bank.appendChild(el);
+  });
+}
+
+function addToSlotL4(bankIdx) {
+  if (l4State.locked) return;
+  l4State.bankStates[bankIdx].used = true;
+  l4State.slotWords.push({ word: l4State.bankStates[bankIdx].word, fromIdx: bankIdx });
+  renderL4();
+}
+
+function removeFromSlotL4(slotIdx) {
+  if (l4State.locked) return;
+  const item = l4State.slotWords[slotIdx];
+  l4State.bankStates[item.fromIdx].used = false;
+  l4State.slotWords.splice(slotIdx, 1);
+  renderL4();
+}
+
+function resetL4() {
+  if (l4State.locked) return;
+  l4State.slotWords = [];
+  l4State.bankStates.forEach(b => b.used = false);
+  renderL4();
+}
+
+function speakL4() {
+  const q = l4State.questions[l4State.idx];
+  speak(q.cn, 'zh-CN');
+}
+
+function checkL4() {
+  if (l4State.locked) return;
+  const q = l4State.questions[l4State.idx];
+  const user = l4State.slotWords.map(x => x.word).join(' ');
+  const answer = q.en.join(' ');
+  const fb = document.getElementById('l4-feedback');
+  if (l4State.slotWords.length === 0) {
+    fb.textContent = '先把句子拼起来呀～';
+    fb.className = 'feedback no';
+    return;
+  }
+  l4State.locked = true;
+  if (user === answer) {
+    fb.textContent = '✅ 完全正确！介词用得真准！';
+    fb.className = 'feedback ok';
+    l4State.score++;
+    speak(answer, 'en-US');
+  } else {
+    fb.textContent = '❌ 再想想哦，正确句子是：' + answer;
+    fb.className = 'feedback no';
+  }
+  document.getElementById('l4-next').style.display = 'inline-block';
+  document.querySelector('#screen-level4 .btn-primary').style.display = 'none';
+  document.querySelector('#screen-level4 .btn-secondary').style.display = 'none';
+}
+
+function nextL4() {
+  l4State.idx++;
+  if (l4State.idx >= l4State.questions.length) {
+    showResult(l4State.score, l4State.questions.length, '第四关');
+  } else {
+    loadL4();
+  }
+}
+
+// ===== 初始化 =====
+initStars();
+</script>
+</body>
+</html>
