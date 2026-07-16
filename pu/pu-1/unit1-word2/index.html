@@ -411,7 +411,7 @@ body {
         <div class="stars-display" id="level4Stars">☆☆☆</div>
       </button>
     </div>
-    <p style="color:#90a4ae; font-size:0.8rem; margin-top:10px;">点击喇叭 🔊 听发音 · 答对了点"下一题"继续</p>
+    <p style="color:#90a4ae; font-size:0.8rem; margin-top:10px;">点击喇叭 🔊 · 答对了点"下一题"继续</p>
     <div class="footer-logo">
       <div class="brand">Provided by Mona</div>
       <div class="tagline">— Flow & Grow —</div>
@@ -661,7 +661,7 @@ function showQuestion() {
     const allChunks = shuffle([...chunks, ...distractors]);
     content.innerHTML = `
       <div class="spell-target">💡 ${q.cn} · 用字母组合拼单词</div>
-      <button class="speak-btn" onclick="playWordAudio('${q.en.replace(/'/g, "\\'")}')" style="margin-bottom:12px;">🔊 听发音</button>
+      <button class="speak-btn" onclick="playWordAudio('${q.en.replace(/'/g, "\\'")}')" style="margin-bottom:12px;">🔊</button>
       <div id="correctAnswerHint" style="display:none; color:#ff6b9d; font-weight:bold; margin-bottom:10px; font-size:0.95rem;"></div>
       <div class="spell-answer-area" id="spellAnswerArea"></div>
       <div class="letter-pool" id="letterPool"></div>
@@ -686,7 +686,7 @@ function showQuestion() {
     const shuffledLetters = shuffle([...letters]);
     content.innerHTML = `
       <div class="spell-target">💡 ${q.cn}</div>
-      <button class="speak-btn" onclick="playWordAudio('${q.en.replace(/'/g, "\\'")}')" style="margin-bottom:12px;">🔊 听发音</button>
+      <button class="speak-btn" onclick="playWordAudio('${q.en.replace(/'/g, "\\'")}')" style="margin-bottom:12px;">🔊</button>
       <div id="correctAnswerHint" style="display:none; color:#ff6b9d; font-weight:bold; margin-bottom:10px; font-size:0.95rem;"></div>
       <div class="spell-answer-area" id="spellAnswerArea"></div>
       <div class="letter-pool" id="letterPool"></div>
