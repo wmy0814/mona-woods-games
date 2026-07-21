@@ -1,0 +1,2522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🍎 水果宝箱大冒险 - Fruit Box Adventure</title>
+<style>
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #0F2B46;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: #0F2B46;
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  /* 顶部状态栏 */
+  .top-bar {
+    background: #0F2B46;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+    margin-bottom: 0;
+  }
+  
+  .stars-display {
+    display: flex;
+    gap: 4px;
+    font-size: 18px;
+  }
+  
+  .level-badge {
+    margin-left: auto;
+    padding: 6px 16px;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .home-btn {
+    color: white;
+    font-size: 14px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+  }
+  .home-btn:hover { background: rgba(255,255,255,0.2); transform: none; }
+  .home-btn:active { transform: none; }
+  
+  /* 页面通用 */
+  .page {
+    display: none;
+    flex: 1;
+    animation: fadeIn 0.5s ease;
+  }
+  .page.active { display: flex; flex-direction: column; }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Logo */
+  .logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, #2DD4BF 0%, #0F2B46 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* 页脚 */
+  .page-footer {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    padding: 20px 0 10px;
+    margin-top: auto;
+  }
+
+  /* 首页 */
+  #home-page {
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding-top: 40px;
+  }
+  
+  .game-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  
+  .game-subtitle {
+    font-size: 16px;
+    color: #2DD4BF;
+    margin-bottom: 30px;
+    background: rgba(45, 212, 191, 0.1);
+    padding: 8px 20px;
+    border-radius: 20px;
+  }
+  
+  .start-btn {
+    background: #2DD4BF;
+    color: #0F2B46;
+    border: none;
+    padding: 16px 50px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+    margin-bottom: 30px;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
+  .start-btn:active { transform: translateY(0); }
+  
+  .level-select {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 700px;
+    padding: 0 20px;
+  }
+  
+  .level-card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 18px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    border: 2px solid transparent;
+  }
+  .level-card:hover { background: rgba(255,255,255,0.15); transform: none; }
+  .level-card.locked { opacity: 0.4; cursor: not-allowed; }
+  .level-card.completed { border-color: #2DD4BF; }
+  
+  .level-icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+  .level-name {
+    font-size: 13px;
+    color: white;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .level-num {
+    font-size: 11px;
+    color: #888;
+  }
+  .level-stars-mini {
+    font-size: 12px;
+    margin-top: 3px;
+  }
+  
+  /* 游戏区域 */
+  .game-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+  }
+  
+  .question-box {
+    background: rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .question-text {
+    font-size: 20px;
+    color: white;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  
+  .question-hint {
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+  }
+  
+  .sound-btn {
+    background: #2DD4BF;
+    color: #0F2B46;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all .2s;
+    margin: 8px;
+  }
+  .sound-btn:hover { transform: scale(1.05); }
+  .sound-btn:active { transform: scale(0.95); }
+  .sound-btn.playing { animation: pulse 0.5s ease infinite; }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  
+  /* 选项按钮 */
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 20px;
+  }
+  
+  .option-btn {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 20px 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+    text-align: center;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .option-btn:hover { border-color: #2DD4BF; background: rgba(45, 212, 191, 0.1); transform: none; }
+  .option-btn:active { transform: none; }
+  .option-btn.correct { 
+    border-color: #2DD4BF; 
+    background: rgba(45, 212, 191, 0.25);
+    color: #2DD4BF;
+    animation: correctBounce 0.4s ease;
+  }
+  .option-btn.wrong {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff8a8a;
+    animation: shake 0.4s ease;
+  }
+  
+  @keyframes correctBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+  
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  
+  .option-emoji {
+    font-size: 44px;
+  }
+  
+  .option-text {
+    font-size: 17px;
+  }
+  
+  /* 进度条 */
+  .progress-bar {
+    width: 100%;
+    max-width: 700px;
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #2DD4BF;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  
+  /* 反馈弹窗 */
+  .feedback-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #0F2B46;
+    border: 2px solid rgba(45, 212, 191, 0.3);
+    border-radius: 16px;
+    padding: 30px 40px;
+    text-align: center;
+    z-index: 100;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+  }
+  .feedback-popup.show { transform: translate(-50%, -50%) scale(1); }
+  
+  .feedback-emoji { font-size: 60px; margin-bottom: 8px; }
+  .feedback-text { font-size: 22px; font-weight: 600; color: white; }
+  .feedback-sub { font-size: 15px; color: rgba(255,255,255,0.6); margin-top: 6px; }
+  
+  .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 99;
+    display: none;
+  }
+  .overlay.show { display: block; }
+  
+  /* 水果学习卡片 */
+  .fruit-cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 20px;
+  }
+  
+  .fruit-card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 15px 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    border: 2px solid transparent;
+  }
+  .fruit-card:hover { border-color: #2DD4BF; }
+  .fruit-card:active { transform: scale(0.97); }
+  .fruit-card.highlight { border-color: #2DD4BF; background: rgba(45, 212, 191, 0.2); }
+  
+  .fruit-card-emoji { font-size: 40px; margin-bottom: 6px; }
+  .fruit-card-word { font-size: 14px; color: white; font-weight: 600; }
+  
+  /* 宝箱 */
+  .treasure-box {
+    position: relative;
+    width: 200px;
+    height: 150px;
+    margin: 20px auto;
+    cursor: pointer;
+    transition: transform .2s;
+  }
+  .treasure-box:hover { transform: scale(1.03); }
+  
+  .box-body {
+    width: 200px;
+    height: 100px;
+    background: linear-gradient(135deg, #1a4a6e, #0F2B46);
+    border-radius: 10px;
+    position: absolute;
+    bottom: 0;
+    border: 3px solid #2DD4BF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 10px;
+    overflow: hidden;
+  }
+  
+  .box-lid {
+    width: 210px;
+    height: 60px;
+    background: linear-gradient(135deg, #0F2B46, #1a4a6e);
+    border-radius: 15px 15px 5px 5px;
+    position: absolute;
+    top: 0;
+    left: -5px;
+    border: 3px solid #2DD4BF;
+    transform-origin: bottom center;
+    transition: transform 0.6s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .box-lock {
+    width: 28px;
+    height: 32px;
+    background: #2DD4BF;
+    border-radius: 50% 50% 5px 5px;
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 2px solid #1a4a6e;
+  }
+  .box-lock::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 12px;
+    background: #0F2B46;
+    border-radius: 2px;
+  }
+  
+  .treasure-box.open .box-lid {
+    transform: rotateX(-120deg);
+  }
+  
+  .box-fruit {
+    font-size: 30px;
+  }
+  
+  /* 场景找水果 */
+  .scene-container {
+    width: 100%;
+    max-width: 500px;
+    height: 350px;
+    background: linear-gradient(180deg, #87ceeb 0%, #87ceeb 60%, #90EE90 60%, #228B22 100%);
+    border-radius: 20px;
+    position: relative;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+  
+  .scene-table {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    height: 20px;
+    background: linear-gradient(135deg, #8B4513, #A0522D);
+    border-radius: 5px;
+  }
+  .scene-table::before {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    left: 20px;
+    width: 15px;
+    height: 50px;
+    background: #8B4513;
+  }
+  .scene-table::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    right: 20px;
+    width: 15px;
+    height: 50px;
+    background: #8B4513;
+  }
+  
+  .scene-chair {
+    position: absolute;
+    bottom: 50px;
+    left: 30px;
+    width: 80px;
+    height: 15px;
+    background: linear-gradient(135deg, #D2691E, #8B4513);
+    border-radius: 3px;
+  }
+  .scene-chair::before {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    left: 10px;
+    width: 10px;
+    height: 40px;
+    background: #8B4513;
+  }
+  .scene-chair::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    right: 10px;
+    width: 10px;
+    height: 40px;
+    background: #8B4513;
+  }
+  
+  .scene-chair-back {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 10px;
+    height: 70px;
+    background: #8B4513;
+    border-radius: 3px;
+  }
+  
+  .scene-box {
+    position: absolute;
+    width: 60px;
+    height: 50px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border-radius: 5px;
+    border: 3px solid #1a5276;
+  }
+  .scene-box-lid {
+    position: absolute;
+    width: 66px;
+    height: 20px;
+    background: linear-gradient(135deg, #2980b9, #3498db);
+    border-radius: 5px 5px 2px 2px;
+    top: -20px;
+    left: -3px;
+    border: 3px solid #1a5276;
+    border-bottom: none;
+  }
+  
+  .scene-fruit {
+    position: absolute;
+    font-size: 35px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    z-index: 10;
+  }
+  .scene-fruit:hover { transform: scale(1.2); }
+  .scene-fruit.found { animation: foundPop 0.5s ease; }
+  
+  @keyframes foundPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5); filter: brightness(1.5); }
+    100% { transform: scale(1.2); }
+  }
+  
+  /* 对话剧场 */
+  .dialogue-container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+  
+  .dialogue-line {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    gap: 10px;
+  }
+  .dialogue-line.jenny { flex-direction: row; }
+  .dialogue-line.jim { flex-direction: row-reverse; }
+  
+  .dialogue-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff9a9e, #fecfef);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    flex-shrink: 0;
+  }
+  .dialogue-line.jim .dialogue-avatar {
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+  }
+  
+  .dialogue-bubble {
+    background: #f0f0f0;
+    padding: 12px 18px;
+    border-radius: 18px;
+    font-size: 16px;
+    line-height: 1.5;
+    max-width: 70%;
+    position: relative;
+  }
+  .dialogue-line.jenny .dialogue-bubble {
+    background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+    border-top-left-radius: 5px;
+  }
+  .dialogue-line.jim .dialogue-bubble {
+    background: linear-gradient(135deg, #a8e6cf, #88d8b0);
+    border-top-right-radius: 5px;
+  }
+  
+  .blank-slot {
+    display: inline-block;
+    min-width: 80px;
+    height: 28px;
+    background: white;
+    border: 2px dashed #999;
+    border-radius: 8px;
+    margin: 0 3px;
+    text-align: center;
+    line-height: 24px;
+    font-weight: bold;
+    color: #e74c3c;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .blank-slot:hover { border-color: #4ecdc4; background: #e8f8f7; }
+  .blank-slot.filled {
+    border-style: solid;
+    border-color: #00b894;
+    background: #d4f5e9;
+    color: #00b894;
+  }
+  .blank-slot.wrong-fill {
+    border-color: #ff6b6b;
+    background: #ffe0e0;
+    animation: shake 0.5s;
+  }
+  
+  /* 结果页 */
+  #result-page {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  
+  .result-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 12px;
+  }
+  
+  .result-stars {
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+  
+  .result-text {
+    font-size: 18px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 30px;
+    background: rgba(255,255,255,0.08);
+    padding: 15px 30px;
+    border-radius: 12px;
+  }
+  
+  .result-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .btn-primary {
+    background: #2DD4BF;
+    color: #0F2B46;
+    border: none;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
+  .btn-primary:active { transform: translateY(0); }
+  
+  .btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.2);
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+  }
+  .btn-secondary:hover { border-color: #2DD4BF; color: #2DD4BF; }
+  
+  /* 星星飞行动画 */
+  .star-fly {
+    position: fixed;
+    font-size: 36px;
+    pointer-events: none;
+    z-index: 200;
+    animation: starFly 1s ease forwards;
+  }
+  
+  @keyframes starFly {
+    0% { transform: scale(0.5); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 1; }
+    100% { transform: translateY(-180px) scale(0.3); opacity: 0; }
+  }
+  
+  /* 下一题按钮 */
+  .next-btn {
+    background: #2DD4BF;
+    color: #0F2B46;
+    border: none;
+    padding: 12px 36px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+    display: none;
+  }
+  .next-btn.show { display: inline-block; animation: fadeIn 0.3s; }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
+  
+  /* 响应式 */
+  @media (max-width: 600px) {
+    .game-title { font-size: 28px; }
+    .game-subtitle { font-size: 16px; }
+    .mona-avatar { width: 120px; height: 120px; font-size: 70px; }
+    .start-btn { padding: 15px 45px; font-size: 20px; }
+    .level-select { grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .level-icon { font-size: 28px; }
+    .level-name { font-size: 10px; }
+    .level-num { font-size: 9px; }
+    .fruit-card-emoji { font-size: 35px; }
+    .fruit-card-word { font-size: 11px; }
+    .fruit-card { padding: 10px 3px; }
+    .option-btn { padding: 15px 10px; font-size: 16px; min-height: 70px; }
+    .option-emoji { font-size: 40px; }
+    .option-text { font-size: 14px; }
+    .question-text { font-size: 18px; }
+    .dialogue-bubble { font-size: 14px; padding: 10px 14px; }
+    .dialogue-avatar { width: 40px; height: 40px; font-size: 24px; }
+    .scene-container { height: 300px; }
+    .result-emoji { font-size: 80px; }
+    .result-title { font-size: 24px; }
+    .result-stars { font-size: 40px; }
+    .blank-slot { min-width: 60px; font-size: 14px; }
+  }
+  
+  @media (max-width: 400px) {
+    .options-grid { grid-template-columns: 1fr; }
+    .fruit-cards { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* 第4关场景图样式 */
+  .scene-image-container {
+    width: 100%;
+    max-width: 500px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  .scene-image-container svg {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  /* 第5关连词成句样式 */
+  .chinese-sentence {
+    font-size: 20px;
+    color: white;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    min-height: 60px;
+    padding: 15px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .word-tile {
+    background: rgba(45, 212, 191, 0.15);
+    color: #2DD4BF;
+    border: 2px solid #2DD4BF;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    user-select: none;
+  }
+  .word-tile:hover { background: rgba(45, 212, 191, 0.25); transform: none; }
+  .word-tile:active { transform: scale(0.97); }
+  .word-tile.used { opacity: 0.25; pointer-events: none; }
+  
+  .sentence-answer-area {
+    width: 100%;
+    max-width: 700px;
+    min-height: 70px;
+    background: rgba(255,255,255,0.04);
+    border: 2px dashed rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+    justify-content: center;
+  }
+  .sentence-answer-area.has-content {
+    border-style: solid;
+    border-color: #2DD4BF;
+    background: rgba(45, 212, 191, 0.06);
+  }
+  .answer-word {
+    background: #2DD4BF;
+    color: #0F2B46;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .answer-word:hover { opacity: 0.85; transform: none; }
+  .answer-word:active { transform: scale(0.97); }
+  
+  .check-sentence-btn {
+    background: #2DD4BF;
+    color: #0F2B46;
+    border: none;
+    padding: 12px 36px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+    display: none;
+  }
+  .check-sentence-btn.show { display: inline-block; }
+  .check-sentence-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
+  
+  .reset-sentence-btn {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.2);
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+    margin-left: 10px;
+  }
+  .reset-sentence-btn:hover { border-color: #ff6b6b; color: #ff6b6b; }
+  
+  /* 水果小图标SVG容器 */
+  .fruit-icon {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+  }
+  .fruit-icon svg { width: 100%; height: 100%; }
+  
+  /* 第3关宝箱内水果展示 */
+  .box-fruits-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  .box-fruit-item {
+    width: 35px;
+    height: 35px;
+  }
+  .box-fruit-item svg { width: 100%; height: 100%; }
+  
+  /* 颜色提示标签 */
+  .color-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .color-tag.red { background: #ffe0e0; color: #e74c3c; }
+  .color-tag.yellow { background: #fff3cd; color: #f39c12; }
+  .color-tag.green { background: #d4edda; color: #27ae60; }
+  .color-tag.purple { background: #e8daef; color: #8e44ad; }
+  .color-tag.orange { background: #ffe4cc; color: #e67e22; }
+  
+  /* 响应式补充 */
+  @media (max-width: 600px) {
+    .word-tile { padding: 8px 14px; font-size: 16px; }
+    .answer-word { padding: 8px 14px; font-size: 16px; }
+    .chinese-sentence { font-size: 18px; }
+    .fruit-icon { width: 40px; height: 40px; }
+    .box-fruit-item { width: 28px; height: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 顶部状态栏 -->
+  <div class="top-bar" id="top-bar" style="display:none;">
+    <button class="home-btn" onclick="goHome()">← 返回</button>
+    <div class="level-badge" id="level-badge">第1关</div>
+    <div class="stars-display" id="stars-display">
+      <span>⭐</span><span>⭐</span><span>⭐</span>
+    </div>
+  </div>
+
+  <!-- 首页 -->
+  <div class="page active" id="home-page">
+    <div class="logo-circle">🍎</div>
+    <h1 class="game-title">水果宝箱大冒险</h1>
+    <div class="game-subtitle">Fruit Box Adventure</div>
+    <button class="start-btn" onclick="startGame()">🎮 开始游戏</button>
+    
+    <div class="level-select" id="level-select">
+      <div class="level-card" onclick="startLevel(1)">
+        <div class="level-icon">📚</div>
+        <div class="level-name">认一认</div>
+        <div class="level-num">Level 1</div>
+        <div class="level-stars-mini" id="l1-stars"></div>
+      </div>
+      <div class="level-card" onclick="startLevel(2)">
+        <div class="level-icon">🔢</div>
+        <div class="level-name">单复数</div>
+        <div class="level-num">Level 2</div>
+        <div class="level-stars-mini" id="l2-stars"></div>
+      </div>
+      <div class="level-card" onclick="startLevel(3)">
+        <div class="level-icon">🎁</div>
+        <div class="level-name">猜猜看</div>
+        <div class="level-num">Level 3</div>
+        <div class="level-stars-mini" id="l3-stars"></div>
+      </div>
+      <div class="level-card" onclick="startLevel(4)">
+        <div class="level-icon">🖼️</div>
+        <div class="level-name">方位选</div>
+        <div class="level-num">Level 4</div>
+        <div class="level-stars-mini" id="l4-stars"></div>
+      </div>
+      <div class="level-card" onclick="startLevel(5)">
+        <div class="level-icon">📝</div>
+        <div class="level-name">连词组句</div>
+        <div class="level-num">Level 5</div>
+        <div class="level-stars-mini" id="l5-stars"></div>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- 游戏页面 -->
+  <div class="page" id="game-page">
+    <div class="game-area" id="game-area">
+      <!-- 动态内容 -->
+    </div>
+    <div style="text-align:center;">
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">下一题 ▶</button>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- 结果页 -->
+  <div class="page" id="result-page">
+    <div class="result-emoji" id="result-emoji">🎉</div>
+    <h2 class="result-title" id="result-title">太棒了！</h2>
+    <div class="result-stars" id="result-stars">⭐⭐⭐</div>
+    <div class="result-text" id="result-text">你完成了所有挑战！</div>
+    <div class="result-buttons">
+      <button class="btn-secondary" onclick="goHome()">🏠 返回首页</button>
+      <button class="btn-primary" id="next-level-btn" onclick="nextLevel()">下一关 ▶</button>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+</div>
+
+<!-- 反馈弹窗 -->
+<div class="overlay" id="overlay"></div>
+<div class="feedback-popup" id="feedback-popup">
+  <div class="feedback-emoji" id="feedback-emoji">🌟</div>
+  <div class="feedback-text" id="feedback-text">答对了！</div>
+  <div class="feedback-sub" id="feedback-sub"></div>
+</div>
+
+<script>
+// ============ SVG 场景图库 ============
+const SCENE_SVGS = {
+    "scene_1": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 桌子 -->
+        <rect x="100" y="230" width="200" height="15" rx="5" fill="#8B4513"/>
+        <rect x="115" y="245" width="10" height="60" fill="#A0522D"/>
+        <rect x="275" y="245" width="10" height="60" fill="#A0522D"/>
+        <ellipse cx="200" cy="232" rx="95" ry="6" fill="rgba(0,0,0,0.1)"/>
+        
+    
+            <g transform="translate(200, 185)">
+                <ellipse cx="0" cy="0" rx="20" ry="18.0" fill="#E74C3C"/>
+                <ellipse cx="-5" cy="-5" rx="4" ry="5" fill="#FF6B6B" opacity="0.6"/>
+                <path d="M 0 -18.0 Q 4 -24.0 5 -22.0" fill="none" stroke="#228B22" stroke-width="3"/>
+                <ellipse cx="5" cy="-21.0" rx="5" ry="4" fill="#32CD32" transform="rotate(30, 5, -21.0)"/>
+            </g>
+            
+</svg>`,
+    "scene_2": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 箱子 -->
+        <rect x="140" y="230" width="120" height="80" rx="5" fill="#3498db" stroke="#2980b9" stroke-width="3"/>
+        <rect x="135" y="215" width="130" height="20" rx="5" fill="#2980b9" stroke="#1a5276" stroke-width="2"/>
+        <rect x="190" y="245" width="20" height="12" rx="2" fill="#ffd93d" stroke="#f39c12" stroke-width="2"/>
+        
+    
+            <g transform="translate(200, 245)">
+                <path d="M -15 -7 Q 0 -18.0 15 -5 Q 12.0 7 0 10.0 Q -12.0 5 -15 -7" 
+                      fill="#FFE135" stroke="#DAA520" stroke-width="2"/>
+                <ellipse cx="10.5" cy="-5" rx="3" ry="5" fill="#8B4513"/>
+                <path d="M -13.5 -5 Q -10.5 0 -7.5 3" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+            </g>
+            
+</svg>`,
+    "scene_3": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 椅子 -->
+        <rect x="130" y="250" width="100" height="12" rx="3" fill="#D2691E"/>
+        <rect x="140" y="262" width="8" height="45" fill="#8B4513"/>
+        <rect x="212" y="262" width="8" height="45" fill="#8B4513"/>
+        <rect x="125" y="180" width="10" height="82" rx="3" fill="#8B4513"/>
+        <rect x="120" y="175" width="20" height="10" rx="3" fill="#A0522D"/>
+        
+    
+            <g transform="translate(180, 295)">
+                <ellipse cx="0" cy="0" rx="20" ry="14.0" fill="#2ECC71"/>
+                <ellipse cx="0" cy="3" rx="17.0" ry="11.0" fill="#FF6B6B"/>
+                <!-- 西瓜籽 -->
+                <ellipse cx="-6" cy="0" rx="2" ry="4" fill="#2C3E50" transform="rotate(-20, -6, 0)"/>
+                <ellipse cx="5" cy="3" rx="2" ry="4" fill="#2C3E50" transform="rotate(15, 5, 3)"/>
+                <ellipse cx="0" cy="5" rx="2" ry="4" fill="#2C3E50"/>
+                <ellipse cx="10" cy="0" rx="2" ry="4" fill="#2C3E50" transform="rotate(25, 10, 0)"/>
+                <ellipse cx="-10" cy="4" rx="2" ry="4" fill="#2C3E50" transform="rotate(-30, -10, 4)"/>
+            </g>
+            
+</svg>`,
+    "scene_4": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 箱子 -->
+        <rect x="140" y="230" width="120" height="80" rx="5" fill="#3498db" stroke="#2980b9" stroke-width="3"/>
+        <rect x="135" y="215" width="130" height="20" rx="5" fill="#2980b9" stroke="#1a5276" stroke-width="2"/>
+        <rect x="190" y="245" width="20" height="12" rx="2" fill="#ffd93d" stroke="#f39c12" stroke-width="2"/>
+        
+    
+            <g transform="translate(200, 190)">
+                <circle cx="0" cy="0" r="20" fill="#FF8C00"/>
+                <circle cx="-5" cy="-5" r="5" fill="#FFA500" opacity="0.6"/>
+                <!-- 橙子纹理 -->
+                <circle cx="6" cy="5" r="2" fill="#E67E22" opacity="0.5"/>
+                <circle cx="-6" cy="6" r="2" fill="#E67E22" opacity="0.5"/>
+                <circle cx="4" cy="-10" r="2" fill="#E67E22" opacity="0.5"/>
+                <!-- 叶子 -->
+                <ellipse cx="0" cy="-19.0" rx="5" ry="3" fill="#27AE60" transform="rotate(-20, 0, -19.0)"/>
+                <rect x="-1" y="-20" width="3" height="4" fill="#8B4513"/>
+            </g>
+            
+</svg>`,
+    "scene_5": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 椅子 -->
+        <rect x="130" y="250" width="100" height="12" rx="3" fill="#D2691E"/>
+        <rect x="140" y="262" width="8" height="45" fill="#8B4513"/>
+        <rect x="212" y="262" width="8" height="45" fill="#8B4513"/>
+        <rect x="125" y="180" width="10" height="82" rx="3" fill="#8B4513"/>
+        <rect x="120" y="175" width="20" height="10" rx="3" fill="#A0522D"/>
+        
+    
+            <g transform="translate(180, 207)">
+                <circle cx="-10" cy="-6" r="6" fill="#9B59B6"/>
+                <circle cx="0" cy="-10" r="6" fill="#8E44AD"/>
+                <circle cx="10" cy="-6" r="6" fill="#9B59B6"/>
+                <circle cx="-6" cy="0" r="6" fill="#8E44AD"/>
+                <circle cx="6" cy="0" r="6" fill="#9B59B6"/>
+                <circle cx="0" cy="6" r="6" fill="#8E44AD"/>
+                <circle cx="-5" cy="13.0" r="6" fill="#7D3C98"/>
+                <circle cx="5" cy="13.0" r="6" fill="#9B59B6"/>
+                <!-- 高光 -->
+                <circle cx="-11.0" cy="-8.0" r="3" fill="#D7BDE2" opacity="0.7"/>
+                <path d="M 0 -13.0 Q 4 -20 5 -18.0" fill="none" stroke="#228B22" stroke-width="2"/>
+            </g>
+            
+</svg>`,
+    "scene_6": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 箱子 -->
+        <rect x="140" y="230" width="120" height="80" rx="5" fill="#3498db" stroke="#2980b9" stroke-width="3"/>
+        <rect x="135" y="215" width="130" height="20" rx="5" fill="#2980b9" stroke="#1a5276" stroke-width="2"/>
+        <rect x="190" y="245" width="20" height="12" rx="2" fill="#ffd93d" stroke="#f39c12" stroke-width="2"/>
+        
+    
+            <g transform="translate(185, 305)">
+                <circle cx="-7" cy="-5" r="5" fill="#9B59B6"/>
+                <circle cx="0" cy="-7" r="5" fill="#8E44AD"/>
+                <circle cx="7" cy="-5" r="5" fill="#9B59B6"/>
+                <circle cx="-5" cy="0" r="5" fill="#8E44AD"/>
+                <circle cx="5" cy="0" r="5" fill="#9B59B6"/>
+                <circle cx="0" cy="5" r="5" fill="#8E44AD"/>
+                <circle cx="-3" cy="10.0" r="5" fill="#7D3C98"/>
+                <circle cx="3" cy="10.0" r="5" fill="#9B59B6"/>
+                <!-- 高光 -->
+                <circle cx="-8.0" cy="-6.0" r="3" fill="#D7BDE2" opacity="0.7"/>
+                <path d="M 0 -10.0 Q 3 -15 3 -13.5" fill="none" stroke="#228B22" stroke-width="2"/>
+            </g>
+            
+            <g transform="translate(215, 308)">
+                <circle cx="-7" cy="-5" r="5" fill="#9B59B6"/>
+                <circle cx="0" cy="-7" r="5" fill="#8E44AD"/>
+                <circle cx="7" cy="-5" r="5" fill="#9B59B6"/>
+                <circle cx="-5" cy="0" r="5" fill="#8E44AD"/>
+                <circle cx="5" cy="0" r="5" fill="#9B59B6"/>
+                <circle cx="0" cy="5" r="5" fill="#8E44AD"/>
+                <circle cx="-3" cy="10.0" r="5" fill="#7D3C98"/>
+                <circle cx="3" cy="10.0" r="5" fill="#9B59B6"/>
+                <!-- 高光 -->
+                <circle cx="-8.0" cy="-6.0" r="3" fill="#D7BDE2" opacity="0.7"/>
+                <path d="M 0 -10.0 Q 3 -15 3 -13.5" fill="none" stroke="#228B22" stroke-width="2"/>
+            </g>
+            
+</svg>`,
+    "scene_7": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 桌子 -->
+        <rect x="100" y="230" width="200" height="15" rx="5" fill="#8B4513"/>
+        <rect x="115" y="245" width="10" height="60" fill="#A0522D"/>
+        <rect x="275" y="245" width="10" height="60" fill="#A0522D"/>
+        <ellipse cx="200" cy="232" rx="95" ry="6" fill="rgba(0,0,0,0.1)"/>
+        
+    
+            <g transform="translate(185, 290)">
+                <ellipse cx="0" cy="0" rx="15" ry="13.5" fill="#E74C3C"/>
+                <ellipse cx="-3" cy="-3" rx="3" ry="3" fill="#FF6B6B" opacity="0.6"/>
+                <path d="M 0 -13.5 Q 3 -18.0 3 -16.5" fill="none" stroke="#228B22" stroke-width="3"/>
+                <ellipse cx="3" cy="-15.75" rx="3" ry="3" fill="#32CD32" transform="rotate(30, 3, -15.75)"/>
+            </g>
+            
+            <g transform="translate(215, 293)">
+                <ellipse cx="0" cy="0" rx="15" ry="13.5" fill="#E74C3C"/>
+                <ellipse cx="-3" cy="-3" rx="3" ry="3" fill="#FF6B6B" opacity="0.6"/>
+                <path d="M 0 -13.5 Q 3 -18.0 3 -16.5" fill="none" stroke="#228B22" stroke-width="3"/>
+                <ellipse cx="3" cy="-15.75" rx="3" ry="3" fill="#32CD32" transform="rotate(30, 3, -15.75)"/>
+            </g>
+            
+            <g transform="translate(200, 280)">
+                <ellipse cx="0" cy="0" rx="12.0" ry="10.8" fill="#E74C3C"/>
+                <ellipse cx="-3.0" cy="-3.0" rx="2.0" ry="3.0" fill="#FF6B6B" opacity="0.6"/>
+                <path d="M 0 -10.8 Q 2.0 -14.399999999999999 3.0 -13.200000000000001" fill="none" stroke="#228B22" stroke-width="3"/>
+                <ellipse cx="3.0" cy="-12.600000000000001" rx="3.0" ry="2.0" fill="#32CD32" transform="rotate(30, 3.0, -12.600000000000001)"/>
+            </g>
+            
+</svg>`,
+    "scene_8": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 桌子 -->
+        <rect x="100" y="230" width="200" height="15" rx="5" fill="#8B4513"/>
+        <rect x="115" y="245" width="10" height="60" fill="#A0522D"/>
+        <rect x="275" y="245" width="10" height="60" fill="#A0522D"/>
+        <ellipse cx="200" cy="232" rx="95" ry="6" fill="rgba(0,0,0,0.1)"/>
+        
+    
+            <g transform="translate(185, 195)">
+                <circle cx="0" cy="0" r="15" fill="#FF8C00"/>
+                <circle cx="-3" cy="-3" r="3" fill="#FFA500" opacity="0.6"/>
+                <!-- 橙子纹理 -->
+                <circle cx="5" cy="3" r="2" fill="#E67E22" opacity="0.5"/>
+                <circle cx="-5" cy="5" r="2" fill="#E67E22" opacity="0.5"/>
+                <circle cx="3" cy="-7" r="2" fill="#E67E22" opacity="0.5"/>
+                <!-- 叶子 -->
+                <ellipse cx="0" cy="-14.25" rx="3" ry="2" fill="#27AE60" transform="rotate(-20, 0, -14.25)"/>
+                <rect x="-1" y="-15" width="3" height="3" fill="#8B4513"/>
+            </g>
+            
+            <g transform="translate(215, 198)">
+                <circle cx="0" cy="0" r="15" fill="#FF8C00"/>
+                <circle cx="-3" cy="-3" r="3" fill="#FFA500" opacity="0.6"/>
+                <!-- 橙子纹理 -->
+                <circle cx="5" cy="3" r="2" fill="#E67E22" opacity="0.5"/>
+                <circle cx="-5" cy="5" r="2" fill="#E67E22" opacity="0.5"/>
+                <circle cx="3" cy="-7" r="2" fill="#E67E22" opacity="0.5"/>
+                <!-- 叶子 -->
+                <ellipse cx="0" cy="-14.25" rx="3" ry="2" fill="#27AE60" transform="rotate(-20, 0, -14.25)"/>
+                <rect x="-1" y="-15" width="3" height="3" fill="#8B4513"/>
+            </g>
+            
+            <g transform="translate(200, 185)">
+                <circle cx="0" cy="0" r="12.0" fill="#FF8C00"/>
+                <circle cx="-3.0" cy="-3.0" r="3.0" fill="#FFA500" opacity="0.6"/>
+                <!-- 橙子纹理 -->
+                <circle cx="4.0" cy="3.0" r="2" fill="#E67E22" opacity="0.5"/>
+                <circle cx="-4.0" cy="4.0" r="2" fill="#E67E22" opacity="0.5"/>
+                <circle cx="2.0" cy="-6.0" r="2" fill="#E67E22" opacity="0.5"/>
+                <!-- 叶子 -->
+                <ellipse cx="0" cy="-11.399999999999999" rx="3.0" ry="2.0" fill="#27AE60" transform="rotate(-20, 0, -11.399999999999999)"/>
+                <rect x="-1" y="-12.0" width="3" height="2.0" fill="#8B4513"/>
+            </g>
+            
+</svg>`,
+    "scene_9": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 箱子 -->
+        <rect x="140" y="230" width="120" height="80" rx="5" fill="#3498db" stroke="#2980b9" stroke-width="3"/>
+        <rect x="135" y="215" width="130" height="20" rx="5" fill="#2980b9" stroke="#1a5276" stroke-width="2"/>
+        <rect x="190" y="245" width="20" height="12" rx="2" fill="#ffd93d" stroke="#f39c12" stroke-width="2"/>
+        
+    
+            <g transform="translate(200, 245)">
+                <ellipse cx="0" cy="0" rx="15" ry="10.5" fill="#2ECC71"/>
+                <ellipse cx="0" cy="2" rx="12.75" ry="8.25" fill="#FF6B6B"/>
+                <!-- 西瓜籽 -->
+                <ellipse cx="-5" cy="0" rx="2" ry="4" fill="#2C3E50" transform="rotate(-20, -5, 0)"/>
+                <ellipse cx="3" cy="2" rx="2" ry="4" fill="#2C3E50" transform="rotate(15, 3, 2)"/>
+                <ellipse cx="0" cy="3" rx="2" ry="4" fill="#2C3E50"/>
+                <ellipse cx="7" cy="0" rx="2" ry="4" fill="#2C3E50" transform="rotate(25, 7, 0)"/>
+                <ellipse cx="-7" cy="3" rx="2" ry="4" fill="#2C3E50" transform="rotate(-30, -7, 3)"/>
+            </g>
+            
+</svg>`,
+    "scene_10": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 椅子 -->
+        <rect x="130" y="250" width="100" height="12" rx="3" fill="#D2691E"/>
+        <rect x="140" y="262" width="8" height="45" fill="#8B4513"/>
+        <rect x="212" y="262" width="8" height="45" fill="#8B4513"/>
+        <rect x="125" y="180" width="10" height="82" rx="3" fill="#8B4513"/>
+        <rect x="120" y="175" width="20" height="10" rx="3" fill="#A0522D"/>
+        
+    
+            <g transform="translate(180, 207)">
+                <ellipse cx="0" cy="0" rx="15" ry="13.5" fill="#E74C3C"/>
+                <ellipse cx="-3" cy="-3" rx="3" ry="3" fill="#FF6B6B" opacity="0.6"/>
+                <path d="M 0 -13.5 Q 3 -18.0 3 -16.5" fill="none" stroke="#228B22" stroke-width="3"/>
+                <ellipse cx="3" cy="-15.75" rx="3" ry="3" fill="#32CD32" transform="rotate(30, 3, -15.75)"/>
+            </g>
+            
+</svg>`,
+    "scene_11": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 桌子 -->
+        <rect x="100" y="230" width="200" height="15" rx="5" fill="#8B4513"/>
+        <rect x="115" y="245" width="10" height="60" fill="#A0522D"/>
+        <rect x="275" y="245" width="10" height="60" fill="#A0522D"/>
+        <ellipse cx="200" cy="232" rx="95" ry="6" fill="rgba(0,0,0,0.1)"/>
+        
+    
+            <g transform="translate(185, 195)">
+                <path d="M -15 -7 Q 0 -18.0 15 -5 Q 12.0 7 0 10.0 Q -12.0 5 -15 -7" 
+                      fill="#FFE135" stroke="#DAA520" stroke-width="2"/>
+                <ellipse cx="10.5" cy="-5" rx="3" ry="5" fill="#8B4513"/>
+                <path d="M -13.5 -5 Q -10.5 0 -7.5 3" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+            </g>
+            
+            <g transform="translate(215, 198)">
+                <path d="M -15 -7 Q 0 -18.0 15 -5 Q 12.0 7 0 10.0 Q -12.0 5 -15 -7" 
+                      fill="#FFE135" stroke="#DAA520" stroke-width="2"/>
+                <ellipse cx="10.5" cy="-5" rx="3" ry="5" fill="#8B4513"/>
+                <path d="M -13.5 -5 Q -10.5 0 -7.5 3" fill="none" stroke="#FFD700" stroke-width="1.5"/>
+            </g>
+            
+</svg>`,
+    "scene_12": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350" width="100%" height="100%">
+    <!-- 背景 -->
+    <rect width="400" height="350" fill="#E8F4FD"/>
+    <!-- 地板 -->
+    <rect y="305" width="400" height="45" fill="#DEB887"/>
+    <line x1="0" y1="305" x2="400" y2="305" stroke="#C4A574" stroke-width="2"/>
+    <!-- 墙壁装饰 -->
+    <circle cx="50" cy="50" r="20" fill="#FFE4B5" opacity="0.5"/>
+    <circle cx="350" cy="80" r="15" fill="#FFE4B5" opacity="0.5"/>
+    <rect x="30" y="30" width="40" height="30" fill="#87CEEB" opacity="0.3" rx="5"/>
+    
+    
+        <!-- 桌子 -->
+        <rect x="100" y="230" width="200" height="15" rx="5" fill="#8B4513"/>
+        <rect x="115" y="245" width="10" height="60" fill="#A0522D"/>
+        <rect x="275" y="245" width="10" height="60" fill="#A0522D"/>
+        <ellipse cx="200" cy="232" rx="95" ry="6" fill="rgba(0,0,0,0.1)"/>
+        
+    
+            <g transform="translate(200, 195)">
+                <ellipse cx="0" cy="0" rx="25" ry="17.5" fill="#2ECC71"/>
+                <ellipse cx="0" cy="3" rx="21.25" ry="13.75" fill="#FF6B6B"/>
+                <!-- 西瓜籽 -->
+                <ellipse cx="-8" cy="0" rx="2" ry="4" fill="#2C3E50" transform="rotate(-20, -8, 0)"/>
+                <ellipse cx="5" cy="3" rx="2" ry="4" fill="#2C3E50" transform="rotate(15, 5, 3)"/>
+                <ellipse cx="0" cy="5" rx="2" ry="4" fill="#2C3E50"/>
+                <ellipse cx="10" cy="0" rx="2" ry="4" fill="#2C3E50" transform="rotate(25, 10, 0)"/>
+                <ellipse cx="-12" cy="4" rx="2" ry="4" fill="#2C3E50" transform="rotate(-30, -12, 4)"/>
+            </g>
+            
+</svg>`,
+};
+
+// 水果SVG图标（小尺寸）
+function getFruitSvg(fruitKey, size=40) {
+  const emojiMap = {
+    'apple': '🍎',
+    'banana': '🍌',
+    'orange': '🍊',
+    'grape': '🍇',
+    'watermelon': '🍉'
+  };
+  const emoji = emojiMap[fruitKey] || '🍎';
+  return `<span style="display:inline-block;font-size:${size}px;line-height:1;">${emoji}</span>`;
+}
+
+// ============ 各关卡题目数据 ============
+const LEVEL2_QUESTIONS = [
+  {
+    fruit: "apple",
+    isPlural: false,
+    correctWord: "an apple",
+    question: "听音，选出正确的图片",
+    options: [{word: "an apple", isCorrect: true, fruitKey: "apple", isPlural: false}, {word: "bananas", isCorrect: false, fruitKey: "banana", isPlural: true}, {word: "oranges", isCorrect: false, fruitKey: "orange", isPlural: true}, {word: "apples", isCorrect: false, fruitKey: "apple", isPlural: true}]
+  },
+  {
+    fruit: "grape",
+    isPlural: false,
+    correctWord: "a grape",
+    question: "听音，选出正确的图片",
+    options: [{word: "grapes", isCorrect: false, fruitKey: "grape", isPlural: true}, {word: "watermelons", isCorrect: false, fruitKey: "watermelon", isPlural: true}, {word: "an orange", isCorrect: false, fruitKey: "orange", isPlural: false}, {word: "a grape", isCorrect: true, fruitKey: "grape", isPlural: false}]
+  },
+  {
+    fruit: "orange",
+    isPlural: false,
+    correctWord: "an orange",
+    question: "听音，选出正确的图片",
+    options: [{word: "an orange", isCorrect: true, fruitKey: "orange", isPlural: false}, {word: "watermelons", isCorrect: false, fruitKey: "watermelon", isPlural: true}, {word: "oranges", isCorrect: false, fruitKey: "orange", isPlural: true}, {word: "apples", isCorrect: false, fruitKey: "apple", isPlural: true}]
+  },
+  {
+    fruit: "watermelon",
+    isPlural: false,
+    correctWord: "a watermelon",
+    question: "听音，选出正确的图片",
+    options: [{word: "watermelons", isCorrect: false, fruitKey: "watermelon", isPlural: true}, {word: "a watermelon", isCorrect: true, fruitKey: "watermelon", isPlural: false}, {word: "grapes", isCorrect: false, fruitKey: "grape", isPlural: true}, {word: "an orange", isCorrect: false, fruitKey: "orange", isPlural: false}]
+  },
+  {
+    fruit: "apple",
+    isPlural: true,
+    correctWord: "apples",
+    question: "听音，选出正确的图片",
+    options: [{word: "an apple", isCorrect: false, fruitKey: "apple", isPlural: false}, {word: "bananas", isCorrect: false, fruitKey: "banana", isPlural: true}, {word: "a grape", isCorrect: false, fruitKey: "grape", isPlural: false}, {word: "apples", isCorrect: true, fruitKey: "apple", isPlural: true}]
+  },
+  {
+    fruit: "banana",
+    isPlural: true,
+    correctWord: "bananas",
+    question: "听音，选出正确的图片",
+    options: [{word: "oranges", isCorrect: false, fruitKey: "orange", isPlural: true}, {word: "apples", isCorrect: false, fruitKey: "apple", isPlural: true}, {word: "bananas", isCorrect: true, fruitKey: "banana", isPlural: true}, {word: "a banana", isCorrect: false, fruitKey: "banana", isPlural: false}]
+  },
+  {
+    fruit: "orange",
+    isPlural: true,
+    correctWord: "oranges",
+    question: "听音，选出正确的图片",
+    options: [{word: "oranges", isCorrect: true, fruitKey: "orange", isPlural: true}, {word: "an orange", isCorrect: false, fruitKey: "orange", isPlural: false}, {word: "bananas", isCorrect: false, fruitKey: "banana", isPlural: true}, {word: "a grape", isCorrect: false, fruitKey: "grape", isPlural: false}]
+  },
+  {
+    fruit: "grape",
+    isPlural: true,
+    correctWord: "grapes",
+    question: "听音，选出正确的图片",
+    options: [{word: "grapes", isCorrect: true, fruitKey: "grape", isPlural: true}, {word: "a grape", isCorrect: false, fruitKey: "grape", isPlural: false}, {word: "an orange", isCorrect: false, fruitKey: "orange", isPlural: false}, {word: "an apple", isCorrect: false, fruitKey: "apple", isPlural: false}]
+  },
+  {
+    fruit: "watermelon",
+    isPlural: true,
+    correctWord: "watermelons",
+    question: "听音，选出正确的图片",
+    options: [{word: "watermelons", isCorrect: true, fruitKey: "watermelon", isPlural: true}, {word: "oranges", isCorrect: false, fruitKey: "orange", isPlural: true}, {word: "bananas", isCorrect: false, fruitKey: "banana", isPlural: true}, {word: "a watermelon", isCorrect: false, fruitKey: "watermelon", isPlural: false}]
+  },
+  {
+    fruit: "banana",
+    isPlural: false,
+    correctWord: "a banana",
+    question: "听音，选出正确的图片",
+    options: [{word: "bananas", isCorrect: false, fruitKey: "banana", isPlural: true}, {word: "a banana", isCorrect: true, fruitKey: "banana", isPlural: false}, {word: "grapes", isCorrect: false, fruitKey: "grape", isPlural: true}, {word: "oranges", isCorrect: false, fruitKey: "orange", isPlural: true}]
+  },
+];
+
+const LEVEL3_QUESTIONS = [
+  {
+    fruitName: "grape",
+    fruitSvgKey: "grape",
+    count: 1,
+    color: "",
+    isSingular: true,
+    correctSentence: "There's a grape.",
+    question: "看看宝箱里有什么，选出正确的句子",
+    options: ["There's a banana.", "There are 2 grapes.", "There's a grape.", "There are 1 grapes."]
+  },
+  {
+    fruitName: "banana",
+    fruitSvgKey: "banana",
+    count: 4,
+    color: "yellow",
+    isSingular: false,
+    correctSentence: "There are 4 yellow bananas.",
+    question: "看看宝箱里有什么，选出正确的句子",
+    options: ["There are 4 yellow bananas.", "There are 5 yellow bananas.", "There are 4 green watermelons.", "There's a yellow banana."]
+  },
+  {
+    fruitName: "orange",
+    fruitSvgKey: "orange",
+    count: 6,
+    color: "orange",
+    isSingular: false,
+    correctSentence: "There are 6 orange oranges.",
+    question: "看看宝箱里有什么，选出正确的句子",
+    options: ["There are 6 red apples.", "There's an orange orange.", "There are 5 orange oranges.", "There are 6 orange oranges."]
+  },
+  {
+    fruitName: "watermelon",
+    fruitSvgKey: "watermelon",
+    count: 1,
+    color: "green",
+    isSingular: true,
+    correctSentence: "There's a green watermelon.",
+    question: "看看宝箱里有什么，选出正确的句子",
+    options: ["There are 2 green watermelons.", "There's a green watermelon.", "There's an orange orange.", "There are 1 green watermelons."]
+  },
+  {
+    fruitName: "apple",
+    fruitSvgKey: "apple",
+    count: 1,
+    color: "red",
+    isSingular: true,
+    correctSentence: "There's a red apple.",
+    question: "看看宝箱里有什么，选出正确的句子",
+    options: ["There are 1 red apples.", "There are 2 red apples.", "There's a red apple.", "There's a purple grape."]
+  },
+  {
+    fruitName: "grape",
+    fruitSvgKey: "grape",
+    count: 5,
+    color: "",
+    isSingular: false,
+    correctSentence: "There are 5 grapes.",
+    question: "看看宝箱里有什么，选出正确的句子",
+    options: ["There are 5 bananas.", "There's a grape.", "There are 6 grapes.", "There are 5 grapes."]
+  },
+  {
+    fruitName: "orange",
+    fruitSvgKey: "orange",
+    count: 2,
+    color: "orange",
+    isSingular: false,
+    correctSentence: "There are 2 orange oranges.",
+    question: "看看宝箱里有什么，选出正确的句子",
+    options: ["There's an orange orange.", "There are 3 orange oranges.", "There are 2 red apples.", "There are 2 orange oranges."]
+  },
+  {
+    fruitName: "apple",
+    fruitSvgKey: "apple",
+    count: 3,
+    color: "red",
+    isSingular: false,
+    correctSentence: "There are 3 red apples.",
+    question: "看看宝箱里有什么，选出正确的句子",
+    options: ["There's a red apple.", "There are 3 red apples.", "There are 3 purple grapes.", "There are 4 red apples."]
+  },
+  {
+    fruitName: "watermelon",
+    fruitSvgKey: "watermelon",
+    count: 2,
+    color: "",
+    isSingular: false,
+    correctSentence: "There are 2 watermelons.",
+    question: "看看宝箱里有什么，选出正确的句子",
+    options: ["There's a watermelon.", "There are 3 watermelons.", "There are 2 oranges.", "There are 2 watermelons."]
+  },
+  {
+    fruitName: "banana",
+    fruitSvgKey: "banana",
+    count: 1,
+    color: "",
+    isSingular: true,
+    correctSentence: "There's a banana.",
+    question: "看看宝箱里有什么，选出正确的句子",
+    options: ["There are 2 bananas.", "There are 1 bananas.", "There's a watermelon.", "There's a banana."]
+  },
+];
+
+const LEVEL4_QUESTIONS = [
+  {
+    sceneId: "scene_1",
+    question: "Where is the apple?",
+    correctSentence: "It's on the table.",
+    isPlural: false,
+    options: [
+      {sentence: "It's in the table.", isCorrect: false},
+      {sentence: "It's on the table.", isCorrect: true},
+      {sentence: "It's under the table.", isCorrect: false},
+      {sentence: "It's on the chair.", isCorrect: false}
+    ]
+  },
+  {
+    sceneId: "scene_2",
+    question: "Where is the banana?",
+    correctSentence: "It's in the box.",
+    isPlural: false,
+    options: [
+      {sentence: "It's on the box.", isCorrect: false},
+      {sentence: "It's under the box.", isCorrect: false},
+      {sentence: "It's in the box.", isCorrect: true},
+      {sentence: "It's in the chair.", isCorrect: false}
+    ]
+  },
+  {
+    sceneId: "scene_3",
+    question: "Where is the watermelon?",
+    correctSentence: "It's under the chair.",
+    isPlural: false,
+    options: [
+      {sentence: "It's on the chair.", isCorrect: false},
+      {sentence: "It's under the chair.", isCorrect: true},
+      {sentence: "It's in the chair.", isCorrect: false},
+      {sentence: "It's under the table.", isCorrect: false}
+    ]
+  },
+  {
+    sceneId: "scene_4",
+    question: "Where is the orange?",
+    correctSentence: "It's on the box.",
+    isPlural: false,
+    options: [
+      {sentence: "It's in the box.", isCorrect: false},
+      {sentence: "It's on the box.", isCorrect: true},
+      {sentence: "It's under the box.", isCorrect: false},
+      {sentence: "It's on the table.", isCorrect: false}
+    ]
+  },
+  {
+    sceneId: "scene_5",
+    question: "Where are the grapes?",
+    correctSentence: "They're on the chair.",
+    isPlural: true,
+    options: [
+      {sentence: "They're on the chair.", isCorrect: true},
+      {sentence: "They're under the chair.", isCorrect: false},
+      {sentence: "They're in the chair.", isCorrect: false},
+      {sentence: "They're on the table.", isCorrect: false}
+    ]
+  },
+  {
+    sceneId: "scene_6",
+    question: "Where are the grapes?",
+    correctSentence: "They're under the box.",
+    isPlural: true,
+    options: [
+      {sentence: "They're on the box.", isCorrect: false},
+      {sentence: "They're in the box.", isCorrect: false},
+      {sentence: "They're under the box.", isCorrect: true},
+      {sentence: "They're under the chair.", isCorrect: false}
+    ]
+  },
+  {
+    sceneId: "scene_7",
+    question: "Where are the apples?",
+    correctSentence: "They're under the table.",
+    isPlural: true,
+    options: [
+      {sentence: "They're on the table.", isCorrect: false},
+      {sentence: "They're under the table.", isCorrect: true},
+      {sentence: "They're in the table.", isCorrect: false},
+      {sentence: "They're under the box.", isCorrect: false}
+    ]
+  },
+  {
+    sceneId: "scene_8",
+    question: "Where are the oranges?",
+    correctSentence: "They're on the table.",
+    isPlural: true,
+    options: [
+      {sentence: "They're on the table.", isCorrect: true},
+      {sentence: "They're in the table.", isCorrect: false},
+      {sentence: "They're under the table.", isCorrect: false},
+      {sentence: "They're on the chair.", isCorrect: false}
+    ]
+  },
+];
+
+const LEVEL5_QUESTIONS = [
+  {
+    chinese: "椅子上有一根香蕉。",
+    shuffledWords: ["banana", "There", "is", "a", "chair", "on", "the", "."],
+    correctOrder: ["There", "is", "a", "banana", "on", "the", "chair", "."],
+    correctSentence: "There is a banana on the chair."
+  },
+  {
+    chinese: "盒子里有一个苹果。",
+    shuffledWords: ["an", "There", "apple", "is", "in", "box", "the", "."],
+    correctOrder: ["There", "is", "an", "apple", "in", "the", "box", "."],
+    correctSentence: "There is an apple in the box."
+  },
+  {
+    chinese: "桌子上有一个西瓜。",
+    shuffledWords: ["watermelon", "a", "is", "There", "table", "the", "on", "."],
+    correctOrder: ["There", "is", "a", "watermelon", "on", "the", "table", "."],
+    correctSentence: "There is a watermelon on the table."
+  },
+  {
+    chinese: "椅子下面有一个橙子。",
+    shuffledWords: ["orange", "an", "is", "the", "There", "chair", "under", "."],
+    correctOrder: ["There", "is", "an", "orange", "under", "the", "chair", "."],
+    correctSentence: "There is an orange under the chair."
+  },
+  {
+    chinese: "桌子上有一颗葡萄。",
+    shuffledWords: ["grape", "There", "on", "is", "a", "table", "the", "."],
+    correctOrder: ["There", "is", "a", "grape", "on", "the", "table", "."],
+    correctSentence: "There is a grape on the table."
+  },
+  {
+    chinese: "盒子里有两个苹果。",
+    shuffledWords: ["apples", "two", "There", "in", "are", "box", "the", "."],
+    correctOrder: ["There", "are", "two", "apples", "in", "the", "box", "."],
+    correctSentence: "There are two apples in the box."
+  },
+  {
+    chinese: "桌子上有三根香蕉。",
+    shuffledWords: ["three", "bananas", "There", "are", "table", "on", "the", "."],
+    correctOrder: ["There", "are", "three", "bananas", "on", "the", "table", "."],
+    correctSentence: "There are three bananas on the table."
+  },
+  {
+    chinese: "椅子下面有四个橙子。",
+    shuffledWords: ["four", "There", "oranges", "are", "chair", "under", "the", "."],
+    correctOrder: ["There", "are", "four", "oranges", "under", "the", "chair", "."],
+    correctSentence: "There are four oranges under the chair."
+  },
+  {
+    chinese: "盒子里有五颗葡萄。",
+    shuffledWords: ["grapes", "five", "There", "in", "are", "box", "the", "."],
+    correctOrder: ["There", "are", "five", "grapes", "in", "the", "box", "."],
+    correctSentence: "There are five grapes in the box."
+  },
+  {
+    chinese: "椅子上有六个苹果。",
+    shuffledWords: ["six", "apples", "are", "There", "chair", "on", "the", "."],
+    correctOrder: ["There", "are", "six", "apples", "on", "the", "chair", "."],
+    correctSentence: "There are six apples on the chair."
+  },
+];
+
+
+// ============ 游戏状态 ============
+let gameState = {
+  currentLevel: 1,
+  currentQuestion: 0,
+  totalQuestions: 5,
+  correctCount: 0,
+  stars: 0,
+  totalStars: 0,
+  levelStars: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+  answered: false,
+  questions: [],
+  // 第5关专用
+  currentAnswerWords: [],
+};
+
+// 加载本地存储的星星
+function loadStars() {
+  try {
+    const saved = localStorage.getItem('fruit_game_stars');
+    if (saved) {
+      const data = JSON.parse(saved);
+      gameState.levelStars = data.levelStars || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    }
+  } catch(e) {}
+  updateLevelStarsDisplay();
+}
+
+function saveStars() {
+  try {
+    localStorage.setItem('fruit_game_stars', JSON.stringify({
+      levelStars: gameState.levelStars
+    }));
+  } catch(e) {}
+}
+
+function updateLevelStarsDisplay() {
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById(`l${i}-stars`);
+    if (el) {
+      const stars = gameState.levelStars[i] || 0;
+      el.textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+    }
+  }
+}
+
+// ============ 语音播放 ============
+function playSound(text, lang='en-US') {
+  // 使用有道词典API（英文）
+  if (lang === 'en-US') {
+    const url = `https://dict.youdao.com/dictvoice?type=2&audio=${encodeURIComponent(text)}`;
+    const audio = new Audio(url);
+    audio.play().catch(err => {
+      // 备用：使用Web Speech API
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+      }
+    });
+  } else {
+    // 中文：使用Web Speech API
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'zh-CN';
+      utterance.rate = 0.9;
+      speechSynthesis.speak(utterance);
+    }
+  }
+}
+
+// ============ 页面切换 ============
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  document.getElementById('top-bar').style.display = (pageId === 'home-page') ? 'none' : 'flex';
+}
+
+function goHome() {
+  showPage('home-page');
+  updateLevelStarsDisplay();
+}
+
+function startGame() {
+  startLevel(1);
+}
+
+function startLevel(level) {
+  gameState.currentLevel = level;
+  gameState.currentQuestion = 0;
+  gameState.correctCount = 0;
+  gameState.answered = false;
+  gameState.stars = 0;
+  
+  document.getElementById('level-badge').textContent = `第${level}关`;
+  updateStarsDisplay();
+  
+  showPage('game-page');
+  generateQuestions(level);
+  renderQuestion();
+}
+
+function updateStarsDisplay() {
+  const display = document.getElementById('stars-display');
+  const total = gameState.totalStars;
+  display.innerHTML = '';
+  for (let i = 0; i < Math.min(total, 15); i++) {
+    display.innerHTML += '<span>⭐</span>';
+  }
+  if (total > 15) display.innerHTML += `<span style="font-size:16px;color:#ffd93d;">x${total}</span>`;
+}
+
+// ============ 生成题目 ============
+function generateQuestions(level) {
+  gameState.questions = [];
+  
+  switch(level) {
+    case 1: // 水果认一认 - 听音指认（保持原样）
+      gameState.totalQuestions = 5;
+      const fruits = [
+        { name: 'banana', key: 'banana' },
+        { name: 'apple', key: 'apple' },
+        { name: 'watermelon', key: 'watermelon' },
+        { name: 'grape', key: 'grape' },
+        { name: 'orange', key: 'orange' }
+      ];
+      const shuffled = [...fruits].sort(() => Math.random() - 0.5);
+      for (let i = 0; i < 5; i++) {
+        const fruit = shuffled[i];
+        const options = [fruit];
+        const others = fruits.filter(f => f.name !== fruit.name).sort(() => Math.random() - 0.5).slice(0, 3);
+        options.push(...others);
+        options.sort(() => Math.random() - 0.5);
+        
+        gameState.questions.push({
+          type: 'listen-choose',
+          correct: fruit,
+          options: options,
+          question: '听音，选出正确的水果'
+        });
+      }
+      break;
+      
+    case 2: // 一个还是很多 - 单复数辨析（10题）
+      gameState.totalQuestions = LEVEL2_QUESTIONS.length;
+      gameState.questions = LEVEL2_QUESTIONS.map(q => ({
+        type: 'singular-plural',
+        ...q
+      }));
+      break;
+      
+    case 3: // 宝箱猜猜看（10题，带颜色）
+      gameState.totalQuestions = LEVEL3_QUESTIONS.length;
+      gameState.questions = LEVEL3_QUESTIONS.map(q => ({
+        type: 'treasure-box',
+        ...q
+      }));
+      break;
+      
+    case 4: // 方位图片选择
+      gameState.totalQuestions = LEVEL4_QUESTIONS.length;
+      gameState.questions = LEVEL4_QUESTIONS.map(q => ({
+        type: 'position-choose',
+        ...q
+      }));
+      break;
+      
+    case 5: // 连词成句
+      gameState.totalQuestions = LEVEL5_QUESTIONS.length;
+      gameState.questions = LEVEL5_QUESTIONS.map(q => ({
+        type: 'word-order',
+        ...q
+      }));
+      break;
+  }
+}
+
+// ============ 渲染题目 ============
+function renderQuestion() {
+  gameState.answered = false;
+  gameState.currentAnswerWords = [];
+  const q = gameState.questions[gameState.currentQuestion];
+  const area = document.getElementById('game-area');
+  document.getElementById('next-btn').classList.remove('show');
+  
+  switch(q.type) {
+    case 'listen-choose':
+      renderListenChoose(q, area);
+      break;
+    case 'singular-plural':
+      renderSingularPlural(q, area);
+      break;
+    case 'treasure-box':
+      renderTreasureBox(q, area);
+      break;
+    case 'position-choose':
+      renderPositionChoose(q, area);
+      break;
+    case 'word-order':
+      renderWordOrder(q, area);
+      break;
+  }
+}
+
+// 关卡1：听音选水果
+function renderListenChoose(q, area) {
+  area.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${(gameState.currentQuestion/gameState.totalQuestions)*100}%"></div></div>
+    <div class="question-box">
+      <div class="question-text">${q.question}</div>
+      <div class="question-hint">点击喇叭听发音 🔊</div>
+      <button class="sound-btn" id="play-sound-btn" onclick="playCurrentWord()">🔊</button>
+    </div>
+    <div class="options-grid" id="options-grid">
+      ${q.options.map((opt, i) => `
+        <button class="option-btn" onclick="checkAnswer(${i})" data-index="${i}">
+          <span class="option-emoji">${getFruitSvg(opt.key, 50)}</span>
+          <span class="option-text">${opt.name}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+  setTimeout(() => playCurrentWord(), 500);
+}
+
+function playCurrentWord() {
+  const q = gameState.questions[gameState.currentQuestion];
+  const btn = document.getElementById('play-sound-btn');
+  if (btn) {
+    btn.classList.add('playing');
+    setTimeout(() => btn.classList.remove('playing'), 1000);
+  }
+  playSound(q.correct.name);
+}
+
+// 关卡2：单复数
+function renderSingularPlural(q, area) {
+  area.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${(gameState.currentQuestion/gameState.totalQuestions)*100}%"></div></div>
+    <div class="question-box">
+      <div class="question-text">${q.question}</div>
+      <div class="question-hint">听音选出正确的图片 🔊</div>
+      <button class="sound-btn" id="play-sound-btn" onclick="playSingularPlural()">🔊</button>
+    </div>
+    <div class="options-grid" id="options-grid">
+      ${q.options.map((opt, i) => `
+        <button class="option-btn" onclick="checkAnswer(${i})" data-index="${i}">
+          <span class="option-emoji">${renderFruitDisplay(opt.fruitKey, opt.isPlural)}</span>
+          <span class="option-text">${opt.word}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+  setTimeout(() => playSingularPlural(), 500);
+}
+
+function renderFruitDisplay(fruitKey, isPlural) {
+  if (isPlural) {
+    return `<span style="display:inline-flex;gap:2px;">${getFruitSvg(fruitKey, 32)}${getFruitSvg(fruitKey, 32)}${getFruitSvg(fruitKey, 32)}</span>`;
+  }
+  return getFruitSvg(fruitKey, 45);
+}
+
+function playSingularPlural() {
+  const q = gameState.questions[gameState.currentQuestion];
+  const btn = document.getElementById('play-sound-btn');
+  if (btn) {
+    btn.classList.add('playing');
+    setTimeout(() => btn.classList.remove('playing'), 1000);
+  }
+  playSound(q.correctWord);
+}
+
+// 关卡3：宝箱猜猜看
+function renderTreasureBox(q, area) {
+  const count = q.count;
+  const colorClass = q.color || '';
+  const colorLabel = q.color ? `<span class="color-tag ${colorClass}">${q.color}</span>` : '';
+  
+  area.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${(gameState.currentQuestion/gameState.totalQuestions)*100}%"></div></div>
+    <div class="question-box">
+      <div class="question-text">${q.question}</div>
+      ${colorLabel}
+    </div>
+    <div class="treasure-box" id="treasure-box" onclick="openBox()">
+      <div class="box-lid">
+        <div class="box-lock"></div>
+      </div>
+      <div class="box-body" id="box-body">
+        ❓
+      </div>
+    </div>
+    <div style="font-size:14px;color:#666;margin-bottom:15px;">点击宝箱打开看看 👆</div>
+    <div class="options-grid" id="options-grid" style="display:none;">
+      ${q.options.map((opt, i) => `
+        <button class="option-btn" onclick="checkAnswer(${i})" data-index="${i}">
+          <span class="option-text">${opt}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+let boxOpened = false;
+
+function openBox() {
+  if (boxOpened) return;
+  boxOpened = true;
+  
+  const q = gameState.questions[gameState.currentQuestion];
+  const box = document.getElementById('treasure-box');
+  const body = document.getElementById('box-body');
+  const options = document.getElementById('options-grid');
+  
+  box.classList.add('open');
+  
+  setTimeout(() => {
+    let fruitsHtml = '<div class="box-fruits-container">';
+    for (let i = 0; i < q.count; i++) {
+      fruitsHtml += `<span class="box-fruit-item">${getFruitSvg(q.fruitSvgKey, 35)}</span>`;
+    }
+    fruitsHtml += '</div>';
+    body.innerHTML = fruitsHtml;
+    
+    setTimeout(() => {
+      options.style.display = 'grid';
+      playSound(q.correctSentence);
+    }, 500);
+  }, 600);
+}
+
+// 关卡4：方位图片选择
+function renderPositionChoose(q, area) {
+  const svgContent = SCENE_SVGS[q.sceneId] || '';
+  
+  area.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${(gameState.currentQuestion/gameState.totalQuestions)*100}%"></div></div>
+    <div class="question-box">
+      <div class="question-text">${q.question}</div>
+      <button class="sound-btn" style="width:50px;height:50px;font-size:22px;" onclick="playPositionQuestion()">🔊</button>
+    </div>
+    <div class="scene-image-container" id="scene-image-container">
+      ${svgContent}
+    </div>
+    <div style="font-size:14px;color:#666;margin-bottom:10px;">仔细观察图片，选择正确的句子 👇</div>
+    <div class="options-grid" id="options-grid">
+      ${q.options.map((opt, i) => `
+        <button class="option-btn" onclick="checkAnswer(${i})" data-index="${i}">
+          <span class="option-text">${opt.sentence}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+  setTimeout(() => playPositionQuestion(), 500);
+}
+
+function playPositionQuestion() {
+  const q = gameState.questions[gameState.currentQuestion];
+  playSound(q.question);
+}
+
+// 关卡5：连词成句
+function renderWordOrder(q, area) {
+  area.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" style="width:${(gameState.currentQuestion/gameState.totalQuestions)*100}%"></div></div>
+    <div class="question-box">
+      <div class="question-text">连词成句</div>
+      <div class="chinese-sentence">${q.chinese}</div>
+      <button class="sound-btn" style="width:45px;height:45px;font-size:20px;" onclick="playChineseSentence()">🔊</button>
+    </div>
+    <div class="sentence-answer-area" id="sentence-answer-area" onclick="handleAnswerAreaClick(event)">
+      <span style="color:#999;font-size:16px;">点击下方单词，按正确顺序排列</span>
+    </div>
+    <div class="word-bank" id="word-bank">
+      ${q.shuffledWords.map((word, i) => `
+        <span class="word-tile" data-word="${word}" data-index="${i}" onclick="selectWord(this)">${word}</span>
+      `).join('')}
+    </div>
+    <div style="margin-top:10px;">
+      <button class="check-sentence-btn" id="check-sentence-btn" onclick="checkSentenceAnswer()">✓ 确定</button>
+      <button class="reset-sentence-btn" onclick="resetSentence()">↻ 重来</button>
+    </div>
+  `;
+  
+  // 自动播放中文句子
+  setTimeout(() => playChineseSentence(), 600);
+}
+
+function playChineseSentence() {
+  const q = gameState.questions[gameState.currentQuestion];
+  playSound(q.chinese, 'zh-CN');
+}
+
+function selectWord(tile) {
+  if (gameState.answered) return;
+  
+  const word = tile.dataset.word;
+  const index = tile.dataset.index;
+  
+  // 添加到答案区
+  gameState.currentAnswerWords.push({ word, index, element: tile });
+  
+  // 标记为已使用
+  tile.classList.add('used');
+  
+  // 更新答案区显示
+  updateAnswerArea();
+  
+  // 显示确定按钮
+  const checkBtn = document.getElementById('check-sentence-btn');
+  if (checkBtn && gameState.currentAnswerWords.length > 0) {
+    checkBtn.classList.add('show');
+  }
+}
+
+function handleAnswerAreaClick(event) {
+  if (event.target.classList.contains('answer-word')) {
+    if (gameState.answered) return;
+    // 点击答案区的单词，移回词库
+    const word = event.target.dataset.word;
+    const idx = parseInt(event.target.dataset.idx);
+    
+    // 恢复词库中的单词
+    const tile = gameState.currentAnswerWords[idx].element;
+    tile.classList.remove('used');
+    
+    // 从答案中移除
+    gameState.currentAnswerWords.splice(idx, 1);
+    
+    // 更新答案区
+    updateAnswerArea();
+    
+    // 如果答案为空，隐藏确定按钮
+    const checkBtn = document.getElementById('check-sentence-btn');
+    if (checkBtn && gameState.currentAnswerWords.length === 0) {
+      checkBtn.classList.remove('show');
+    }
+  }
+}
+
+function updateAnswerArea() {
+  const area = document.getElementById('sentence-answer-area');
+  if (!area) return;
+  
+  if (gameState.currentAnswerWords.length === 0) {
+    area.innerHTML = '<span style="color:#999;font-size:16px;">点击下方单词，按正确顺序排列</span>';
+    area.classList.remove('has-content');
+  } else {
+    area.classList.add('has-content');
+    area.innerHTML = gameState.currentAnswerWords.map((item, i) => 
+      `<span class="answer-word" data-word="${item.word}" data-idx="${i}">${item.word}</span>`
+    ).join('');
+  }
+}
+
+function resetSentence() {
+  if (gameState.answered) return;
+  
+  // 恢复所有单词
+  const tiles = document.querySelectorAll('.word-tile');
+  tiles.forEach(t => t.classList.remove('used'));
+  
+  gameState.currentAnswerWords = [];
+  updateAnswerArea();
+  
+  const checkBtn = document.getElementById('check-sentence-btn');
+  if (checkBtn) checkBtn.classList.remove('show');
+}
+
+function checkSentenceAnswer() {
+  if (gameState.answered) return;
+  
+  const q = gameState.questions[gameState.currentQuestion];
+  const userWords = gameState.currentAnswerWords.map(item => item.word);
+  const correctWords = q.correctOrder;
+  
+  // 比较
+  const isCorrect = userWords.length === correctWords.length &&
+    userWords.every((w, i) => w === correctWords[i]);
+  
+  gameState.answered = true;
+  
+  // 获取所有选项按钮（答案区的单词）
+  const answerArea = document.getElementById('sentence-answer-area');
+  const wordTiles = document.querySelectorAll('.word-tile');
+  
+  if (isCorrect) {
+    gameState.correctCount++;
+    gameState.stars++;
+    gameState.totalStars++;
+    updateStarsDisplay();
+    showStarAnimation();
+    showFeedback('correct', '答对了！', 'Great job! 🌟');
+    playSound(q.correctSentence);
+    
+    // 高亮正确
+    answerArea.querySelectorAll('.answer-word').forEach(el => {
+      el.style.background = 'linear-gradient(135deg, #00b894, #55efc4)';
+    });
+  } else {
+    showFeedback('wrong', '再想想哦~', 'Try again! 💪');
+    playSound('Try again!');
+    
+    // 显示正确答案
+    answerArea.style.borderColor = '#ff6b6b';
+    answerArea.style.background = '#fff5f5';
+    
+    // 显示正确答案
+    const correctDiv = document.createElement('div');
+    correctDiv.style.width = '100%';
+    correctDiv.style.marginTop = '10px';
+    correctDiv.style.paddingTop = '10px';
+    correctDiv.style.borderTop = '2px dashed #ddd';
+    correctDiv.innerHTML = `<div style="color:#27ae60;font-weight:bold;margin-bottom:8px;">正确答案：</div>
+      <div style="color:#333;font-size:18px;">${q.correctSentence}</div>`;
+    answerArea.appendChild(correctDiv);
+  }
+  
+  // 禁用所有单词
+  wordTiles.forEach(t => t.style.pointerEvents = 'none');
+  document.getElementById('check-sentence-btn').style.display = 'none';
+  
+  document.getElementById('next-btn').classList.add('show');
+}
+
+// ============ 检查答案 ============
+function checkAnswer(index) {
+  if (gameState.answered) return;
+  gameState.answered = true;
+  
+  const q = gameState.questions[gameState.currentQuestion];
+  const buttons = document.querySelectorAll('.option-btn');
+  let isCorrect = false;
+  
+  switch(q.type) {
+    case 'listen-choose':
+      isCorrect = q.options[index].name === q.correct.name;
+      break;
+    case 'singular-plural':
+      isCorrect = q.options[index].isCorrect;
+      break;
+    case 'treasure-box':
+      isCorrect = q.options[index] === q.correctSentence;
+      break;
+    case 'position-choose':
+      isCorrect = q.options[index].isCorrect;
+      break;
+  }
+  
+  buttons.forEach((btn, i) => {
+    btn.style.pointerEvents = 'none';
+    let correct = false;
+    switch(q.type) {
+      case 'listen-choose':
+        correct = q.options[i].name === q.correct.name;
+        break;
+      case 'singular-plural':
+        correct = q.options[i].isCorrect;
+        break;
+      case 'treasure-box':
+        correct = q.options[i] === q.correctSentence;
+        break;
+      case 'position-choose':
+        correct = q.options[i].isCorrect;
+        break;
+    }
+    if (correct) {
+      btn.classList.add('correct');
+    } else if (i === index && !isCorrect) {
+      btn.classList.add('wrong');
+    }
+  });
+  
+  if (isCorrect) {
+    gameState.correctCount++;
+    gameState.stars++;
+    gameState.totalStars++;
+    updateStarsDisplay();
+    showStarAnimation();
+    showFeedback('correct', '答对了！', 'Great job! 🌟');
+    playSound('Great job!');
+  } else {
+    showFeedback('wrong', '再想想哦~', 'Try again! 💪');
+    playSound('Try again!');
+  }
+  
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function showStarAnimation() {
+  const star = document.createElement('div');
+  star.className = 'star-fly';
+  star.textContent = '⭐';
+  star.style.left = '50%';
+  star.style.top = '50%';
+  star.style.transform = 'translate(-50%, -50%)';
+  document.body.appendChild(star);
+  setTimeout(() => star.remove(), 1000);
+}
+
+function showFeedback(type, text, sub) {
+  const popup = document.getElementById('feedback-popup');
+  const overlay = document.getElementById('overlay');
+  const emoji = document.getElementById('feedback-emoji');
+  const textEl = document.getElementById('feedback-text');
+  const subEl = document.getElementById('feedback-sub');
+  
+  emoji.textContent = type === 'correct' ? '🌟' : '🤗';
+  textEl.textContent = text;
+  subEl.textContent = sub;
+  
+  popup.classList.add('show');
+  overlay.classList.add('show');
+  
+  setTimeout(() => {
+    popup.classList.remove('show');
+    overlay.classList.remove('show');
+  }, 1500);
+}
+
+// ============ 下一题 ============
+function nextQuestion() {
+  boxOpened = false;
+  gameState.currentQuestion++;
+  
+  if (gameState.currentQuestion >= gameState.totalQuestions) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ============ 结果页 ============
+function showResult() {
+  const correct = gameState.correctCount;
+  const total = gameState.totalQuestions;
+  const percentage = correct / total;
+  
+  let stars = 0;
+  let title = '';
+  let emoji = '';
+  let text = '';
+  
+  if (percentage === 1) {
+    stars = 3;
+    emoji = '🏆';
+    title = '完美通关！';
+    text = `全部答对！你真是水果小专家！\n答对 ${correct}/${total} 题`;
+  } else if (percentage >= 0.8) {
+    stars = 2;
+    emoji = '🎉';
+    title = '太棒了！';
+    text = `你做得非常好！继续加油！\n答对 ${correct}/${total} 题`;
+  } else if (percentage >= 0.6) {
+    stars = 1;
+    emoji = '😊';
+    title = '不错哦！';
+    text = `还可以再练习一下！\n答对 ${correct}/${total} 题`;
+  } else {
+    stars = 0;
+    emoji = '💪';
+    title = '继续加油！';
+    text = `再练习一下，你一定可以的！\n答对 ${correct}/${total} 题`;
+  }
+  
+  // 更新星星记录
+  if (stars > (gameState.levelStars[gameState.currentLevel] || 0)) {
+    gameState.levelStars[gameState.currentLevel] = stars;
+    saveStars();
+  }
+  
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+  document.getElementById('result-text').textContent = text;
+  
+  // 下一关按钮
+  const nextBtn = document.getElementById('next-level-btn');
+  if (gameState.currentLevel >= 5) {
+    nextBtn.textContent = '🎊 全部通关！';
+    nextBtn.onclick = goHome;
+  } else {
+    nextBtn.textContent = '下一关 ▶';
+    nextBtn.onclick = nextLevel;
+  }
+  
+  showPage('result-page');
+}
+
+function nextLevel() {
+  if (gameState.currentLevel < 5) {
+    startLevel(gameState.currentLevel + 1);
+  } else {
+    goHome();
+  }
+}
+
+// ============ 初始化 ============
+window.onload = function() {
+  loadStars();
+};
+</script>
+</body>
+</html>
