@@ -85,6 +85,34 @@
     to { opacity: 1; transform: translateY(0); }
   }
   
+  /* Logo */
+  .logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, #2DD4BF 0%, #0F2B46 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* 页脚 */
+  .page-footer {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    padding: 20px 0 10px;
+    margin-top: auto;
+  }
+
   /* 首页 */
   #home-page {
     align-items: center;
@@ -938,7 +966,8 @@
 
   <!-- 首页 -->
   <div class="page active" id="home-page">
-    <h1 class="game-title">🍎 水果宝箱大冒险</h1>
+    <div class="logo-circle">🍎</div>
+    <h1 class="game-title">水果宝箱大冒险</h1>
     <div class="game-subtitle">Fruit Box Adventure</div>
     <button class="start-btn" onclick="startGame()">🎮 开始游戏</button>
     
@@ -974,6 +1003,7 @@
         <div class="level-stars-mini" id="l5-stars"></div>
       </div>
     </div>
+    <div class="page-footer">Mona Woods Games</div>
   </div>
 
   <!-- 游戏页面 -->
@@ -984,6 +1014,7 @@
     <div style="text-align:center;">
       <button class="next-btn" id="next-btn" onclick="nextQuestion()">下一题 ▶</button>
     </div>
+    <div class="page-footer">Mona Woods Games</div>
   </div>
 
   <!-- 结果页 -->
@@ -996,6 +1027,7 @@
       <button class="btn-secondary" onclick="goHome()">🏠 返回首页</button>
       <button class="btn-primary" id="next-level-btn" onclick="nextLevel()">下一关 ▶</button>
     </div>
+    <div class="page-footer">Mona Woods Games</div>
   </div>
 </div>
 
@@ -1432,22 +1464,15 @@ const SCENE_SVGS = {
 
 // 水果SVG图标（小尺寸）
 function getFruitSvg(fruitKey, size=40) {
-  const s = size;
-  const r = s / 2;
-  switch(fruitKey) {
-    case 'banana':
-      return `<svg viewBox="-${r} -${r} ${s} ${s}" width="${s}" height="${s}"><path d="M -${r} -${r/2} Q 0 -${r*1.2} ${r} -${r/3} Q ${r*0.8} ${r/2} 0 ${r/1.5} Q -${r*0.8} ${r/3} -${r} -${r/2}" fill="#FFE135" stroke="#DAA520" stroke-width="2"/><ellipse cx="${r*0.7}" cy="-${r/3}" rx="3" ry="5" fill="#8B4513"/></svg>`;
-    case 'apple':
-      return `<svg viewBox="-${r} -${r} ${s} ${s}" width="${s}" height="${s}"><ellipse cx="0" cy="0" rx="${r}" ry="${r*0.9}" fill="#E74C3C"/><ellipse cx="-${r/4}" cy="-${r/4}" rx="${r/5}" ry="${r/4}" fill="#FF6B6B" opacity="0.6"/><path d="M 0 -${r*0.9} Q ${r/5} -${r*1.2} ${r/4} -${r*1.1}" fill="none" stroke="#228B22" stroke-width="3"/><ellipse cx="${r/4}" cy="-${r*1.05}" rx="${r/4}" ry="${r/5}" fill="#32CD32"/></svg>`;
-    case 'watermelon':
-      return `<svg viewBox="-${r} -${r} ${s} ${s}" width="${s}" height="${s}"><ellipse cx="0" cy="0" rx="${r}" ry="${r*0.7}" fill="#2ECC71"/><ellipse cx="0" cy="${r/6}" rx="${r*0.85}" ry="${r*0.55}" fill="#FF6B6B"/><ellipse cx="-${r/3}" cy="0" rx="2" ry="4" fill="#2C3E50"/><ellipse cx="${r/4}" cy="${r/6}" rx="2" ry="4" fill="#2C3E50"/><ellipse cx="0" cy="${r/4}" rx="2" ry="4" fill="#2C3E50"/></svg>`;
-    case 'grape':
-      return `<svg viewBox="-${r} -${r} ${s} ${s}" width="${s}" height="${s}"><circle cx="-${r/2}" cy="-${r/3}" r="${r/3}" fill="#9B59B6"/><circle cx="0" cy="-${r/2}" r="${r/3}" fill="#8E44AD"/><circle cx="${r/2}" cy="-${r/3}" r="${r/3}" fill="#9B59B6"/><circle cx="-${r/3}" cy="0" r="${r/3}" fill="#8E44AD"/><circle cx="${r/3}" cy="0" r="${r/3}" fill="#9B59B6"/><circle cx="0" cy="${r/3}" r="${r/3}" fill="#8E44AD"/><circle cx="-${r/4}" cy="${r/1.5}" r="${r/3}" fill="#7D3C98"/><circle cx="${r/4}" cy="${r/1.5}" r="${r/3}" fill="#9B59B6"/></svg>`;
-    case 'orange':
-      return `<svg viewBox="-${r} -${r} ${s} ${s}" width="${s}" height="${s}"><circle cx="0" cy="0" r="${r}" fill="#FF8C00"/><circle cx="-${r/4}" cy="-${r/4}" r="${r/4}" fill="#FFA500" opacity="0.6"/><ellipse cx="0" cy="-${r*0.95}" rx="${r/4}" ry="${r/6}" fill="#27AE60"/><rect x="-1" y="-${r}" width="3" height="${r/5}" fill="#8B4513"/></svg>`;
-    default:
-      return '';
-  }
+  const emojiMap = {
+    'apple': '🍎',
+    'banana': '🍌',
+    'orange': '🍊',
+    'grape': '🍇',
+    'watermelon': '🍉'
+  };
+  const emoji = emojiMap[fruitKey] || '🍎';
+  return `<span style="display:inline-block;font-size:${size}px;line-height:1;">${emoji}</span>`;
 }
 
 // ============ 各关卡题目数据 ============
