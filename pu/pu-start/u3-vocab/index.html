@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>PU Start · U3 词汇闯关</title>
+<title>PU Start · U3 Food &amp; Fruit 词汇闯关</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body {
@@ -472,12 +472,12 @@
   <div id="screen-select" class="screen active">
     <div class="level-header">
       <a class="btn-home" href="../">🏠 主页</a>
-      <div class="level-badge">U3 词汇闯关</div>
+      <div class="level-badge">U3 词汇闯关 · Food &amp; Fruit</div>
     </div>
     <div class="select-header">
       <div class="logo-circle">🍎</div>
-      <h1>Unit 3 Fruit</h1>
-      <div class="subtitle">看图选词 · 词义配对 · 单词拼写 · 句型运用</div>
+      <h1>Unit 3 Food &amp; Fruit</h1>
+      <div class="subtitle">看图选词 · 词义配对 · 音节拼写 · 句型运用</div>
     </div>
 
     <div class="level-cards">
@@ -500,8 +500,8 @@
       <div class="level-btn" onclick="initLevel3()">
         <div class="emoji">🔤</div>
         <div class="level-content">
-          <div class="title">第三关 · 拼单词</div>
-          <div class="desc">看图把字母排成正确的单词</div>
+          <div class="title">第三关 · 音节拼写</div>
+          <div class="desc">看图用音节块拼出正确的单词</div>
         </div>
         <div class="tag">拼写</div>
       </div>
@@ -509,7 +509,7 @@
         <div class="emoji">💬</div>
         <div class="level-content">
           <div class="title">第四关 · 连词成句</div>
-          <div class="desc">练习What's this / What are they句型</div>
+          <div class="desc">There be 句型连词成句，含颜色、数量与地点</div>
         </div>
         <div class="tag">句型</div>
       </div>
@@ -565,10 +565,10 @@
     <div class="level-header">
       <button class="btn-back" onclick="goSelect()">← 返回</button>
       <a class="btn-home" href="../">🏠 主页</a>
-      <div class="level-badge">第三关 · 拼单词</div>
+      <div class="level-badge">第三关 · 音节拼写</div>
     </div>
     <div class="main">
-      <div class="instruction">看图，把字母拼成正确的单词</div>
+      <div class="instruction">看图，用音节块拼出正确的单词</div>
       <div class="progress-text" id="l3-progress">1 / 10</div>
       <div class="score-text" id="l3-score">得分：0</div>
       <div class="game-card">
@@ -595,8 +595,8 @@
       <div class="level-badge">第四关 · 连词成句</div>
     </div>
     <div class="main">
-      <div class="instruction">看图片和中文，把单词排成正确的句子</div>
-      <div class="progress-text" id="l4-progress">1 / 8</div>
+      <div class="instruction">看中文意思，把单词排成正确的英语句子</div>
+      <div class="progress-text" id="l4-progress">1 / 10</div>
       <div class="score-text" id="l4-score">得分：0</div>
       <div class="game-card">
         <div class="l4-fruit-img" id="l4-img">🍎</div>
@@ -638,40 +638,94 @@
 
 <script>
 // ===== 数据 =====
-const FRUIT_WORDS = [
-  { en: 'apple', cn: '苹果', emoji: '🍎', letters: ['a','p','p','l','e'] },
-  { en: 'banana', cn: '香蕉', emoji: '🍌', letters: ['b','a','n','a','n','a'] },
-  { en: 'grapes', cn: '葡萄', emoji: '🍇', letters: ['g','r','a','p','e','s'] },
-  { en: 'orange', cn: '橙子', emoji: '🍊', letters: ['o','r','a','n','g','e'] },
-  { en: 'watermelon', cn: '西瓜', emoji: '🍉', letters: ['w','a','t','e','r','m','e','l','o','n'] }
+const WORDS = [
+  { en: 'apple', cn: '苹果', emoji: '🍎',
+    correctSyllables: ['a','pp','le'],
+    syllableOptions: ['a','pp','le','pa','pe','la'] },
+  { en: 'banana', cn: '香蕉', emoji: '🍌',
+    correctSyllables: ['ba','na','na'],
+    syllableOptions: ['ba','na','na','ab','an','abn'] },
+  { en: 'grapes', cn: '葡萄', emoji: '🍇',
+    correctSyllables: ['g','r','ape','s'],
+    syllableOptions: ['g','r','ape','s','ga','rep'] },
+  { en: 'orange', cn: '橙子', emoji: '🍊',
+    correctSyllables: ['o','ran','ge'],
+    syllableOptions: ['o','ran','ge','orr','gon','rag'] },
+  { en: 'watermelon', cn: '西瓜', emoji: '🍉',
+    correctSyllables: ['wa','ter','me','lon'],
+    syllableOptions: ['wa','ter','me','lon','wat','melo'] },
+  { en: 'beans', cn: '豆子', emoji: '🫘',
+    correctSyllables: ['b','ea','n','s'],
+    syllableOptions: ['b','ea','n','s','eb','nas'] },
+  { en: 'egg', cn: '鸡蛋', emoji: '🥚',
+    correctSyllables: ['e','g','g'],
+    syllableOptions: ['e','g','g','ge','gg','egge'] },
+  { en: 'carrot', cn: '胡萝卜', emoji: '🥕',
+    correctSyllables: ['ca','rro','t'],
+    syllableOptions: ['ca','rro','t','rac','tor','arc'] },
+  { en: 'burger', cn: '汉堡', emoji: '🍔',
+    correctSyllables: ['b','ur','g','er'],
+    syllableOptions: ['b','ur','g','er','rub','gre'] },
+  { en: 'rice', cn: '米饭', emoji: '🍚',
+    correctSyllables: ['r','ice'],
+    syllableOptions: ['r','ice','ir','cei','cri','eci'] }
 ];
 
-// 第四关句型题（问答两行，含标点）
+// 兼容旧变量名
+const FRUIT_WORDS = WORDS;
+
+// 第四关句型题（There be 句型 + 颜色/数量/地点）
 const L4_QUESTIONS = [
-  // 单数 What's this? It's a/an...
-  { cn: '这是什么？它是一个苹果。', emoji: '🍎',
-    q: ["What's", 'this', '?'], a: ["It's", 'an', 'apple', '.'] },
-  { cn: '这是什么？它是一根香蕉。', emoji: '🍌',
-    q: ["What's", 'this', '?'], a: ["It's", 'a', 'banana', '.'] },
-  { cn: '这是什么？它是一个橙子。', emoji: '🍊',
-    q: ["What's", 'this', '?'], a: ["It's", 'an', 'orange', '.'] },
-  { cn: '这是什么？它是一个西瓜。', emoji: '🍉',
-    q: ["What's", 'this', '?'], a: ["It's", 'a', 'watermelon', '.'] },
-  // 单数一般疑问句 Is it...?
-  { cn: '它是葡萄吗？是的，它是。', emoji: '🍇',
-    q: ['Is', 'it', 'grapes', '?'], a: ['Yes', 'it', 'is', '.'] },
-  { cn: '它是苹果吗？不，它不是。', emoji: '🍌',
-    q: ['Is', 'it', 'an', 'apple', '?'], a: ['No', "it isn't", '.'] },
-  // 复数 What are they? They are...
-  { cn: '它们是什么？它们是葡萄。', emoji: '🍇',
-    q: ['What', 'are', 'they', '?'], a: ['They', 'are', 'grapes', '.'] },
-  { cn: '它们是什么？它们是香蕉。', emoji: '🍌',
-    q: ['What', 'are', 'they', '?'], a: ['They', 'are', 'bananas', '.'] },
-  // 复数一般疑问句 Are they...?
-  { cn: '它们是苹果吗？是的，它们是。', emoji: '🍎',
-    q: ['Are', 'they', 'apples', '?'], a: ['Yes', 'they', 'are', '.'] },
-  { cn: '它们是橙子吗？不，它们不是。', emoji: '🍉',
-    q: ['Are', 'they', 'oranges', '?'], a: ['No', "they aren't", '.'] }
+  // There is 单数句
+  { cn: '桌子上有一个红苹果。', emoji: '🍎',
+    words: ['There', 'is', 'a', 'red', 'apple', 'on', 'the', 'table', '.'] },
+  { cn: '盒子里有一个青苹果。', emoji: '🍏',
+    words: ['There', 'is', 'a', 'green', 'apple', 'in', 'the', 'box', '.'] },
+  { cn: '椅子上有一根黄色的香蕉。', emoji: '🍌',
+    words: ['There', 'is', 'a', 'yellow', 'banana', 'on', 'the', 'chair', '.'] },
+  { cn: '橱柜里有一个橙色的橙子。', emoji: '🍊',
+    words: ['There', 'is', 'an', 'orange', 'orange', 'in', 'the', 'cupboard', '.'] },
+  { cn: '包里有一个绿色的西瓜。', emoji: '🍉',
+    words: ['There', 'is', 'a', 'green', 'watermelon', 'in', 'the', 'bag', '.'] },
+  { cn: '包里有一个鸡蛋。', emoji: '🥚',
+    words: ['There', 'is', 'an', 'egg', 'in', 'the', 'bag', '.'] },
+  { cn: '盒子里有一根胡萝卜。', emoji: '🥕',
+    words: ['There', 'is', 'a', 'carrot', 'in', 'the', 'box', '.'] },
+  { cn: '桌子上有一个汉堡。', emoji: '🍔',
+    words: ['There', 'is', 'a', 'burger', 'on', 'the', 'table', '.'] },
+  { cn: '橱柜里有一些米饭。', emoji: '🍚',
+    words: ['There', 'is', 'some', 'rice', 'in', 'the', 'cupboard', '.'] },
+  // There are + 数量复数句
+  { cn: '桌子上有两个红苹果。', emoji: '🍎',
+    words: ['There', 'are', 'two', 'red', 'apples', 'on', 'the', 'table', '.'] },
+  { cn: '盒子里有三个青苹果。', emoji: '🍏',
+    words: ['There', 'are', 'three', 'green', 'apples', 'in', 'the', 'box', '.'] },
+  { cn: '椅子上有两根黄色的香蕉。', emoji: '🍌',
+    words: ['There', 'are', 'two', 'yellow', 'bananas', 'on', 'the', 'chair', '.'] },
+  { cn: '橱柜里有四个橙色的橙子。', emoji: '🍊',
+    words: ['There', 'are', 'four', 'orange', 'oranges', 'in', 'the', 'cupboard', '.'] },
+  { cn: '包里有五颗红葡萄。', emoji: '🍇',
+    words: ['There', 'are', 'five', 'red', 'grapes', 'in', 'the', 'bag', '.'] },
+  { cn: '桌子上有六颗青葡萄。', emoji: '🍇',
+    words: ['There', 'are', 'six', 'green', 'grapes', 'on', 'the', 'table', '.'] },
+  { cn: '椅子上有三个绿色的西瓜。', emoji: '🍉',
+    words: ['There', 'are', 'three', 'green', 'watermelons', 'on', 'the', 'chair', '.'] },
+  { cn: '盒子里有两个鸡蛋。', emoji: '🥚',
+    words: ['There', 'are', 'two', 'eggs', 'in', 'the', 'box', '.'] },
+  { cn: '橱柜里有四根胡萝卜。', emoji: '🥕',
+    words: ['There', 'are', 'four', 'carrots', 'in', 'the', 'cupboard', '.'] },
+  { cn: '桌子上有三个汉堡。', emoji: '🍔',
+    words: ['There', 'are', 'three', 'burgers', 'on', 'the', 'table', '.'] },
+  { cn: '包里有一些豆子。', emoji: '🫘',
+    words: ['There', 'are', 'some', 'beans', 'in', 'the', 'bag', '.'] },
+  { cn: '橱柜里有六个红苹果。', emoji: '🍎',
+    words: ['There', 'are', 'six', 'red', 'apples', 'in', 'the', 'cupboard', '.'] },
+  { cn: '椅子上有两颗青葡萄。', emoji: '🍇',
+    words: ['There', 'are', 'two', 'green', 'grapes', 'on', 'the', 'chair', '.'] },
+  { cn: '盒子里有四个汉堡。', emoji: '🍔',
+    words: ['There', 'are', 'four', 'burgers', 'in', 'the', 'box', '.'] },
+  { cn: '桌子上有三根胡萝卜。', emoji: '🥕',
+    words: ['There', 'are', 'three', 'carrots', 'on', 'the', 'table', '.'] }
 ];
 
 // ===== 工具函数 =====
@@ -747,13 +801,12 @@ function initStars() {
 let l1State = { idx: 0, score: 0, questions: [], locked: false };
 
 function initLevel1() {
-  // 5个词 × 2轮 = 10题
-  const round1 = shuffle(FRUIT_WORDS);
-  const round2 = shuffle(FRUIT_WORDS);
+  // 10个词 × 1轮 = 10题
+  const round1 = shuffle(WORDS);
   l1State = {
     idx: 0,
     score: 0,
-    questions: [...round1, ...round2],
+    questions: [...round1],
     locked: false
   };
   loadL1();
@@ -771,7 +824,7 @@ function loadL1() {
   document.getElementById('l1-next').style.display = 'none';
 
   // 4个选项，1对3错
-  const wrongs = pickRandom(FRUIT_WORDS, 3, [q]);
+  const wrongs = pickRandom(WORDS, 3, [q]);
   const options = shuffle([q, ...wrongs]);
   const box = document.getElementById('l1-options');
   box.innerHTML = '';
@@ -821,12 +874,12 @@ function nextL1() {
 let l2State = { idx: 0, score: 0, questions: [], locked: false };
 
 function initLevel2() {
-  const round1 = shuffle(FRUIT_WORDS);
-  const round2 = shuffle(FRUIT_WORDS);
+  // 10个词 × 1轮 = 10题
+  const round1 = shuffle(WORDS);
   l2State = {
     idx: 0,
     score: 0,
-    questions: [...round1, ...round2],
+    questions: [...round1],
     locked: false
   };
   loadL2();
@@ -844,7 +897,7 @@ function loadL2() {
   document.getElementById('l2-next').style.display = 'none';
 
   // 4个中文选项
-  const wrongs = pickRandom(FRUIT_WORDS, 3, [q]);
+  const wrongs = pickRandom(WORDS, 3, [q]);
   const options = shuffle([q, ...wrongs]);
   const box = document.getElementById('l2-options');
   box.innerHTML = '';
@@ -891,19 +944,19 @@ function nextL2() {
 }
 
 // =====================================================
-// Level 3: 拼单词
+// Level 3: 音节拼写
 // =====================================================
-let l3State = { idx: 0, score: 0, questions: [], slotLetters: [], letterStates: [], locked: false };
+let l3State = { idx: 0, score: 0, questions: [], slotSyllables: [], optionStates: [], locked: false };
 
 function initLevel3() {
-  const round1 = shuffle(FRUIT_WORDS);
-  const round2 = shuffle(FRUIT_WORDS);
+  // 10个词 × 1轮 = 10题
+  const round1 = shuffle(WORDS);
   l3State = {
     idx: 0,
     score: 0,
-    questions: [...round1, ...round2],
-    slotLetters: [],
-    letterStates: [],
+    questions: [...round1],
+    slotSyllables: [],
+    optionStates: [],
     locked: false
   };
   loadL3();
@@ -913,7 +966,7 @@ function initLevel3() {
 function loadL3() {
   const q = l3State.questions[l3State.idx];
   l3State.locked = false;
-  l3State.slotLetters = [];
+  l3State.slotSyllables = [];
   document.getElementById('l3-progress').textContent = `${l3State.idx + 1} / ${l3State.questions.length}`;
   document.getElementById('l3-score').textContent = '得分：' + l3State.score;
   document.getElementById('l3-img').textContent = q.emoji;
@@ -924,13 +977,9 @@ function loadL3() {
   document.querySelector('#screen-level3 .btn-primary').style.display = 'inline-block';
   document.querySelector('#screen-level3 .btn-secondary').style.display = 'inline-block';
 
-  // 打乱字母
-  let shuffled = shuffle(q.letters);
-  // 避免打乱后和原顺序一样
-  if (shuffled.join('') === q.en && q.letters.length > 2) {
-    shuffled = shuffle(q.letters);
-  }
-  l3State.letterStates = shuffled.map((l, i) => ({ letter: l, used: false }));
+  // 打乱音节选项（6个）
+  let shuffled = shuffle(q.syllableOptions);
+  l3State.optionStates = shuffled.map((s, i) => ({ syllable: s, used: false }));
 
   renderL3();
 }
@@ -938,23 +987,23 @@ function loadL3() {
 function renderL3() {
   const slot = document.getElementById('l3-slot');
   slot.innerHTML = '';
-  l3State.slotLetters.forEach((item, sIdx) => {
+  l3State.slotSyllables.forEach((item, sIdx) => {
     const el = document.createElement('div');
     el.className = 'l3-slot-letter';
-    el.textContent = item.letter;
+    el.textContent = item.syllable;
     el.onclick = () => removeFromSlotL3(sIdx);
     slot.appendChild(el);
   });
-  if (l3State.slotLetters.length === 0) {
-    slot.innerHTML = '<span style="color:#94A3B8;font-size:13px;align-self:center;">点击下方字母</span>';
+  if (l3State.slotSyllables.length === 0) {
+    slot.innerHTML = '<span style="color:#94A3B8;font-size:13px;align-self:center;">点击下方音节块</span>';
   }
 
   const bank = document.getElementById('l3-letters');
   bank.innerHTML = '';
-  l3State.letterStates.forEach((item, i) => {
+  l3State.optionStates.forEach((item, i) => {
     const el = document.createElement('div');
     el.className = 'l3-letter' + (item.used ? ' used' : '');
-    el.textContent = item.letter;
+    el.textContent = item.syllable;
     if (!item.used) {
       el.onclick = () => addToSlotL3(i);
     }
@@ -962,32 +1011,32 @@ function renderL3() {
   });
 }
 
-function addToSlotL3(letterIdx) {
+function addToSlotL3(optIdx) {
   if (l3State.locked) return;
-  l3State.letterStates[letterIdx].used = true;
-  l3State.slotLetters.push({ letter: l3State.letterStates[letterIdx].letter, fromIdx: letterIdx });
+  l3State.optionStates[optIdx].used = true;
+  l3State.slotSyllables.push({ syllable: l3State.optionStates[optIdx].syllable, fromIdx: optIdx });
   renderL3();
 }
 
 function removeFromSlotL3(slotIdx) {
   if (l3State.locked) return;
-  const item = l3State.slotLetters[slotIdx];
-  l3State.letterStates[item.fromIdx].used = false;
-  l3State.slotLetters.splice(slotIdx, 1);
+  const item = l3State.slotSyllables[slotIdx];
+  l3State.optionStates[item.fromIdx].used = false;
+  l3State.slotSyllables.splice(slotIdx, 1);
   renderL3();
 }
 
 function resetL3() {
   if (l3State.locked) return;
-  l3State.slotLetters = [];
-  l3State.letterStates.forEach(l => l.used = false);
+  l3State.slotSyllables = [];
+  l3State.optionStates.forEach(o => o.used = false);
   renderL3();
 }
 
 function checkL3() {
   if (l3State.locked) return;
   const q = l3State.questions[l3State.idx];
-  const userWord = l3State.slotLetters.map(x => x.letter).join('');
+  const userWord = l3State.slotSyllables.map(x => x.syllable).join('');
   const fb = document.getElementById('l3-feedback');
   if (userWord.length === 0) {
     fb.textContent = '先拼单词呀～';
@@ -1024,10 +1073,12 @@ function nextL3() {
 let l4State = { idx: 0, score: 0, questions: [], slotWords: [], bankStates: [], locked: false };
 
 function initLevel4() {
+  // 从题库随机抽10题
+  const allQ = shuffle(L4_QUESTIONS);
   l4State = {
     idx: 0,
     score: 0,
-    questions: shuffle(L4_QUESTIONS),
+    questions: allQ.slice(0, 10),
     slotWords: [],
     bankStates: [],
     locked: false
@@ -1050,9 +1101,8 @@ function loadL4() {
   document.querySelector('#screen-level4 .btn-primary').style.display = 'inline-block';
   document.querySelector('#screen-level4 .btn-secondary').style.display = 'inline-block';
 
-  // 打乱单词（问句词+答句词混合）
-  const words = [...q.q, ...q.a];
-  l4State.bankStates = shuffle(words).map((w, i) => ({ word: w, used: false, origIdx: i }));
+  // 打乱单词
+  l4State.bankStates = shuffle([...q.words]).map((w, i) => ({ word: w, used: false, origIdx: i }));
 
   renderL4();
   // 自动播放中文
@@ -1117,8 +1167,7 @@ function checkL4() {
   if (l4State.locked) return;
   const q = l4State.questions[l4State.idx];
   const user = l4State.slotWords.map(x => x.word).join(' ');
-  const answer = [...q.q, ...q.a].join(' ');
-  const answerDisplay = q.q.join(' ') + '\n' + q.a.join(' ');
+  const answer = q.words.join(' ');
   const fb = document.getElementById('l4-feedback');
   if (l4State.slotWords.length === 0) {
     fb.textContent = '先把句子拼起来呀～';
@@ -1129,13 +1178,12 @@ function checkL4() {
   if (user === answer) {
     fb.textContent = '✅ 完全正确！句子读得真好！';
     fb.className = 'feedback ok';
-    fb.style.whiteSpace = 'pre-line';
     l4State.score++;
     // 读一遍英文
-    const speakText = [...q.q, ...q.a].join(' ').replace(/[?.,]/g, '');
+    const speakText = q.words.join(' ').replace(/[?.,]/g, '');
     speak(speakText, 'en-US');
   } else {
-    fb.textContent = '❌ 再想想哦，正确句子是：\n' + answerDisplay;
+    fb.textContent = '❌ 再想想哦，正确句子是：\n' + answer;
     fb.className = 'feedback no';
     fb.style.whiteSpace = 'pre-line';
   }
