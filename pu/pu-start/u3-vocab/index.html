@@ -377,6 +377,124 @@
   .l4-word:active { transform: scale(0.95); }
   .l4-word.used { visibility: hidden; }
 
+  /* ===== Level 5: Q&A Sentence Build ===== */
+  .l5-fruit-img {
+    font-size: 70px;
+    line-height: 1;
+    margin: 4px 0;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+  }
+  .l5-cn {
+    font-size: 14px;
+    color: #0F2B46;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .l5-sound-mini {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .l5-sentence-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .l5-sentence-row {
+    display: flex;
+    gap: 6px;
+    min-height: 44px;
+    padding: 8px;
+    background: #F1F5F9;
+    border-radius: 12px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .l5-sentence-row.question {
+    background: #FEF3C7;
+  }
+  .l5-sentence-row.answer {
+    background: #E0F2FE;
+  }
+  .l5-row-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #92400E;
+    margin-bottom: -4px;
+    margin-left: 4px;
+  }
+  .l5-row-label.answer-label {
+    color: #075985;
+  }
+  .l5-slot-word {
+    padding: 6px 12px;
+    background: #2DD4BF;
+    color: #0F2B46;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .l5-word-bank {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+  .l5-word {
+    padding: 8px 14px;
+    background: #EDE9FE;
+    color: #5B21B6;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .l5-word:active { transform: scale(0.95); }
+  .l5-word.used { visibility: hidden; }
+  .l5-row-switch {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: -4px;
+  }
+  .l5-switch-btn {
+    padding: 4px 14px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background: #F1F5F9;
+    color: #64748B;
+  }
+  .l5-switch-btn.active-q {
+    background: #FEF3C7;
+    color: #92400E;
+    border-color: #F59E0B;
+  }
+  .l5-switch-btn.active-a {
+    background: #E0F2FE;
+    color: #075985;
+    border-color: #38BDF8;
+  }
+
   /* ===== Buttons ===== */
   .action-row {
     display: flex;
@@ -477,7 +595,7 @@
     <div class="select-header">
       <div class="logo-circle">🍎</div>
       <h1>Unit 3 Food &amp; Fruit</h1>
-      <div class="subtitle">看图选词 · 词义配对 · 音节拼写 · 句型运用</div>
+      <div class="subtitle">看图选词 · 词义配对 · 音节拼写 · 陈述句 · 问答句</div>
     </div>
 
     <div class="level-cards">
@@ -508,10 +626,18 @@
       <div class="level-btn" onclick="initLevel4()">
         <div class="emoji">💬</div>
         <div class="level-content">
-          <div class="title">第四关 · 连词成句</div>
-          <div class="desc">There be 句型连词成句，含颜色、数量与地点</div>
+          <div class="title">第四关 · 陈述句连词成句</div>
+          <div class="desc">There be 句型陈述句，含颜色、数量与地点</div>
         </div>
         <div class="tag">句型</div>
+      </div>
+      <div class="level-btn" onclick="initLevel5()">
+        <div class="emoji">❓</div>
+        <div class="level-content">
+          <div class="title">第五关 · 问答句连词成句</div>
+          <div class="desc">How many 提问 + There be 回答，问句答句各一行</div>
+        </div>
+        <div class="tag">问答</div>
       </div>
     </div>
 
@@ -611,6 +737,48 @@
           <button class="btn-secondary" onclick="resetL4()">🔄 重排</button>
           <button class="btn-primary" onclick="checkL4()">✓ 提交</button>
           <button class="btn-next" id="l4-next" style="display:none;" onclick="nextL4()">下一题 →</button>
+        </div>
+      </div>
+    </div>
+    <div class="page-footer">Mona Woods Games</div>
+  </div>
+
+  <!-- ===== LEVEL 5: Q&A Sentence Build ===== -->
+  <div id="screen-level5" class="screen">
+    <div class="level-header">
+      <button class="btn-back" onclick="goSelect()">← 返回</button>
+      <a class="btn-home" href="../">🏠 主页</a>
+      <div class="level-badge">第五关 · 问答句连词成句</div>
+    </div>
+    <div class="main">
+      <div class="instruction">先拼问句，再拼答句，两行句子都要拼对哦</div>
+      <div class="progress-text" id="l5-progress">1 / 10</div>
+      <div class="score-text" id="l5-score">得分：0</div>
+      <div class="game-card">
+        <div class="l5-fruit-img" id="l5-img">🍎</div>
+        <div style="display:flex; align-items:center; gap:10px; justify-content:center;">
+          <button class="l5-sound-mini" onclick="speakL5()">🔊</button>
+          <div class="l5-cn" id="l5-cn"></div>
+        </div>
+
+        <div class="l5-sentence-box">
+          <div class="l5-row-label">📝 问句</div>
+          <div class="l5-sentence-row question" id="l5-slot-q"></div>
+          <div class="l5-row-label answer-label">💬 答句</div>
+          <div class="l5-sentence-row answer" id="l5-slot-a"></div>
+        </div>
+
+        <div class="l5-row-switch">
+          <button class="l5-switch-btn active-q" id="l5-btn-q" onclick="switchL5Row('q')">编辑问句</button>
+          <button class="l5-switch-btn" id="l5-btn-a" onclick="switchL5Row('a')">编辑答句</button>
+        </div>
+
+        <div class="l5-word-bank" id="l5-bank"></div>
+        <div class="feedback" id="l5-feedback"></div>
+        <div class="action-row">
+          <button class="btn-secondary" onclick="resetL5()">🔄 重排</button>
+          <button class="btn-primary" onclick="checkL5()">✓ 提交</button>
+          <button class="btn-next" id="l5-next" style="display:none;" onclick="nextL5()">下一题 →</button>
         </div>
       </div>
     </div>
@@ -726,6 +894,57 @@ const L4_QUESTIONS = [
     words: ['There', 'are', 'four', 'burgers', 'in', 'the', 'box', '.'] },
   { cn: '桌子上有三根胡萝卜。', emoji: '🥕',
     words: ['There', 'are', 'three', 'carrots', 'on', 'the', 'table', '.'] }
+];
+
+// 第五关问答句型题（How many ... are there? + There is/are ...）
+const L5_QUESTIONS = [
+  // 单数回答
+  { cn: '——盒子里有几个苹果？——有一个。', emoji: '🍎',
+    questionWords: ['How', 'many', 'apples', 'are', 'there', 'in', 'the', 'box', '?'],
+    answerWords: ['There', 'is', 'one', '.'] },
+  { cn: '——桌子上有几根香蕉？——有一根。', emoji: '🍌',
+    questionWords: ['How', 'many', 'bananas', 'are', 'there', 'on', 'the', 'table', '?'],
+    answerWords: ['There', 'is', 'one', '.'] },
+  { cn: '——椅子上有几个橙子？——有一个。', emoji: '🍊',
+    questionWords: ['How', 'many', 'oranges', 'are', 'there', 'on', 'the', 'chair', '?'],
+    answerWords: ['There', 'is', 'one', '.'] },
+  { cn: '——包里有几个鸡蛋？——有一个。', emoji: '🥚',
+    questionWords: ['How', 'many', 'eggs', 'are', 'there', 'in', 'the', 'bag', '?'],
+    answerWords: ['There', 'is', 'one', '.'] },
+  { cn: '——盒子里有几个汉堡？——有一个。', emoji: '🍔',
+    questionWords: ['How', 'many', 'burgers', 'are', 'there', 'in', 'the', 'box', '?'],
+    answerWords: ['There', 'is', 'one', '.'] },
+  { cn: '——桌子上有几根胡萝卜？——有一根。', emoji: '🥕',
+    questionWords: ['How', 'many', 'carrots', 'are', 'there', 'on', 'the', 'table', '?'],
+    answerWords: ['There', 'is', 'one', '.'] },
+  // 复数回答
+  { cn: '——桌子上有几个苹果？——有三个。', emoji: '🍎',
+    questionWords: ['How', 'many', 'apples', 'are', 'there', 'on', 'the', 'table', '?'],
+    answerWords: ['There', 'are', 'three', '.'] },
+  { cn: '——盒子里有几根香蕉？——有两根。', emoji: '🍌',
+    questionWords: ['How', 'many', 'bananas', 'are', 'there', 'in', 'the', 'box', '?'],
+    answerWords: ['There', 'are', 'two', '.'] },
+  { cn: '——橱柜里有几个橙子？——有四个。', emoji: '🍊',
+    questionWords: ['How', 'many', 'oranges', 'are', 'there', 'in', 'the', 'cupboard', '?'],
+    answerWords: ['There', 'are', 'four', '.'] },
+  { cn: '——椅子上有几个西瓜？——有两个。', emoji: '🍉',
+    questionWords: ['How', 'many', 'watermelons', 'are', 'there', 'on', 'the', 'chair', '?'],
+    answerWords: ['There', 'are', 'two', '.'] },
+  { cn: '——桌子上有几串葡萄？——有五串。', emoji: '🍇',
+    questionWords: ['How', 'many', 'grapes', 'are', 'there', 'on', 'the', 'table', '?'],
+    answerWords: ['There', 'are', 'five', '.'] },
+  { cn: '——包里有几个鸡蛋？——有三个。', emoji: '🥚',
+    questionWords: ['How', 'many', 'eggs', 'are', 'there', 'in', 'the', 'bag', '?'],
+    answerWords: ['There', 'are', 'three', '.'] },
+  { cn: '——盒子里有几个汉堡？——有四个。', emoji: '🍔',
+    questionWords: ['How', 'many', 'burgers', 'are', 'there', 'in', 'the', 'box', '?'],
+    answerWords: ['There', 'are', 'four', '.'] },
+  { cn: '——橱柜里有几根胡萝卜？——有六根。', emoji: '🥕',
+    questionWords: ['How', 'many', 'carrots', 'are', 'there', 'in', 'the', 'cupboard', '?'],
+    answerWords: ['There', 'are', 'six', '.'] },
+  { cn: '——桌子上有几颗豆子？——有五颗。', emoji: '🫘',
+    questionWords: ['How', 'many', 'beans', 'are', 'there', 'on', 'the', 'table', '?'],
+    answerWords: ['There', 'are', 'five', '.'] }
 ];
 
 // ===== 工具函数 =====
@@ -1198,6 +1417,219 @@ function nextL4() {
     showResult(l4State.score, l4State.questions.length, '第四关');
   } else {
     loadL4();
+  }
+}
+
+// =====================================================
+// Level 5: Q&A 问答连词成句
+// =====================================================
+let l5State = {
+  idx: 0, score: 0, questions: [],
+  currentRow: 'q', // 'q' or 'a'
+  qWords: [],      // 问句已选词
+  aWords: [],      // 答句已选词
+  bankStates: [],  // 词库状态
+  locked: false
+};
+
+function initLevel5() {
+  const allQ = shuffle(L5_QUESTIONS);
+  l5State = {
+    idx: 0,
+    score: 0,
+    questions: allQ.slice(0, 10),
+    currentRow: 'q',
+    qWords: [],
+    aWords: [],
+    bankStates: [],
+    locked: false
+  };
+  loadL5();
+  showScreen('screen-level5');
+}
+
+function loadL5() {
+  const q = l5State.questions[l5State.idx];
+  l5State.locked = false;
+  l5State.currentRow = 'q';
+  l5State.qWords = [];
+  l5State.aWords = [];
+
+  document.getElementById('l5-progress').textContent = `${l5State.idx + 1} / ${l5State.questions.length}`;
+  document.getElementById('l5-score').textContent = '得分：' + l5State.score;
+  document.getElementById('l5-cn').textContent = q.cn;
+  document.getElementById('l5-img').textContent = q.emoji;
+  document.getElementById('l5-feedback').textContent = '';
+  document.getElementById('l5-feedback').className = 'feedback';
+  document.getElementById('l5-next').style.display = 'none';
+  document.querySelector('#screen-level5 .btn-primary').style.display = 'inline-block';
+  document.querySelector('#screen-level5 .btn-secondary').style.display = 'inline-block';
+
+  // 合并问句和答句所有单词，打乱
+  const allWords = [...q.questionWords, ...q.answerWords];
+  l5State.bankStates = shuffle(allWords).map((w, i) => ({ word: w, used: false, fromRow: null }));
+
+  updateL5SwitchBtn();
+  renderL5();
+
+  setTimeout(() => speak(q.cn, 'zh-CN'), 300);
+}
+
+function switchL5Row(row) {
+  if (l5State.locked) return;
+  l5State.currentRow = row;
+  updateL5SwitchBtn();
+}
+
+function updateL5SwitchBtn() {
+  const btnQ = document.getElementById('l5-btn-q');
+  const btnA = document.getElementById('l5-btn-a');
+  if (l5State.currentRow === 'q') {
+    btnQ.className = 'l5-switch-btn active-q';
+    btnA.className = 'l5-switch-btn';
+  } else {
+    btnQ.className = 'l5-switch-btn';
+    btnA.className = 'l5-switch-btn active-a';
+  }
+}
+
+function renderL5() {
+  // 渲染问句行
+  const slotQ = document.getElementById('l5-slot-q');
+  slotQ.innerHTML = '';
+  l5State.qWords.forEach((item, sIdx) => {
+    const el = document.createElement('div');
+    el.className = 'l5-slot-word';
+    el.textContent = item.word;
+    el.onclick = () => removeFromSlotL5('q', sIdx);
+    slotQ.appendChild(el);
+  });
+  if (l5State.qWords.length === 0) {
+    slotQ.innerHTML = '<span style="color:#92400E;font-size:12px;">点「编辑问句」后选词</span>';
+  }
+
+  // 渲染答句行
+  const slotA = document.getElementById('l5-slot-a');
+  slotA.innerHTML = '';
+  l5State.aWords.forEach((item, sIdx) => {
+    const el = document.createElement('div');
+    el.className = 'l5-slot-word';
+    el.textContent = item.word;
+    el.onclick = () => removeFromSlotL5('a', sIdx);
+    slotA.appendChild(el);
+  });
+  if (l5State.aWords.length === 0) {
+    slotA.innerHTML = '<span style="color:#075985;font-size:12px;">点「编辑答句」后选词</span>';
+  }
+
+  // 渲染词库
+  const bank = document.getElementById('l5-bank');
+  bank.innerHTML = '';
+  l5State.bankStates.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'l5-word' + (item.used ? ' used' : '');
+    el.textContent = item.word;
+    if (!item.used) {
+      el.onclick = () => addToSlotL5(i);
+    }
+    bank.appendChild(el);
+  });
+}
+
+function addToSlotL5(bankIdx) {
+  if (l5State.locked) return;
+  const word = l5State.bankStates[bankIdx].word;
+  l5State.bankStates[bankIdx].used = true;
+
+  if (l5State.currentRow === 'q') {
+    l5State.qWords.push({ word, fromIdx: bankIdx });
+  } else {
+    l5State.aWords.push({ word, fromIdx: bankIdx });
+  }
+  renderL5();
+}
+
+function removeFromSlotL5(row, slotIdx) {
+  if (l5State.locked) return;
+  const arr = row === 'q' ? l5State.qWords : l5State.aWords;
+  const item = arr[slotIdx];
+  l5State.bankStates[item.fromIdx].used = false;
+  arr.splice(slotIdx, 1);
+  renderL5();
+}
+
+function resetL5() {
+  if (l5State.locked) return;
+  l5State.qWords = [];
+  l5State.aWords = [];
+  l5State.bankStates.forEach(b => b.used = false);
+  renderL5();
+}
+
+function speakL5() {
+  const q = l5State.questions[l5State.idx];
+  speak(q.cn, 'zh-CN');
+}
+
+function checkL5() {
+  if (l5State.locked) return;
+  const q = l5State.questions[l5State.idx];
+  const fb = document.getElementById('l5-feedback');
+
+  if (l5State.qWords.length === 0 && l5State.aWords.length === 0) {
+    fb.textContent = '先把句子拼起来呀～';
+    fb.className = 'feedback no';
+    return;
+  }
+  if (l5State.qWords.length === 0) {
+    fb.textContent = '问句还没拼哦～';
+    fb.className = 'feedback no';
+    return;
+  }
+  if (l5State.aWords.length === 0) {
+    fb.textContent = '答句还没拼哦～';
+    fb.className = 'feedback no';
+    return;
+  }
+
+  const userQ = l5State.qWords.map(x => x.word).join(' ');
+  const userA = l5State.aWords.map(x => x.word).join(' ');
+  const answerQ = q.questionWords.join(' ');
+  const answerA = q.answerWords.join(' ');
+
+  l5State.locked = true;
+
+  if (userQ === answerQ && userA === answerA) {
+    fb.textContent = '✅ 太棒了！两句都答对啦！';
+    fb.className = 'feedback ok';
+    l5State.score++;
+    // 读英文
+    const speakText = (answerQ + ' ' + answerA).replace(/[?.,]/g, '');
+    speak(speakText, 'en-US');
+  } else {
+    let msg = '❌ 再想想哦～\n';
+    if (userQ !== answerQ) {
+      msg += '问句正确答案：' + answerQ + '\n';
+    }
+    if (userA !== answerA) {
+      msg += '答句正确答案：' + answerA;
+    }
+    fb.textContent = msg;
+    fb.className = 'feedback no';
+    fb.style.whiteSpace = 'pre-line';
+  }
+
+  document.getElementById('l5-next').style.display = 'inline-block';
+  document.querySelector('#screen-level5 .btn-primary').style.display = 'none';
+  document.querySelector('#screen-level5 .btn-secondary').style.display = 'none';
+}
+
+function nextL5() {
+  l5State.idx++;
+  if (l5State.idx >= l5State.questions.length) {
+    showResult(l5State.score, l5State.questions.length, '第五关');
+  } else {
+    loadL5();
   }
 }
 
