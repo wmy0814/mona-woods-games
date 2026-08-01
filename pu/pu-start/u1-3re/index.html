@@ -3,62 +3,572 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PU Start · 阶段复习 U1-3</title>
+<title>Power Up Start U1~U3 阶段复习</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-  background: linear-gradient(135deg, #fef9f3 0%, #fce8d4 100%);
-  min-height: 100vh;
-  padding: 40px 20px;
-  color: #3a2a1a;
-}
-.container { max-width: 960px; margin: 0 auto; }
-.back {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 8px 16px;
-  background: #fff;
-  border-radius: 20px;
-  color: #6b4f3a;
-  text-decoration: none;
-  font-size: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-.back:hover { background: #f5e6d3; }
-h1 { font-size: 32px; margin-bottom: 8px; color: #6b3a1a; }
-.subtitle { font-size: 16px; color: #8b6f5a; margin-bottom: 30px; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-}
-.card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  text-decoration: none;
-  color: #3a2a1a;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  transition: transform 0.15s, box-shadow 0.15s;
-  display: block;
-}
-.card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
-.card-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-.card-desc { font-size: 13px; color: #8b6f5a; }
-.card.disabled { background: #f5f0e8; color: #b09a82; cursor: not-allowed; pointer-events: none; }
-.logo { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 12px; }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#1a1a2e;--bg2:#16213e;--mint:#00d9a3;--coral:#ff6b6b;--white:#f0f0f0;--gray:#8892b0;--dark:#0f0f23;--gold:#ffd700;--mint-dim:rgba(0,217,163,.15);--coral-dim:rgba(255,107,107,.15)}
+body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden}
+.container{max-width:900px;margin:0 auto;padding:20px}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 32px;border:2px solid var(--mint);border-radius:16px;background:transparent;color:var(--mint);font-size:17px;font-weight:700;cursor:pointer;transition:all .25s;gap:8px;user-select:none;-webkit-user-select:none}
+.btn:hover{background:var(--mint);color:var(--bg);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,217,163,.3)}
+.btn-coral{border-color:var(--coral);color:var(--coral)}
+.btn-coral:hover{background:var(--coral);color:var(--white);box-shadow:0 6px 20px rgba(255,107,107,.3)}
+.btn-small{padding:10px 20px;font-size:15px;border-radius:12px}
+.btn:active{transform:scale(.96)}
+/* Header bar */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 0;margin-bottom:12px}
+.top-bar .title{font-size:20px;font-weight:800;color:var(--mint)}
+.back-btn{background:none;border:2px solid var(--gray);color:var(--gray);padding:8px 16px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:600;transition:all .2s}
+.back-btn:hover{border-color:var(--coral);color:var(--coral)}
+/* Progress bar */
+.progress-wrap{width:100%;height:10px;background:var(--bg2);border-radius:8px;overflow:hidden;margin-bottom:20px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--mint),var(--coral));border-radius:8px;transition:width .4s ease}
+.progress-text{text-align:center;font-size:14px;color:var(--gray);margin-bottom:8px}
+/* Pages */
+.page{display:none;animation:fadeIn .4s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+/* HOME */
+.hero{text-align:center;padding:40px 0 20px}
+.hero h1{font-size:clamp(28px,5vw,42px);font-weight:900;background:linear-gradient(135deg,var(--mint),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;line-height:1.3}
+.hero p{color:var(--gray);font-size:16px;margin-bottom:30px}
+.level-grid{display:grid;grid-template-columns:1fr;gap:16px;padding-bottom:30px}
+@media(min-width:600px){.level-grid{grid-template-columns:1fr 1fr}}
+.level-card{background:var(--bg2);border:2px solid transparent;border-radius:20px;padding:22px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.level-card:hover{border-color:var(--mint);transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,217,163,.15)}
+.level-card .lc-num{font-size:13px;font-weight:800;color:var(--coral);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.level-card .lc-title{font-size:20px;font-weight:800;margin-bottom:6px}
+.level-card .lc-desc{font-size:14px;color:var(--gray);line-height:1.5}
+.level-card .lc-stars{position:absolute;top:16px;right:18px;font-size:18px;letter-spacing:2px}
+.level-card .lc-icon{font-size:36px;margin-bottom:10px}
+.level-card.locked{opacity:.45;pointer-events:none}
+.level-card.cleared{border-color:var(--mint-dim)}
+/* GAME AREA */
+.game-area{text-align:center;padding:10px 0}
+.question-box{background:var(--bg2);border-radius:24px;padding:30px 20px;margin-bottom:24px;min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.question-box .emoji-hint{font-size:72px;margin-bottom:16px;line-height:1}
+.question-box .text-hint{font-size:clamp(28px,5vw,40px);font-weight:800;color:var(--mint);word-break:break-word}
+.question-box .sub-hint{font-size:15px;color:var(--gray);margin-top:8px}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(min-width:600px){.options{grid-template-columns:1fr 1fr 1fr 1fr}}
+.opt-btn{background:var(--bg2);border:2px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 10px;font-size:clamp(16px,3vw,20px);font-weight:700;color:var(--white);cursor:pointer;transition:all .2s;text-align:center;word-break:break-word}
+.opt-btn:hover{border-color:var(--mint);background:var(--mint-dim)}
+.opt-btn.correct{border-color:var(--mint);background:rgba(0,217,163,.25);color:var(--mint);animation:popCorrect .4s}
+.opt-btn.wrong{border-color:var(--coral);background:var(--coral-dim);color:var(--coral);animation:shake .4s}
+.opt-btn.disabled{pointer-events:none;opacity:.6}
+.opt-btn .opt-emoji{font-size:36px;display:block;margin-bottom:6px}
+@keyframes popCorrect{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+/* Feedback overlay */
+.feedback{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;z-index:100;pointer-events:none;opacity:0;transition:opacity .3s}
+.feedback.show{opacity:1}
+.feedback .fb-icon{font-size:120px;animation:fbPop .5s ease}
+@keyframes fbPop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.3)}100%{transform:scale(1);opacity:1}}
+/* LEVEL 5: Word ordering */
+.word-bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:20px;min-height:60px}
+.word-chip{background:var(--bg2);border:2px solid var(--mint);border-radius:12px;padding:12px 18px;font-size:18px;font-weight:700;color:var(--mint);cursor:pointer;transition:all .2s;user-select:none}
+.word-chip:hover{background:var(--mint-dim);transform:translateY(-2px)}
+.word-chip.used{opacity:.3;pointer-events:none;border-style:dashed}
+.answer-zone{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:64px;background:var(--bg2);border:2px dashed var(--gray);border-radius:16px;padding:16px;margin-bottom:20px;align-items:center}
+.answer-zone .word-chip{border-color:var(--coral);color:var(--coral);background:var(--coral-dim)}
+.answer-zone.empty-hint::before{content:'点击上方单词排列句子';color:var(--gray);font-size:15px}
+.action-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+/* Score / Complete */
+.complete-page{text-align:center;padding:40px 0}
+.complete-page .trophy{font-size:80px;margin-bottom:16px}
+.complete-page h2{font-size:32px;font-weight:900;background:linear-gradient(135deg,var(--mint),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px}
+.score-board{background:var(--bg2);border-radius:20px;padding:24px;margin:24px 0;text-align:left}
+.score-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.score-row:last-child{border:none}
+.score-row .sr-label{font-size:16px;font-weight:600}
+.score-row .sr-score{font-size:18px;font-weight:800;color:var(--mint)}
+.score-total{font-size:22px;color:var(--gold);font-weight:900}
+.encourage{font-size:18px;color:var(--gray);margin:20px 0 30px;line-height:1.6}
+/* Stars animation */
+@keyframes starPop{0%{transform:scale(0) rotate(-30deg)}60%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1) rotate(0)}}
+.star-anim{display:inline-block;animation:starPop .4s ease both}
+/* Confetti */
+.confetti-wrap{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:200;overflow:hidden}
+.confetti{position:absolute;width:10px;height:10px;border-radius:2px;top:-20px;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+/* Sentence display for Level4&5 */
+.sentence-prompt{font-size:clamp(20px,4vw,28px);font-weight:700;color:var(--white);line-height:1.5}
+.sentence-prompt .highlight{color:var(--mint)}
 </style>
 </head>
 <body>
-<div class="container">
-  <a class="back" href="../../">← 返回上级</a>
-  
-  <h1>PU Start · 阶段复习 U1-3</h1>
-  <div class="subtitle">Unit 1 / 2 / 3 三单元综合</div>
-  <div class="grid">
-    <a class="card" href="game.html"><div class="card-title">阶段复习游戏</div><div class="card-desc">U1-3 综合闯关</div></a>
-  </div>
+<div class="container" id="app">
+<!-- ========== HOME ========== -->
+<div class="page active" id="page-home">
+<div class="hero">
+<h1>🚀 Power Up Start<br>U1~U3 阶段复习</h1>
+<p>完成5个关卡，巩固三个单元的知识！</p>
 </div>
+<div class="level-grid" id="level-grid"></div>
+</div>
+
+<!-- ========== GAME ========== -->
+<div class="page" id="page-game">
+<div class="top-bar">
+<button class="back-btn" onclick="goHome()">← 返回</button>
+<div class="title" id="game-title"></div>
+<div style="width:60px"></div>
+</div>
+<div class="progress-text" id="progress-text"></div>
+<div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+<div class="game-area" id="game-area"></div>
+</div>
+
+<!-- ========== COMPLETE ========== -->
+<div class="page" id="page-complete">
+<div class="complete-page">
+<div class="trophy">🏆</div>
+<h2>全部通关！太棒了！</h2>
+<div class="score-board" id="score-board"></div>
+<p class="encourage" id="encourage-text"></p>
+<button class="btn" onclick="resetAll()">🔄 重新挑战</button>
+</div>
+</div>
+</div>
+
+<!-- Feedback overlay -->
+<div class="feedback" id="feedback"><div class="fb-icon" id="fb-icon"></div></div>
+
+<script>
+// ===== DATA =====
+const LEVELS = [
+  {id:1, icon:'👨‍👩‍👧‍👦', title:'U1词汇·看图选词', desc:'看emoji图片，选出正确的英文单词', type:'emoji2word'},
+  {id:2, icon:'🎒', title:'U2词汇·听音选图', desc:'看英文单词，选出对应的图片', type:'word2emoji'},
+  {id:3, icon:'🍎', title:'U3词汇·看词选中英', desc:'英文选中文 或 中文选英文，看你能否全对！', type:'bilingual'},
+  {id:4, icon:'💬', title:'句型匹配', desc:'看情景问题，选出正确的回答', type:'match'},
+  {id:5, icon:'🧩', title:'连词成句', desc:'点击打乱的单词，排列成正确的句子', type:'reorder'}
+];
+
+// Level 1 data
+const L1 = [
+  {emoji:'👨',answer:'dad',opts:['dad','mum','man','boy']},
+  {emoji:'👩',answer:'mum',opts:['woman','mum','girl','sister']},
+  {emoji:'👩‍🦱',answer:'sister',opts:['brother','woman','sister','mum']},
+  {emoji:'👦',answer:'brother',opts:['boy','brother','dad','grandpa']},
+  {emoji:'👵',answer:'grandma',opts:['grandpa','woman','mum','grandma']},
+  {emoji:'👴',answer:'grandpa',opts:['grandma','man','grandpa','dad']},
+  {emoji:'🧔',answer:'man',opts:['woman','man','boy','brother']},
+  {emoji:'👩‍🦰',answer:'woman',opts:['man','mum','woman','girl']},
+  {emoji:'🧒',answer:'boy',opts:['girl','dad','brother','boy']},
+  {emoji:'👧',answer:'girl',opts:['boy','sister','girl','woman']},
+  {emoji:'👨‍👩‍👧‍👦',answer:'family',opts:['family','dad','friends','people']}
+];
+
+// Level 2 data
+const L2 = [
+  {word:'bag',emoji:'🎒',opts:['🎒','📚','✏️','📋']},
+  {word:'pencil',emoji:'✏️',opts:['📋','✏️','🎒','🪑']},
+  {word:'teacher',emoji:'👩‍🏫',opts:['👩‍🏫','🏫','📚','🛝']},
+  {word:'classroom',emoji:'🏫',opts:['🛝','🏫','📚','🗄️']},
+  {word:'playground',emoji:'🛝',opts:['🏫','🪑','🛝','📋']},
+  {word:'board',emoji:'📋',opts:['📚','📋','🗄️','✏️']},
+  {word:'table',emoji:'🟫',opts:['🗄️','📚','🟫','🎒']},
+  {word:'bookcase',emoji:'📚',opts:['🖊️','📋','📚','🗄️']},
+  {word:'chair',emoji:'🪑',opts:['🪑','🗄️','📚','📋']},
+  {word:'cupboard',emoji:'🗄️',opts:['📚','🗄️','🪑','🎒']}
+];
+
+// Level 3 data
+const L3 = [
+  {show:'apple',showType:'en',answer:'苹果',opts:['苹果','香蕉','葡萄','橙子']},
+  {show:'香蕉',showType:'zh',answer:'banana',opts:['orange','banana','grapes','apple']},
+  {show:'grapes',showType:'en',answer:'葡萄',opts:['西瓜','豆角','葡萄','胡萝卜']},
+  {show:'橙子',showType:'zh',answer:'orange',opts:['apple','orange','banana','egg']},
+  {show:'watermelon',showType:'en',answer:'西瓜',opts:['西瓜','汉堡','米饭','豆角']},
+  {show:'汉堡',showType:'zh',answer:'burger',opts:['burger','carrot','rice','egg']},
+  {show:'carrot',showType:'en',answer:'胡萝卜',opts:['鸡蛋','米饭','胡萝卜','汉堡']},
+  {show:'鸡蛋',showType:'zh',answer:'egg',opts:['egg','rice','beans','burger']},
+  {show:'rice',showType:'en',answer:'米饭',opts:['豆角','米饭','西瓜','葡萄']},
+  {show:'豆角',showType:'zh',answer:'beans',opts:['carrot','beans','egg','rice']}
+];
+
+// Level 4 data
+const L4 = [
+  {prompt:'Who\'s she?',answer:'She\'s my mum.',opts:['She\'s my mum.','He\'s my dad.','It\'s a bag.','I like apples.']},
+  {prompt:'Where is the bag?',answer:'It\'s on the table.',opts:['It\'s an apple.','It\'s on the table.','She\'s my sister.','Yes, I do.']},
+  {prompt:'What\'s this?',answer:'It\'s an apple.',opts:['It\'s on the chair.','They are grapes.','It\'s an apple.','He\'s my brother.']},
+  {prompt:'How many apples?',answer:'There are three.',opts:['It\'s a burger.','There are three.','Yes, they are.','She\'s my mum.']},
+  {prompt:'Do you like bananas?',answer:'Yes, I do.',opts:['No, it isn\'t.','They are grapes.','Yes, I do.','It\'s on the table.']},
+  {prompt:'Is it a burger?',answer:'No, it isn\'t.',opts:['Yes, I do.','No, it isn\'t.','She\'s my mum.','There are five.']},
+  {prompt:'What are they?',answer:'They are grapes.',opts:['It\'s an apple.','They are grapes.','He\'s my dad.','It\'s on the board.']},
+  {prompt:'Are they carrots?',answer:'Yes, they are.',opts:['No, it isn\'t.','Yes, they are.','Where is the pencil?','She\'s my grandma.']},
+  {prompt:'Who is he?',answer:'He\'s my dad.',opts:['He\'s my dad.','It\'s a bookcase.','Yes, I do.','They are beans.']},
+  {prompt:'Is she your sister?',answer:'Yes, she is.',opts:['No, he isn\'t.','Yes, she is.','It\'s on the table.','How many books?']}
+];
+
+// Level 5 data
+const L5 = [
+  {words:['Who','is','she','?'],answer:'Who is she ?'},
+  {words:['It\'s','on','the','chair','.'],answer:'It\'s on the chair .'},
+  {words:['It\'s','an','apple','.'],answer:'It\'s an apple .'},
+  {words:['He\'s','my','dad','.'],answer:'He\'s my dad .'},
+  {words:['How','many','bananas','are','there','?'],answer:'How many bananas are there ?'},
+  {words:['Where','is','the','pencil','?'],answer:'Where is the pencil ?'},
+  {words:['They','are','grapes','.'],answer:'They are grapes .'},
+  {words:['Do','you','like','rice','?'],answer:'Do you like rice ?'}
+];
+
+// ===== STATE =====
+let currentLevel = 0;
+let currentQ = 0;
+let score = [0,0,0,0,0];
+let cleared = [false,false,false,false,false];
+let answered = false;
+let l5Answer = [];
+let l5Shuffled = [];
+
+// ===== NAV =====
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goHome(){
+  showPage('page-home');
+  renderHome();
+}
+
+function renderHome(){
+  const grid = document.getElementById('level-grid');
+  grid.innerHTML = '';
+  LEVELS.forEach((lv,i)=>{
+    const isCleared = cleared[i];
+    const stars = isCleared ? '<span class="star-anim">⭐</span>'.repeat(getStars(i)) : '';
+    const card = document.createElement('div');
+    card.className = 'level-card' + (isCleared?' cleared':'');
+    card.innerHTML = `
+      <div class="lc-stars">${stars}</div>
+      <div class="lc-icon">${lv.icon}</div>
+      <div class="lc-num">关卡 ${lv.id}</div>
+      <div class="lc-title">${lv.title}</div>
+      <div class="lc-desc">${lv.desc}</div>
+    `;
+    card.onclick = ()=> startLevel(i);
+    grid.appendChild(card);
+  });
+}
+
+function getStars(levelIdx){
+  const total = getLevelTotal(levelIdx);
+  const s = score[levelIdx];
+  if(s === total) return 3;
+  if(s >= total * 0.7) return 2;
+  return 1;
+}
+
+function getLevelTotal(i){return [11,10,10,10,8][i]}
+
+// ===== START LEVEL =====
+function startLevel(idx){
+  currentLevel = idx;
+  currentQ = 0;
+  score[idx] = 0;
+  answered = false;
+  document.getElementById('game-title').textContent = LEVELS[idx].title;
+  showPage('page-game');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  answered = false;
+  const total = getLevelTotal(currentLevel);
+  const pct = ((currentQ)/total*100).toFixed(0);
+  document.getElementById('progress-text').textContent = `第 ${currentQ+1} / ${total} 题`;
+  document.getElementById('progress-fill').style.width = pct+'%';
+  
+  const area = document.getElementById('game-area');
+  switch(currentLevel){
+    case 0: renderL1(area); break;
+    case 1: renderL2(area); break;
+    case 2: renderL3(area); break;
+    case 3: renderL4(area); break;
+    case 4: renderL5(area); break;
+  }
+}
+
+// ===== LEVEL 1: Emoji → Word =====
+function renderL1(area){
+  const d = L1[currentQ];
+  const shuffled = shuffle([...d.opts]);
+  area.innerHTML = `
+    <div class="question-box">
+      <div class="emoji-hint">${d.emoji}</div>
+      <div class="sub-hint">这个图片对应的英文单词是？</div>
+    </div>
+    <div class="options">
+      ${shuffled.map(o=>`<button class="opt-btn" onclick="checkL1(this,'${o}','${d.answer}')">${o}</button>`).join('')}
+    </div>
+  `;
+}
+
+function checkL1(btn, chosen, answer){
+  if(answered) return;
+  answered = true;
+  highlightOpts(btn, chosen, answer);
+  if(chosen===answer) score[currentLevel]++;
+  showFeedback(chosen===answer, ()=>nextQuestion());
+}
+
+// ===== LEVEL 2: Word → Emoji =====
+function renderL2(area){
+  const d = L2[currentQ];
+  const shuffled = shuffle([...d.opts]);
+  area.innerHTML = `
+    <div class="question-box">
+      <div class="text-hint">${d.word}</div>
+      <div class="sub-hint">选出对应的图片</div>
+    </div>
+    <div class="options">
+      ${shuffled.map(o=>`<button class="opt-btn" onclick="checkL2(this,'${o}','${d.emoji}')"><span class="opt-emoji">${o}</span></button>`).join('')}
+    </div>
+  `;
+}
+
+function checkL2(btn, chosen, answer){
+  if(answered) return;
+  answered = true;
+  highlightOpts(btn, chosen, answer);
+  if(chosen===answer) score[currentLevel]++;
+  showFeedback(chosen===answer, ()=>nextQuestion());
+}
+
+// ===== LEVEL 3: Bilingual =====
+function renderL3(area){
+  const d = L3[currentQ];
+  const shuffled = shuffle([...d.opts]);
+  const isEn = d.showType === 'en';
+  area.innerHTML = `
+    <div class="question-box">
+      <div class="text-hint">${d.show}</div>
+      <div class="sub-hint">${isEn ? '选出正确的中文翻译' : '选出正确的英文单词'}</div>
+    </div>
+    <div class="options">
+      ${shuffled.map(o=>`<button class="opt-btn" onclick="checkL3(this,'${esc(o)}','${esc(d.answer)}')">${o}</button>`).join('')}
+    </div>
+  `;
+}
+
+function esc(s){return s.replace(/'/g,"\\'")}
+
+function checkL3(btn, chosen, answer){
+  if(answered) return;
+  answered = true;
+  highlightOpts(btn, chosen, answer);
+  if(chosen===answer) score[currentLevel]++;
+  showFeedback(chosen===answer, ()=>nextQuestion());
+}
+
+// ===== LEVEL 4: Sentence matching =====
+function renderL4(area){
+  const d = L4[currentQ];
+  const shuffled = shuffle([...d.opts]);
+  area.innerHTML = `
+    <div class="question-box">
+      <div class="sentence-prompt"><span class="highlight">${d.prompt}</span></div>
+      <div class="sub-hint" style="margin-top:14px">选出正确的回答</div>
+    </div>
+    <div class="options" style="grid-template-columns:1fr">
+      ${shuffled.map(o=>`<button class="opt-btn" style="text-align:left;padding:16px 20px" onclick="checkL4(this,'${esc(o)}','${esc(d.answer)}')">${o}</button>`).join('')}
+    </div>
+  `;
+}
+
+function checkL4(btn, chosen, answer){
+  if(answered) return;
+  answered = true;
+  highlightOpts(btn, chosen, answer);
+  if(chosen===answer) score[currentLevel]++;
+  showFeedback(chosen===answer, ()=>nextQuestion());
+}
+
+// ===== LEVEL 5: Word reorder =====
+function renderL5(area){
+  const d = L5[currentQ];
+  l5Answer = [];
+  l5Shuffled = shuffle([...d.words]).map((w,i)=>({word:w,idx:i,used:false}));
+  
+  area.innerHTML = `
+    <div class="question-box">
+      <div class="sub-hint">点击单词，按正确顺序排列成句子</div>
+    </div>
+    <div class="answer-zone empty-hint" id="answer-zone"></div>
+    <div class="word-bank" id="word-bank">
+      ${l5Shuffled.map((w,i)=>`<div class="word-chip" id="chip-${i}" onclick="pickWord(${i})">${w.word}</div>`).join('')}
+    </div>
+    <div class="action-row">
+      <button class="btn btn-small btn-coral" onclick="resetL5()">🔄 重置</button>
+      <button class="btn btn-small" onclick="checkL5()" id="l5-submit">✅ 提交</button>
+    </div>
+  `;
+}
+
+function pickWord(idx){
+  if(answered) return;
+  const w = l5Shuffled[idx];
+  if(w.used) return;
+  w.used = true;
+  document.getElementById('chip-'+idx).classList.add('used');
+  l5Answer.push({word:w.word, idx:idx});
+  renderAnswerZone();
+}
+
+function removeWord(pos){
+  if(answered) return;
+  const item = l5Answer[pos];
+  l5Shuffled[item.idx].used = false;
+  document.getElementById('chip-'+item.idx).classList.remove('used');
+  l5Answer.splice(pos,1);
+  renderAnswerZone();
+}
+
+function renderAnswerZone(){
+  const zone = document.getElementById('answer-zone');
+  if(l5Answer.length === 0){
+    zone.innerHTML = '';
+    zone.classList.add('empty-hint');
+  } else {
+    zone.classList.remove('empty-hint');
+    zone.innerHTML = l5Answer.map((a,i)=>
+      `<div class="word-chip" onclick="removeWord(${i})">${a.word}</div>`
+    ).join('');
+  }
+}
+
+function resetL5(){
+  if(answered) return;
+  l5Answer = [];
+  l5Shuffled.forEach(w=>{w.used=false;document.getElementById('chip-'+w.idx).classList.remove('used')});
+  renderAnswerZone();
+}
+
+function checkL5(){
+  if(answered) return;
+  if(l5Answer.length !== L5[currentQ].words.length){
+    alert('请把单词全部排列好再提交哦！');
+    return;
+  }
+  answered = true;
+  const userAns = l5Answer.map(a=>a.word).join(' ');
+  const correct = L5[currentQ].answer;
+  const isRight = userAns === correct;
+  if(isRight) score[currentLevel]++;
+  
+  // Show correct answer
+  const zone = document.getElementById('answer-zone');
+  zone.innerHTML = `<div style="color:${isRight?'var(--mint)':'var(--coral)'}; font-size:20px; font-weight:700">${isRight?'✅ 正确！':'❌ 正确答案：'} ${correct.replace(/ \./g,'.').replace(/ \?/g,'?')}</div>`;
+  document.getElementById('l5-submit').style.display='none';
+  
+  showFeedback(isRight, ()=>nextQuestion());
+}
+
+// ===== HELPERS =====
+function highlightOpts(btn, chosen, answer){
+  const all = btn.parentElement.querySelectorAll('.opt-btn');
+  all.forEach(b=>{
+    b.classList.add('disabled');
+    const val = b.textContent.trim();
+    if(val === answer) b.classList.add('correct');
+  });
+  if(chosen !== answer) btn.classList.add('wrong');
+}
+
+function showFeedback(isCorrect, cb){
+  const fb = document.getElementById('feedback');
+  const icon = document.getElementById('fb-icon');
+  icon.textContent = isCorrect ? '✅' : '❌';
+  fb.classList.add('show');
+  setTimeout(()=>{
+    fb.classList.remove('show');
+    setTimeout(cb, 200);
+  }, 800);
+}
+
+function nextQuestion(){
+  const total = getLevelTotal(currentLevel);
+  if(currentQ < total - 1){
+    currentQ++;
+    renderQuestion();
+  } else {
+    // Level complete
+    document.getElementById('progress-fill').style.width = '100%';
+    cleared[currentLevel] = true;
+    setTimeout(()=>showComplete(), 400);
+  }
+}
+
+function showComplete(){
+  // Check if all cleared
+  if(cleared.every(c=>c)){
+    showFinalPage();
+  } else {
+    goHome();
+    // Auto scroll to next level
+  }
+}
+
+function showFinalPage(){
+  showPage('page-complete');
+  const board = document.getElementById('score-board');
+  const names = ['看图选词','听音选图','看词选中英','句型匹配','连词成句'];
+  const totals = [11,10,10,10,8];
+  let totalScore = 0, totalMax = 0;
+  board.innerHTML = names.map((n,i)=>{
+    totalScore += score[i]; totalMax += totals[i];
+    return `<div class="score-row"><span class="sr-label">${LEVELS[i].icon} 关卡${i+1}：${n}</span><span class="sr-score">${score[i]} / ${totals[i]}</span></div>`;
+  }).join('') + `<div class="score-row"><span class="sr-label score-total">🏅 总分</span><span class="sr-score score-total">${totalScore} / ${totalMax}</span></div>`;
+  
+  const pct = totalScore/totalMax;
+  let msg = '';
+  if(pct===1) msg='🎉 完美通关！你是英语小达人！';
+  else if(pct>=.85) msg='👏 非常棒！继续保持，马上就能满分啦！';
+  else if(pct>=.7) msg='💪 不错哦！再练练就能更好了！';
+  else msg='📖 加油！多多复习，你一定可以的！';
+  document.getElementById('encourage-text').textContent = msg;
+  
+  launchConfetti();
+}
+
+function resetAll(){
+  score = [0,0,0,0,0];
+  cleared = [false,false,false,false,false];
+  goHome();
+}
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function launchConfetti(){
+  const wrap = document.createElement('div');
+  wrap.className='confetti-wrap';
+  document.body.appendChild(wrap);
+  const colors=['#00d9a3','#ff6b6b','#ffd700','#7c5cff','#ff9a3c','#5ce1ff'];
+  for(let i=0;i<60;i++){
+    const c=document.createElement('div');
+    c.className='confetti';
+    c.style.left=Math.random()*100+'%';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.width=(6+Math.random()*8)+'px';
+    c.style.height=(6+Math.random()*8)+'px';
+    c.style.animationDuration=(2+Math.random()*3)+'s';
+    c.style.animationDelay=(Math.random()*2)+'s';
+    wrap.appendChild(c);
+  }
+  setTimeout(()=>wrap.remove(),6000);
+}
+
+// Init
+renderHome();
+</script>
 </body>
 </html>
