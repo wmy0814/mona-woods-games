@@ -193,30 +193,52 @@ const L3 = [
   {show:'豆角',showType:'zh',answer:'beans',opts:['carrot','beans','egg','rice']}
 ];
 
-// Level 4 data
+// Level 4 data (expanded pool)
 const L4 = [
-  {prompt:'Who\'s she?',answer:'She\'s my mum.',opts:['She\'s my mum.','He\'s my dad.','It\'s a bag.','I like apples.']},
-  {prompt:'Where is the bag?',answer:'It\'s on the table.',opts:['It\'s an apple.','It\'s on the table.','She\'s my sister.','Yes, I do.']},
-  {prompt:'What\'s this?',answer:'It\'s an apple.',opts:['It\'s on the chair.','They are grapes.','It\'s an apple.','He\'s my brother.']},
-  {prompt:'How many apples?',answer:'There are three.',opts:['It\'s a burger.','There are three.','Yes, they are.','She\'s my mum.']},
-  {prompt:'Do you like bananas?',answer:'Yes, I do.',opts:['No, it isn\'t.','They are grapes.','Yes, I do.','It\'s on the table.']},
-  {prompt:'Is it a burger?',answer:'No, it isn\'t.',opts:['Yes, I do.','No, it isn\'t.','She\'s my mum.','There are five.']},
-  {prompt:'What are they?',answer:'They are grapes.',opts:['It\'s an apple.','They are grapes.','He\'s my dad.','It\'s on the board.']},
-  {prompt:'Are they carrots?',answer:'Yes, they are.',opts:['No, it isn\'t.','Yes, they are.','Where is the pencil?','She\'s my grandma.']},
-  {prompt:'Who is he?',answer:'He\'s my dad.',opts:['He\'s my dad.','It\'s a bookcase.','Yes, I do.','They are beans.']},
-  {prompt:'Is she your sister?',answer:'Yes, she is.',opts:['No, he isn\'t.','Yes, she is.','It\'s on the table.','How many books?']}
+  {prompt:"Who's she?",answer:"She's my mum.",opts:["She's my mum.","He's my dad.","It's a bag.","I like apples."]},
+  {prompt:"Where is the bag?",answer:"It's on the table.",opts:["It's an apple.","It's on the table.","She's my sister.","Yes, I do."]},
+  {prompt:"What's this?",answer:"It's an apple.",opts:["It's on the chair.","They are grapes.","It's an apple.","He's my brother."]},
+  {prompt:"How many apples?",answer:"There are three.",opts:["It's a burger.","There are three.","Yes, they are.","She's my mum."]},
+  {prompt:"Do you like bananas?",answer:"Yes, I do.",opts:["No, it isn't.","They are grapes.","Yes, I do.","It's on the table."]},
+  {prompt:"Is it a burger?",answer:"No, it isn't.",opts:["Yes, I do.","No, it isn't.","She's my mum.","There are five."]},
+  {prompt:"What are they?",answer:"They are grapes.",opts:["It's an apple.","They are grapes.","He's my dad.","It's on the board."]},
+  {prompt:"Are they carrots?",answer:"Yes, they are.",opts:["No, it isn't.","Yes, they are.","Where is the pencil?","She's my grandma."]},
+  {prompt:"Who is he?",answer:"He's my dad.",opts:["He's my dad.","It's a bookcase.","Yes, I do.","They are beans."]},
+  {prompt:"Is she your sister?",answer:"Yes, she is.",opts:["No, he isn't.","Yes, she is.","It's on the table.","How many books?"]},
+  {prompt:"Who's he?",answer:"He's my grandpa.",opts:["He's my grandpa.","It's a chair.","Yes, I do.","They are eggs."]},
+  {prompt:"Where is the pencil?",answer:"It's in the bag.",opts:["It's in the bag.","He's my brother.","It's an egg.","No, it isn't."]},
+  {prompt:"What's that?",answer:"It's a burger.",opts:["It's a burger.","She's my sister.","They are rice.","It's on the wall."]},
+  {prompt:"How many eggs?",answer:"There are five.",opts:["There are five.","He's my dad.","Yes, they are.","It's a carrot."]},
+  {prompt:"Do you like rice?",answer:"Yes, I do.",opts:["It's a grape.","Yes, I do.","No, he isn't.","She's my mum."]},
+  {prompt:"Is it a carrot?",answer:"Yes, it is.",opts:["Yes, it is.","Where is the board?","They are burgers.","He's my uncle."]},
+  {prompt:"Are they beans?",answer:"No, they aren't.",opts:["Yes, she is.","No, they aren't.","It's a pencil.","He's my dad."]},
+  {prompt:"Where is the bookcase?",answer:"It's in the classroom.",opts:["It's in the classroom.","She's my grandma.","It's a grape.","Yes, I do."]},
+  {prompt:"What is it?",answer:"It's a chair.",opts:["It's a chair.","He's my dad.","They are oranges.","It's under the table."]},
+  {prompt:"Is he your brother?",answer:"Yes, he is.",opts:["No, she isn't.","Yes, he is.","It's a watermelon.","There are two."]}
 ];
 
-// Level 5 data
+// Level 5 data (expanded pool)
 const L5 = [
   {words:['Who','is','she','?'],answer:'Who is she ?'},
-  {words:['It\'s','on','the','chair','.'],answer:'It\'s on the chair .'},
-  {words:['It\'s','an','apple','.'],answer:'It\'s an apple .'},
-  {words:['He\'s','my','dad','.'],answer:'He\'s my dad .'},
+  {words:["It's",'on','the','chair','.'],answer:"It's on the chair ."},
+  {words:["It's",'an','apple','.'],answer:"It's an apple ."},
+  {words:["He's",'my','dad','.'],answer:"He's my dad ."},
   {words:['How','many','bananas','are','there','?'],answer:'How many bananas are there ?'},
   {words:['Where','is','the','pencil','?'],answer:'Where is the pencil ?'},
   {words:['They','are','grapes','.'],answer:'They are grapes .'},
-  {words:['Do','you','like','rice','?'],answer:'Do you like rice ?'}
+  {words:['Do','you','like','rice','?'],answer:'Do you like rice ?'},
+  {words:['She','is','my','sister','.'],answer:'She is my sister .'},
+  {words:['Is','it','a','burger','?'],answer:'Is it a burger ?'},
+  {words:['The','bag','is','on','the','table','.'],answer:'The bag is on the table .'},
+  {words:['What','are','they','?'],answer:'What are they ?'},
+  {words:['I','like','carrots','.'],answer:'I like carrots .'},
+  {words:['Are','they','beans','?'],answer:'Are they beans ?'},
+  {words:['Where','is','the','board','?'],answer:'Where is the board ?'},
+  {words:["It's",'in','the','classroom','.'],answer:"It's in the classroom ."},
+  {words:['There','are','three','eggs','.'],answer:'There are three eggs .'},
+  {words:["She's",'my','grandma','.'],answer:"She's my grandma ."},
+  {words:['Do','you','like','watermelon','?'],answer:'Do you like watermelon ?'},
+  {words:['The','pencil','is','in','the','bag','.'],answer:'The pencil is in the bag .'}
 ];
 
 // ===== STATE =====
@@ -227,6 +249,21 @@ let cleared = [false,false,false,false,false];
 let answered = false;
 let l5Answer = [];
 let l5Shuffled = [];
+let l1Shuffled=[], l2Shuffled=[], l3Shuffled=[], l4Shuffled=[], l5Order=[];
+
+// ===== UTILS =====
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function pickRandom(arr, n){
+  const shuffled = shuffle([...arr]);
+  return shuffled.slice(0, n);
+}
 
 // ===== TTS AUDIO =====
 function speak(text, rate=0.85){
@@ -313,6 +350,12 @@ function startLevel(idx){
   currentQ = 0;
   score[idx] = 0;
   answered = false;
+  // Shuffle question order for each level
+  if(idx===0) l1Shuffled = shuffle([...L1]);
+  else if(idx===1) l2Shuffled = shuffle([...L2]);
+  else if(idx===2) l3Shuffled = shuffle([...L3]);
+  else if(idx===3) l4Shuffled = pickRandom(L4, 10);
+  else if(idx===4) l5Order = pickRandom(L5, 8);
   document.getElementById('game-title').textContent = LEVELS[idx].title;
   showPage('page-game');
   renderQuestion();
@@ -337,7 +380,7 @@ function renderQuestion(){
 
 // ===== LEVEL 1: Emoji → Word =====
 function renderL1(area){
-  const d = L1[currentQ];
+  const d = l1Shuffled[currentQ];
   const shuffled = shuffle([...d.opts]);
   area.innerHTML = `
     <div class="question-box">
@@ -366,7 +409,7 @@ function checkL1(btn, chosen, answer){
 
 // ===== LEVEL 2: Word → Emoji =====
 function renderL2(area){
-  const d = L2[currentQ];
+  const d = l2Shuffled[currentQ];
   const shuffled = shuffle([...d.opts]);
   area.innerHTML = `
     <div class="question-box">
@@ -395,7 +438,7 @@ function checkL2(btn, chosen, answer){
 
 // ===== LEVEL 3: Bilingual =====
 function renderL3(area){
-  const d = L3[currentQ];
+  const d = l3Shuffled[currentQ];
   const shuffled = shuffle([...d.opts]);
   const isEn = d.showType === 'en';
   // Determine what to speak: always speak the English word
@@ -429,7 +472,7 @@ function checkL3(btn, chosen, answer){
 
 // ===== LEVEL 4: Sentence matching =====
 function renderL4(area){
-  const d = L4[currentQ];
+  const d = l4Shuffled[currentQ];
   const shuffled = shuffle([...d.opts]);
   area.innerHTML = `
     <div class="question-box">
@@ -458,7 +501,7 @@ function checkL4(btn, chosen, answer){
 
 // ===== LEVEL 5: Word reorder =====
 function renderL5(area){
-  const d = L5[currentQ];
+  const d = l5Order[currentQ];
   l5Answer = [];
   l5Shuffled = shuffle([...d.words]).map((w,i)=>({word:w,idx:i,used:false}));
   
@@ -527,13 +570,13 @@ function resetL5(){
 
 function checkL5(){
   if(answered) return;
-  if(l5Answer.length !== L5[currentQ].words.length){
+  if(l5Answer.length !== l5Order[currentQ].words.length){
     alert('请把单词全部排列好再提交哦！');
     return;
   }
   answered = true;
   const userAns = l5Answer.map(a=>a.word).join(' ');
-  const correct = L5[currentQ].answer;
+  const correct = l5Order[currentQ].answer;
   const isRight = userAns === correct;
   if(isRight) score[currentLevel]++;
   
@@ -616,14 +659,6 @@ function resetAll(){
   score = [0,0,0,0,0];
   cleared = [false,false,false,false,false];
   goHome();
-}
-
-function shuffle(arr){
-  for(let i=arr.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]]=[arr[j],arr[i]];
-  }
-  return arr;
 }
 
 function launchConfetti(){
