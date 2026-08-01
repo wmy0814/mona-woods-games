@@ -58,6 +58,7 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;backgroun
 .opt-btn.wrong{border-color:var(--coral);background:var(--coral-dim);color:var(--coral);animation:shake .4s}
 .opt-btn.disabled{pointer-events:none;opacity:.6}
 .opt-btn .opt-emoji{font-size:36px;display:block;margin-bottom:6px}
+.opt-btn .opt-label{font-size:13px;display:block;margin-top:4px;color:var(--white);opacity:.85}
 @keyframes popCorrect{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 /* Feedback overlay */
@@ -166,6 +167,12 @@ const L1 = [
 ];
 
 // Level 2 data
+const EMOJI_ZH = {
+  '🎒':'书包','📚':'书架','✏️':'铅笔','📋':'黑板','🪑':'椅子',
+  '🗄️':'柜子','👩‍🏫':'老师','🏫':'教室','🛝':'操场','👩‍🏫':'老师',
+  '🟫':'桌子','🖊️':'钢笔'
+};
+
 const L2 = [
   {word:'bag',emoji:'🎒',opts:['🎒','📚','✏️','📋']},
   {word:'pencil',emoji:'✏️',opts:['📋','✏️','🎒','🪑']},
@@ -193,28 +200,28 @@ const L3 = [
   {show:'豆角',showType:'zh',answer:'beans',opts:['carrot','beans','egg','rice']}
 ];
 
-// Level 4 data (expanded pool)
+// Level 4 data (2选1，降低难度)
 const L4 = [
-  {prompt:"Who's she?",answer:"She's my mum.",opts:["She's my mum.","He's my dad.","It's a bag.","I like apples."]},
-  {prompt:"Where is the bag?",answer:"It's on the table.",opts:["It's an apple.","It's on the table.","She's my sister.","Yes, I do."]},
-  {prompt:"What's this?",answer:"It's an apple.",opts:["It's on the chair.","They are grapes.","It's an apple.","He's my brother."]},
-  {prompt:"How many apples?",answer:"There are three.",opts:["It's a burger.","There are three.","Yes, they are.","She's my mum."]},
-  {prompt:"Do you like bananas?",answer:"Yes, I do.",opts:["No, it isn't.","They are grapes.","Yes, I do.","It's on the table."]},
-  {prompt:"Is it a burger?",answer:"No, it isn't.",opts:["Yes, I do.","No, it isn't.","She's my mum.","There are five."]},
-  {prompt:"What are they?",answer:"They are grapes.",opts:["It's an apple.","They are grapes.","He's my dad.","It's on the board."]},
-  {prompt:"Are they carrots?",answer:"Yes, they are.",opts:["No, it isn't.","Yes, they are.","Where is the pencil?","She's my grandma."]},
-  {prompt:"Who is he?",answer:"He's my dad.",opts:["He's my dad.","It's a bookcase.","Yes, I do.","They are beans."]},
-  {prompt:"Is she your sister?",answer:"Yes, she is.",opts:["No, he isn't.","Yes, she is.","It's on the table.","How many books?"]},
-  {prompt:"Who's he?",answer:"He's my grandpa.",opts:["He's my grandpa.","It's a chair.","Yes, I do.","They are eggs."]},
-  {prompt:"Where is the pencil?",answer:"It's in the bag.",opts:["It's in the bag.","He's my brother.","It's an egg.","No, it isn't."]},
-  {prompt:"What's that?",answer:"It's a burger.",opts:["It's a burger.","She's my sister.","They are rice.","It's on the wall."]},
-  {prompt:"How many eggs?",answer:"There are five.",opts:["There are five.","He's my dad.","Yes, they are.","It's a carrot."]},
-  {prompt:"Do you like rice?",answer:"Yes, I do.",opts:["It's a grape.","Yes, I do.","No, he isn't.","She's my mum."]},
-  {prompt:"Is it a carrot?",answer:"Yes, it is.",opts:["Yes, it is.","Where is the board?","They are burgers.","He's my uncle."]},
-  {prompt:"Are they beans?",answer:"No, they aren't.",opts:["Yes, she is.","No, they aren't.","It's a pencil.","He's my dad."]},
-  {prompt:"Where is the bookcase?",answer:"It's in the classroom.",opts:["It's in the classroom.","She's my grandma.","It's a grape.","Yes, I do."]},
-  {prompt:"What is it?",answer:"It's a chair.",opts:["It's a chair.","He's my dad.","They are oranges.","It's under the table."]},
-  {prompt:"Is he your brother?",answer:"Yes, he is.",opts:["No, she isn't.","Yes, he is.","It's a watermelon.","There are two."]}
+  {prompt:"Who's she?",answer:"She's my mum.",opts:["She's my mum.","He's my dad."]},
+  {prompt:"Where is the bag?",answer:"It's on the table.",opts:["It's on the table.","She's my sister."]},
+  {prompt:"What's this?",answer:"It's an apple.",opts:["It's an apple.","He's my brother."]},
+  {prompt:"How many apples?",answer:"There are three.",opts:["There are three.","She's my mum."]},
+  {prompt:"Do you like bananas?",answer:"Yes, I do.",opts:["Yes, I do.","No, it isn't."]},
+  {prompt:"Is it a burger?",answer:"No, it isn't.",opts:["No, it isn't.","Yes, I do."]},
+  {prompt:"What are they?",answer:"They are grapes.",opts:["They are grapes.","It's an apple."]},
+  {prompt:"Are they carrots?",answer:"Yes, they are.",opts:["Yes, they are.","No, it isn't."]},
+  {prompt:"Who is he?",answer:"He's my dad.",opts:["He's my dad.","It's a bookcase."]},
+  {prompt:"Is she your sister?",answer:"Yes, she is.",opts:["Yes, she is.","No, he isn't."]},
+  {prompt:"Who's he?",answer:"He's my grandpa.",opts:["He's my grandpa.","It's a chair."]},
+  {prompt:"Where is the pencil?",answer:"It's in the bag.",opts:["It's in the bag.","He's my brother."]},
+  {prompt:"What's that?",answer:"It's a burger.",opts:["It's a burger.","She's my sister."]},
+  {prompt:"How many eggs?",answer:"There are five.",opts:["There are five.","He's my dad."]},
+  {prompt:"Do you like rice?",answer:"Yes, I do.",opts:["Yes, I do.","No, he isn't."]},
+  {prompt:"Is it a carrot?",answer:"Yes, it is.",opts:["Yes, it is.","They are burgers."]},
+  {prompt:"Are they beans?",answer:"No, they aren't.",opts:["No, they aren't.","Yes, she is."]},
+  {prompt:"Where is the bookcase?",answer:"It's in the classroom.",opts:["It's in the classroom.","She's my grandma."]},
+  {prompt:"What is it?",answer:"It's a chair.",opts:["It's a chair.","He's my dad."]},
+  {prompt:"Is he your brother?",answer:"Yes, he is.",opts:["Yes, he is.","No, she isn't."]}
 ];
 
 // Level 5 data (expanded pool)
@@ -402,7 +409,7 @@ function renderL2(area){
       ${audioBtnHTML(d.word)}
     </div>
     <div class="options">
-      ${shuffled.map(o=>`<button class="opt-btn" onclick="checkL2(this,'${o}','${d.emoji}')"><span class="opt-emoji">${o}</span></button>`).join('')}
+      ${shuffled.map(o=>`<button class="opt-btn" onclick="checkL2(this,'${o}','${d.emoji}')"><span class="opt-emoji">${o}</span><span class="opt-label">${EMOJI_ZH[o]||''}</span></button>`).join('')}
     </div>
   `;
   // Auto-play the word
