@@ -95,6 +95,11 @@ body{font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;backgroun
 /* Sentence display for Level4&5 */
 .sentence-prompt{font-size:clamp(20px,4vw,28px);font-weight:700;color:var(--white);line-height:1.5}
 .sentence-prompt .highlight{color:var(--mint)}
+/* Audio button */
+.audio-btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:8px 18px;border:2px solid var(--mint);border-radius:20px;background:var(--mint-dim);color:var(--mint);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s}
+.audio-btn:hover{background:var(--mint);color:var(--bg)}
+.audio-btn.playing{animation:pulse .6s infinite alternate}
+@keyframes pulse{0%{opacity:.7}100%{opacity:1}}
 </style>
 </head>
 <body>
@@ -223,6 +228,44 @@ let answered = false;
 let l5Answer = [];
 let l5Shuffled = [];
 
+// ===== TTS AUDIO =====
+function speak(text, rate=0.85){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US';
+  utt.rate = rate;
+  utt.pitch = 1.0;
+  // Try to find a good English voice
+  const voices = window.speechSynthesis.getVoices();
+  const enVoice = voices.find(v=>v.lang.startsWith('en') && v.name.includes('Female'))
+    || voices.find(v=>v.lang.startsWith('en-US'))
+    || voices.find(v=>v.lang.startsWith('en'));
+  if(enVoice) utt.voice = enVoice;
+  window.speechSynthesis.speak(utt);
+  return utt;
+}
+
+function speakAndAnimate(btnEl, text, rate){
+  if(!btnEl) return;
+  btnEl.classList.add('playing');
+  const utt = speak(text, rate);
+  if(utt){
+    utt.onend = ()=> btnEl.classList.remove('playing');
+    utt.onerror = ()=> btnEl.classList.remove('playing');
+  }
+  setTimeout(()=> btnEl.classList.remove('playing'), 3000);
+}
+
+function audioBtnHTML(text, rate){
+  return `<button class="audio-btn" onclick="speakAndAnimate(this,'${text.replace(/'/g,"\\'")}',${rate||0.85})">🔊 点击听发音</button>`;
+}
+
+// Load voices (some browsers need this)
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged = ()=>{ window.speechSynthesis.getVoices(); };
+}
+
 // ===== NAV =====
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -300,11 +343,17 @@ function renderL1(area){
     <div class="question-box">
       <div class="emoji-hint">${d.emoji}</div>
       <div class="sub-hint">这个图片对应的英文单词是？</div>
+      ${audioBtnHTML(d.answer)}
     </div>
     <div class="options">
       ${shuffled.map(o=>`<button class="opt-btn" onclick="checkL1(this,'${o}','${d.answer}')">${o}</button>`).join('')}
     </div>
   `;
+  // Auto-play the word
+  setTimeout(()=>{
+    const btn = area.querySelector('.audio-btn');
+    speakAndAnimate(btn, d.answer, 0.8);
+  }, 300);
 }
 
 function checkL1(btn, chosen, answer){
@@ -323,11 +372,17 @@ function renderL2(area){
     <div class="question-box">
       <div class="text-hint">${d.word}</div>
       <div class="sub-hint">选出对应的图片</div>
+      ${audioBtnHTML(d.word)}
     </div>
     <div class="options">
       ${shuffled.map(o=>`<button class="opt-btn" onclick="checkL2(this,'${o}','${d.emoji}')"><span class="opt-emoji">${o}</span></button>`).join('')}
     </div>
   `;
+  // Auto-play the word
+  setTimeout(()=>{
+    const btn = area.querySelector('.audio-btn');
+    speakAndAnimate(btn, d.word, 0.8);
+  }, 300);
 }
 
 function checkL2(btn, chosen, answer){
@@ -343,15 +398,23 @@ function renderL3(area){
   const d = L3[currentQ];
   const shuffled = shuffle([...d.opts]);
   const isEn = d.showType === 'en';
+  // Determine what to speak: always speak the English word
+  const speakWord = isEn ? d.show : d.answer;
   area.innerHTML = `
     <div class="question-box">
       <div class="text-hint">${d.show}</div>
       <div class="sub-hint">${isEn ? '选出正确的中文翻译' : '选出正确的英文单词'}</div>
+      ${audioBtnHTML(speakWord)}
     </div>
     <div class="options">
       ${shuffled.map(o=>`<button class="opt-btn" onclick="checkL3(this,'${esc(o)}','${esc(d.answer)}')">${o}</button>`).join('')}
     </div>
   `;
+  // Auto-play
+  setTimeout(()=>{
+    const btn = area.querySelector('.audio-btn');
+    speakAndAnimate(btn, speakWord, 0.8);
+  }, 300);
 }
 
 function esc(s){return s.replace(/'/g,"\\'")}
@@ -372,11 +435,17 @@ function renderL4(area){
     <div class="question-box">
       <div class="sentence-prompt"><span class="highlight">${d.prompt}</span></div>
       <div class="sub-hint" style="margin-top:14px">选出正确的回答</div>
+      ${audioBtnHTML(d.prompt)}
     </div>
     <div class="options" style="grid-template-columns:1fr">
       ${shuffled.map(o=>`<button class="opt-btn" style="text-align:left;padding:16px 20px" onclick="checkL4(this,'${esc(o)}','${esc(d.answer)}')">${o}</button>`).join('')}
     </div>
   `;
+  // Auto-play the question
+  setTimeout(()=>{
+    const btn = area.querySelector('.audio-btn');
+    speakAndAnimate(btn, d.prompt, 0.85);
+  }, 300);
 }
 
 function checkL4(btn, chosen, answer){
@@ -393,9 +462,13 @@ function renderL5(area){
   l5Answer = [];
   l5Shuffled = shuffle([...d.words]).map((w,i)=>({word:w,idx:i,used:false}));
   
+  // Build the full sentence for TTS (remove punctuation spacing)
+  const fullSentence = d.answer.replace(/ \./g,'.').replace(/ \?/g,'?');
+  
   area.innerHTML = `
     <div class="question-box">
       <div class="sub-hint">点击单词，按正确顺序排列成句子</div>
+      ${audioBtnHTML(fullSentence, 0.8)}
     </div>
     <div class="answer-zone empty-hint" id="answer-zone"></div>
     <div class="word-bank" id="word-bank">
@@ -406,6 +479,11 @@ function renderL5(area){
       <button class="btn btn-small" onclick="checkL5()" id="l5-submit">✅ 提交</button>
     </div>
   `;
+  // Auto-play the sentence
+  setTimeout(()=>{
+    const btn = area.querySelector('.audio-btn');
+    speakAndAnimate(btn, fullSentence, 0.8);
+  }, 300);
 }
 
 function pickWord(idx){
