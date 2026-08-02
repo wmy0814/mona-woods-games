@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 5 · 语法大闯关</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Verdana', 'PingFang SC', sans-serif;
+    background: #0F2B46;
+    color: #fff;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .home-link {
+    color: #2DD4BF;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 15px;
+    display: inline-block;
+  }
+  .home-link:hover { text-decoration: underline; }
+
+  /* 顶部 Logo 区 */
+  .logo-section {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-top: 10px;
+  }
+  .logo-badge {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2DD4BF 0%, #0EA5E9 100%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+  }
+  .logo-title {
+    font-size: 22px;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .logo-sub {
+    font-size: 13px;
+    color: #94A3B8;
+  }
+  .logo-sub span { color: #2DD4BF; }
+
+  /* 首页选关 */
+  .welcome-card {
+    background: #fff;
+    color: #1E293B;
+    border-radius: 20px;
+    padding: 30px 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  .welcome-card h1 {
+    font-size: 24px;
+    color: #0F2B46;
+    margin-bottom: 8px;
+  }
+  .welcome-card .subtitle {
+    font-size: 14px;
+    color: #64748B;
+    margin-bottom: 20px;
+  }
+  .welcome-card .intro {
+    text-align: left;
+    background: #F0FDFA;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #0F766E;
+  }
+  .welcome-card .intro strong { color: #0F2B46; }
+  .level-select-title {
+    text-align: left;
+    font-size: 15px;
+    color: #0F2B46;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  .level-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .level-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: #F8FAFC;
+    border: 2px solid #E2E8F0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .level-item:hover {
+    border-color: #2DD4BF;
+    background: #F0FDFA;
+    transform: translateX(4px);
+  }
+  .level-item.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .level-item.locked:hover {
+    transform: none;
+    border-color: #E2E8F0;
+    background: #F8FAFC;
+  }
+  .level-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2DD4BF;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-right: 14px;
+    flex-shrink: 0;
+  }
+  .level-item.locked .level-num {
+    background: #CBD5E1;
+  }
+  .level-info { flex: 1; }
+  .level-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #0F2B46;
+    margin-bottom: 2px;
+  }
+  .level-desc {
+    font-size: 13px;
+    color: #64748B;
+  }
+  .level-arrow {
+    color: #94A3B8;
+    font-size: 18px;
+  }
+
+  /* 游戏区 */
+  .game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  .back-btn {
+    color: #2DD4BF;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .back-btn:hover { text-decoration: underline; }
+  .score-display {
+    font-size: 14px;
+    color: #94A3B8;
+  }
+  .score-display .num { color: #2DD4BF; font-weight: bold; }
+
+  .level-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .level-tab {
+    flex: 1;
+    padding: 12px 8px;
+    background: rgba(45, 212, 191, 0.1);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 13px;
+  }
+  .level-tab.active {
+    background: rgba(45, 212, 191, 0.2);
+    border-color: #2DD4BF;
+    color: #2DD4BF;
+  }
+  .level-tab.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .level-tab .num {
+    font-size: 18px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .card {
+    background: #fff;
+    color: #1E293B;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  }
+  .card h2 {
+    font-size: 18px;
+    color: #0F2B46;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  .progress {
+    text-align: center;
+    color: #64748B;
+    font-size: 13px;
+    margin-bottom: 15px;
+  }
+  .question {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    min-height: 50px;
+  }
+  .question .scene {
+    display: block;
+    font-size: 13px;
+    color: #64748B;
+    margin-bottom: 8px;
+  }
+  .question .hint {
+    display: inline-block;
+    background: #FEF3C7;
+    color: #92400E;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option {
+    padding: 14px 18px;
+    background: #F1F5F9;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+    text-align: left;
+  }
+  .option:hover {
+    background: #E2E8F0;
+    border-color: #2DD4BF;
+  }
+  .option.correct {
+    background: #DCFCE7;
+    border-color: #22C55E;
+    color: #166534;
+  }
+  .option.wrong {
+    background: #FEE2E2;
+    border-color: #EF4444;
+    color: #991B1B;
+  }
+  .option.disabled {
+    pointer-events: none;
+  }
+  .fill-blank {
+    display: inline-block;
+    min-width: 80px;
+    border-bottom: 2px solid #2DD4BF;
+    padding: 2px 8px;
+    color: #0F2B46;
+    font-weight: bold;
+  }
+  .fill-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #E2E8F0;
+    border-radius: 10px;
+    font-size: 15px;
+    margin-bottom: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .fill-input:focus {
+    border-color: #2DD4BF;
+  }
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: #2DD4BF;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .submit-btn:hover {
+    background: #14B8A6;
+  }
+  .submit-btn:disabled {
+    background: #CBD5E1;
+    cursor: not-allowed;
+  }
+  .next-btn {
+    width: 100%;
+    padding: 14px;
+    background: #0F2B46;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+  }
+  .next-btn:hover {
+    background: #1E3A5F;
+  }
+  .feedback {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-top: 15px;
+    font-size: 14px;
+    display: none;
+    line-height: 1.5;
+    white-space: pre-line;
+  }
+  .feedback.show { display: block; }
+  .feedback.good {
+    background: #DCFCE7;
+    color: #166534;
+  }
+  .feedback.bad {
+    background: #FEE2E2;
+    color: #991B1B;
+  }
+  .result-card {
+    text-align: center;
+    padding: 40px 25px;
+  }
+  .result-card .score {
+    font-size: 48px;
+    font-weight: bold;
+    color: #2DD4BF;
+    margin: 15px 0;
+  }
+  .result-card .msg {
+    font-size: 16px;
+    color: #64748B;
+    margin-bottom: 25px;
+  }
+  .result-btn-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .result-btn {
+    padding: 12px 24px;
+    background: #2DD4BF;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .result-btn:hover { background: #14B8A6; }
+  .result-btn.secondary {
+    background: #0F2B46;
+  }
+  .result-btn.secondary:hover { background: #1E3A5F; }
+  .emoji { font-size: 28px; margin-bottom: 10px; }
+  .hidden { display: none !important; }
+
+  /* 连词成句区域 */
+  .arrange-area {
+    min-height: 60px;
+    background: #F0FDFA;
+    border: 2px dashed #2DD4BF;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    transition: all 0.3s;
+  }
+  .arrange-area.empty {
+    border-color: #CBD5E1;
+    background: #F8FAFC;
+  }
+  .arrange-area .placeholder-text {
+    color: #94A3B8;
+    font-size: 13px;
+    width: 100%;
+    text-align: center;
+  }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+    min-height: 44px;
+  }
+  .word-block {
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+    border: 2px solid transparent;
+    font-weight: 500;
+  }
+  .word-block.in-bank {
+    background: #0F2B46;
+    color: #fff;
+  }
+  .word-block.in-bank:hover {
+    background: #1E3A5F;
+    border-color: #2DD4BF;
+    transform: translateY(-2px);
+  }
+  .word-block.in-answer {
+    background: #2DD4BF;
+    color: #fff;
+  }
+  .word-block.in-answer:hover {
+    background: #14B8A6;
+    border-color: #0F2B46;
+  }
+  .word-block.correct-word {
+    background: #22C55E !important;
+    border-color: #166534 !important;
+  }
+  .word-block.wrong-word {
+    background: #EF4444 !important;
+    border-color: #991B1B !important;
+  }
+  .word-block.disabled {
+    pointer-events: none;
+    opacity: 0.8;
+  }
+  .arrange-btn-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .arrange-btn-group button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .clear-btn {
+    background: #F1F5F9;
+    color: #64748B;
+  }
+  .clear-btn:hover {
+    background: #E2E8F0;
+  }
+  .check-btn {
+    background: #2DD4BF;
+    color: #fff;
+  }
+  .check-btn:hover {
+    background: #14B8A6;
+  }
+  .check-btn:disabled {
+    background: #CBD5E1;
+    cursor: not-allowed;
+  }
+
+  /* 底部 */
+  .footer {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(45, 212, 191, 0.15);
+  }
+  .footer .provided {
+    font-size: 12px;
+    color: #475569;
+  }
+  .footer .provided strong {
+    color: #2DD4BF;
+    font-weight: normal;
+  }
+  .footer .brand {
+    font-size: 14px;
+    color: #94A3B8;
+    margin-top: 4px;
+    letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 顶部 Logo -->
+  <div class="logo-section">
+    <div class="logo-badge">⭐</div>
+    <div class="logo-title">语法大闯关</div>
+    <div class="logo-sub">Power Up 1 · <span>Unit 5</span></div>
+  </div>
+
+  <!-- 首页选关 -->
+  <div id="homeScreen">
+    <div class="welcome-card">
+      <h1>语法全能星挑战 ⭐</h1>
+      <div class="subtitle">五关闯关，掌握 U5 全部语法</div>
+      <div class="intro">
+        <strong>🎯 你将练习：</strong><br>
+        ✅ like / want / have got 各种形式<br>
+        ✅ 疑问词 What / Who / Whose / Where / How 等<br>
+        ✅ 人称代词与形容词性物主代词<br>
+        ✅ 连词成句与句型转换
+      </div>
+      <div class="level-select-title">选择关卡开始挑战：</div>
+      <div class="level-list">
+        <div class="level-item" onclick="startLevel(0)">
+          <div class="level-num">1</div>
+          <div class="level-info">
+            <div class="level-name">动词变变变</div>
+            <div class="level-desc">填空选择 · like/want/have got · 15题</div>
+          </div>
+          <div class="level-arrow">→</div>
+        </div>
+        <div class="level-item" id="level2Item" onclick="startLevel(1)">
+          <div class="level-num">2</div>
+          <div class="level-info">
+            <div class="level-name">疑问词大侦探</div>
+            <div class="level-desc">选择正确疑问词 · 15题</div>
+          </div>
+          <div class="level-arrow">→</div>
+        </div>
+        <div class="level-item" id="level3Item" onclick="startLevel(2)">
+          <div class="level-num">3</div>
+          <div class="level-info">
+            <div class="level-name">代词小达人</div>
+            <div class="level-desc">人称代词与物主代词 · 15题</div>
+          </div>
+          <div class="level-arrow">→</div>
+        </div>
+        <div class="level-item" id="level4Item" onclick="startLevel(3)">
+          <div class="level-num">4</div>
+          <div class="level-info">
+            <div class="level-name">句型变形记</div>
+            <div class="level-desc">连词成句 · 点击排列 · 15题</div>
+          </div>
+          <div class="level-arrow">→</div>
+        </div>
+        <div class="level-item" id="level5Item" onclick="startLevel(4)">
+          <div class="level-num">5</div>
+          <div class="level-info">
+            <div class="level-name">综合大闯关</div>
+            <div class="level-desc">混合题型 · 终极挑战 · 15题</div>
+          </div>
+          <div class="level-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 游戏区域 -->
+  <div id="gameScreen" class="hidden">
+    <div class="game-header">
+      <button class="back-btn" onclick="backToHome()">← 返回选关</button>
+      <div class="score-display">得分：<span class="num" id="scoreText">0</span></div>
+    </div>
+
+    <div class="card">
+      <h2 id="levelTitle">第一关：动词变变变</h2>
+      <div class="progress" id="progress">第 1 / 15 题</div>
+      <div class="question" id="question"></div>
+      <div id="optionArea"></div>
+      <!-- 连词成句区域 -->
+      <div id="arrangeArea" class="hidden">
+        <div class="arrange-area empty" id="answerZone">
+          <span class="placeholder-text">点击下方单词排列成句子</span>
+        </div>
+        <div class="word-bank" id="wordBank"></div>
+        <div class="arrange-btn-group">
+          <button class="clear-btn" onclick="clearArrange()">🗑️ 清空</button>
+          <button class="check-btn" id="checkArrangeBtn" onclick="checkArrange()">✅ 确认</button>
+        </div>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn hidden" id="nextBtn">下一题 →</button>
+    </div>
+  </div>
+
+  <!-- 结果区域 -->
+  <div id="resultScreen" class="hidden">
+    <div class="card result-card">
+      <div class="emoji" id="resultEmoji">🎉</div>
+      <div style="font-size: 20px; color: #0F2B46; font-weight: bold;" id="resultTitle">闯关成功！</div>
+      <div class="score"><span id="score">0</span> / <span id="total">0</span></div>
+      <div class="msg" id="resultMsg"></div>
+      <div class="result-btn-group">
+        <button class="result-btn secondary" onclick="backToHome()">🏠 返回选关</button>
+        <button class="result-btn" onclick="restartLevel()">🔄 再玩一次</button>
+        <button class="result-btn" onclick="nextLevel()" id="nextLevelBtn">➡️ 下一关</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer">
+    <div class="provided">Provided by <strong>Mona Woods</strong></div>
+    <div class="brand">MONA · ENGLISH</div>
+  </div>
+</div>
+
+<script>
+// 工具：随机打乱数组
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// 每关从题库抽几道
+const QUESTIONS_PER_LEVEL = 15;
+
+// ========== 题库定义 ==========
+const questionBank = [
+  // ========== 第一关：动词变变变 ==========
+  {
+    title: '第一关：动词变变变',
+    type: 'choice',
+    bank: [
+      { scene: '📝 填入正确形式', text: 'She ___ (like) apples.', options: ['like', 'likes', 'liking'], answer: 1, explain: '主语She是三单，like要加s → likes' },
+      { scene: '📝 填入正确形式', text: 'He ___ (not like) bananas.', options: ["don't like", "doesn't like", 'not likes'], answer: 1, explain: '三单否定用doesn\'t + 动词原形 → doesn\'t like' },
+      { scene: '📝 填入正确形式', text: '___ you ___ (like) oranges?', options: ['Do / like', 'Does / like', 'Do / likes'], answer: 0, explain: 'you不是三单，疑问句用Do提前，动词用原形like' },
+      { scene: '📝 填入正确形式', text: 'She ___ got a cat.', options: ['have', 'has', 'having'], answer: 1, explain: 'she用has got表示"有"' },
+      { scene: '📝 填入正确形式', text: '___ you got a pen?', options: ['Has', 'Have', 'Do'], answer: 1, explain: 'you用have got，疑问句把Have提前' },
+      { scene: '📝 填入正确形式', text: 'They ___ (want) to play football.', options: ['want', 'wants', 'wanting'], answer: 0, explain: 'they不是三单，want不加s' },
+      { scene: '📝 填入正确形式', text: 'He ___ (not want) to go.', options: ["don't want", "doesn't want", 'not wants'], answer: 1, explain: '三单否定用doesn\'t + want原形' },
+      { scene: '📝 填入正确形式', text: 'We ___ got any books.', options: ["haven't", "hasn't", "don't"], answer: 0, explain: 'we用have got，否定用haven\'t got' },
+      { scene: '📝 填入正确形式', text: 'I ___ (like) ice cream very much.', options: ['like', 'likes', 'am like'], answer: 0, explain: 'I后面用原形like' },
+      { scene: '📝 填入正确形式', text: 'My mother ___ (want) a new dress.', options: ['want', 'wants', 'wanting'], answer: 1, explain: 'my mother是三单（she），want加s → wants' },
+      { scene: '📝 填入正确形式', text: '___ she got a brother?', options: ['Has', 'Have', 'Is'], answer: 0, explain: 'she用has got，疑问句把Has提前' },
+      { scene: '📝 填入正确形式', text: 'The boys ___ (like) swimming.', options: ['like', 'likes', 'are like'], answer: 0, explain: 'the boys是复数（they），用原形like' },
+      { scene: '📝 填入正确形式', text: 'Tom ___ (not like) carrots.', options: ["don't like", "doesn't like", "isn't like"], answer: 1, explain: 'Tom是三单，否定用doesn\'t like' },
+      { scene: '📝 填入正确形式', text: 'You ___ (want) some juice?', options: ['Do', 'Does', 'Are'], answer: 0, explain: 'you不是三单，疑问用Do' },
+      { scene: '📝 填入正确形式', text: 'The dog ___ got a ball.', options: ['have', 'has', 'is'], answer: 1, explain: 'the dog是it，用has got' },
+      { scene: '📝 填入正确形式', text: '___ they ___ (want) to come?', options: ['Do / want', 'Does / want', 'Do / wants'], answer: 0, explain: 'they不是三单，疑问用Do + 动词原形want' },
+      { scene: '📝 填入正确形式', text: 'My sister ___ (like) dancing.', options: ['like', 'likes', 'liking'], answer: 1, explain: 'my sister是三单（she），like加s' },
+      { scene: '📝 填入正确形式', text: 'I ___ got a new bike.', options: ['have', 'has', 'am'], answer: 0, explain: 'I用have got' },
+      { scene: '📝 填入正确形式', text: 'She ___ (not want) to eat fish.', options: ["don't want", "doesn't want", "isn't want"], answer: 1, explain: 'she三单否定用doesn\'t want' },
+      { scene: '📝 填入正确形式', text: '___ the cat ___ (like) milk?', options: ['Does / like', 'Do / like', 'Is / like'], answer: 0, explain: 'the cat是it（三单），疑问用Does + 动词原形like' },
+      { scene: '📝 填入正确形式', text: 'We ___ (want) to go to the park.', options: ['want', 'wants', 'are want'], answer: 0, explain: 'we不是三单，want用原形' },
+      { scene: '📝 填入正确形式', text: 'He ___ got blue eyes.', options: ['have', 'has', 'is'], answer: 1, explain: 'he用has got' },
+      { scene: '📝 填入正确形式', text: '___ your dad ___ (like) coffee?', options: ['Does / like', 'Do / like', 'Does / likes'], answer: 0, explain: 'your dad是三单（he），疑问用Does + 动词原形like' },
+      { scene: '📝 填入正确形式', text: 'They ___ (not like) rainy days.', options: ["don't like", "doesn't like", "aren't like"], answer: 0, explain: 'they是复数，否定用don\'t like' }
+    ]
+  },
+  // ========== 第二关：疑问词大侦探 ==========
+  {
+    title: '第二关：疑问词大侦探',
+    type: 'choice',
+    bank: [
+      { scene: '🔍 对划线部分提问', text: 'This is <u>Tom\'s</u> bike.\n___ bike is this?', options: ['What', 'Who', 'Whose'], answer: 2, explain: '划线是所属关系（Tom\'s），用Whose提问' },
+      { scene: '🔍 对划线部分提问', text: 'There are <u>five</u> books.\n___ books are there?', options: ['How many', 'How', 'What'], answer: 0, explain: '划线是数量（five），用How many提问' },
+      { scene: '🔍 对划线部分提问', text: 'She is <u>in the library</u>.\n___ is she?', options: ['Who', 'Where', 'What'], answer: 1, explain: '划线是地点（in the library），用Where提问' },
+      { scene: '🔍 对划线部分提问', text: '<u>Lucy</u> is my friend.\n___ is your friend?', options: ['What', 'Whose', 'Who'], answer: 2, explain: '划线是人（Lucy），用Who提问' },
+      { scene: '🔍 对划线部分提问', text: 'This is <u>a pencil</u>.\n___ is this?', options: ['What', 'Who', 'Whose'], answer: 0, explain: '划线是物品（a pencil），用What提问' },
+      { scene: '🔍 对划线部分提问', text: 'He goes to school <u>by bus</u>.\n___ does he go to school?', options: ['What', 'How', 'Where'], answer: 1, explain: '划线是方式（by bus），用How提问' },
+      { scene: '🔍 对划线部分提问', text: 'She is <u>ten years old</u>.\n___ is she?', options: ['How many', 'What', 'How old'], answer: 2, explain: '划线是年龄（ten years old），用How old提问' },
+      { scene: '🔍 对划线部分提问', text: 'This is <u>her</u> bag.\n___ bag is this?', options: ['Who', 'What', 'Whose'], answer: 2, explain: 'her表示所属关系，用Whose提问' },
+      { scene: '🔍 对划线部分提问', text: 'There are <u>three</u> cats in the room.\n___ cats are there in the room?', options: ['How', 'How many', 'What'], answer: 1, explain: '划线是数量（three），用How many提问' },
+      { scene: '🔍 对划线部分提问', text: 'The book is <u>on the desk</u>.\n___ is the book?', options: ['What', 'Who', 'Where'], answer: 2, explain: '划线是地点（on the desk），用Where提问' },
+      { scene: '🔍 对划线部分提问', text: '<u>Mr Smith</u> is our teacher.\n___ is your teacher?', options: ['Who', 'What', 'Whose'], answer: 0, explain: '划线是人（Mr Smith），用Who提问' },
+      { scene: '🔍 对划线部分提问', text: 'That is <u>my</u> hat.\n___ hat is that?', options: ['What', 'Whose', 'Who'], answer: 1, explain: 'my表示所属关系，用Whose提问' },
+      { scene: '🔍 对划线部分提问', text: 'She feels <u>happy</u>.\n___ does she feel?', options: ['How', 'What', 'Who'], answer: 0, explain: '划线是感受/状态（happy），用How提问' },
+      { scene: '🔍 对划线部分提问', text: 'The boy is <u>eight</u>.\n___ is the boy?', options: ['How many', 'How old', 'How'], answer: 1, explain: '划线是年龄（eight），用How old提问' },
+      { scene: '🔍 对划线部分提问', text: 'I want <u>a sandwich</u>.\n___ do you want?', options: ['Who', 'Where', 'What'], answer: 2, explain: '划线是物品（a sandwich），用What提问' },
+      { scene: '🔍 对划线部分提问', text: 'There are <u>ten</u> pupils in the class.\n___ pupils are there in the class?', options: ['How many', 'How', 'What'], answer: 0, explain: '划线是数量（ten），用How many提问' },
+      { scene: '🔍 对划线部分提问', text: 'They play <u>in the garden</u>.\n___ do they play?', options: ['What', 'How', 'Where'], answer: 2, explain: '划线是地点（in the garden），用Where提问' },
+      { scene: '🔍 对划线部分提问', text: '<u>That girl</u> is my cousin.\n___ is your cousin?', options: ['What', 'Who', 'Whose'], answer: 1, explain: '划线是人（that girl），用Who提问' },
+      { scene: '🔍 对划线部分提问', text: 'It is <u>blue</u>.\n___ is it?', options: ['What', 'What colour', 'How'], answer: 1, explain: '划线是颜色（blue），用What colour提问' },
+      { scene: '🔍 对划线部分提问', text: 'This is <u>Peter\'s</u> book.\n___ book is this?', options: ['Who', 'What', 'Whose'], answer: 2, explain: '划线是所属关系（Peter\'s），用Whose提问' },
+      { scene: '🔍 对划线部分提问', text: 'He has got <u>two</u> sisters.\n___ sisters has he got?', options: ['How', 'How many', 'What'], answer: 1, explain: '划线是数量（two），用How many提问' },
+      { scene: '🔍 对划线部分提问', text: 'She goes to bed <u>at nine</u>.\n___ does she go to bed?', options: ['What', 'Where', 'When'], answer: 2, explain: '划线是时间（at nine），用When提问' }
+    ]
+  },
+  // ========== 第三关：代词小达人 ==========
+  {
+    title: '第三关：代词小达人',
+    type: 'choice',
+    bank: [
+      { scene: '📝 选择正确的代词', text: '___ is my brother.', options: ['He', 'Him', 'His'], answer: 0, explain: '做主语用主格He' },
+      { scene: '📝 选择正确的代词', text: 'I like ___.', options: ['she', 'her', 'hers'], answer: 1, explain: 'like后面接宾格her' },
+      { scene: '📝 选择正确的代词', text: '___ name is Lucy.', options: ['She', 'Her', 'Hers'], answer: 1, explain: '修饰名词name用形容词性物主代词Her' },
+      { scene: '📝 选择正确的代词', text: 'This is ___ book.', options: ['he', 'his', 'him'], answer: 1, explain: '修饰名词book用形容词性物主代词his' },
+      { scene: '📝 选择正确的代词', text: 'Give ___ the ball, please.', options: ['I', 'me', 'my'], answer: 1, explain: 'give后面接宾格me' },
+      { scene: '📝 选择正确的代词', text: '___ are good friends.', options: ['We', 'Us', 'Our'], answer: 0, explain: '做主语用主格We' },
+      { scene: '📝 选择正确的代词', text: 'The cat eats ___ food.', options: ['it', 'its', "it's"], answer: 1, explain: '修饰名词food用its（注意it\'s是it is的缩写，不是物主代词）' },
+      { scene: '📝 选择正确的代词', text: 'Is this ___ ruler?', options: ['you', 'your', 'yours'], answer: 1, explain: '修饰名词ruler用形容词性物主代词your' },
+      { scene: '📝 选择正确的代词', text: 'They are ___ students.', options: ['we', 'our', 'us'], answer: 1, explain: '修饰名词students用形容词性物主代词our' },
+      { scene: '📝 选择正确的代词', text: 'Please help ___.', options: ['they', 'them', 'their'], answer: 1, explain: 'help后面接宾格them' },
+      { scene: '📝 选择正确的代词', text: '___ is a teacher.', options: ['She', 'Her', 'Hers'], answer: 0, explain: '做主语用主格She' },
+      { scene: '📝 选择正确的代词', text: 'I can see ___ dog. ___ dog is big.', options: ['your / Its', 'your / It', 'you / Its'], answer: 0, explain: '修饰名词dog用your；第二空修饰名词dog用Its' },
+      { scene: '📝 选择正确的代词', text: 'Look at ___! They are happy.', options: ['they', 'them', 'their'], answer: 1, explain: 'at是介词，后面接宾格them' },
+      { scene: '📝 选择正确的代词', text: '___ school is very big.', options: ['We', 'Us', 'Our'], answer: 2, explain: '修饰名词school用形容词性物主代词Our' },
+      { scene: '📝 选择正确的代词', text: 'Do you know ___?', options: ['he', 'him', 'his'], answer: 1, explain: 'know后面接宾格him' },
+      { scene: '📝 选择正确的代词', text: '___ are in the same class.', options: ['They', 'Them', 'Their'], answer: 0, explain: '做主语用主格They' },
+      { scene: '📝 选择正确的代词', text: 'That is ___ bag, not ___.', options: ['her / my', 'she / I', 'hers / mine'], answer: 0, explain: '修饰名词bag用形容词性物主代词her和my' },
+      { scene: '📝 选择正确的代词', text: 'Tell ___ the answer.', options: ['we', 'us', 'our'], answer: 1, explain: 'tell后面接宾格us' },
+      { scene: '📝 选择正确的代词', text: '___ favourite colour is red.', options: ['He', 'Him', 'His'], answer: 2, explain: '修饰名词colour用形容词性物主代词His' },
+      { scene: '📝 选择正确的代词', text: 'Can ___ help me?', options: ['you', 'your', 'yours'], answer: 0, explain: '做主语用主格you' },
+      { scene: '📝 选择正确的代词', text: '___ love music. Music is ___ life.', options: ['They / their', 'Them / their', 'They / them'], answer: 0, explain: '第一空做主语用They；第二空修饰名词life用their' },
+      { scene: '📝 选择正确的代词', text: 'Show ___ your photo, please.', options: ['I', 'me', 'my'], answer: 1, explain: 'show后面接宾格me' }
+    ]
+  },
+  // ========== 第四关：句型变形记（连词成句）==========
+  {
+    title: '第四关：句型变形记',
+    type: 'arrange',
+    bank: [
+      { scene: '🔤 连词成句', text: '将单词排列成正确的句子：', words: ['She', 'likes', 'apples', '.'], answer: ['She', 'likes', 'apples', '.'], explain: '主语 + likes + 宾语 + 句号。三单主语likes加s。' },
+      { scene: '🔤 连词成句', text: '将单词排列成正确的句子：', words: ['He', "doesn't", 'like', 'bananas', '.'], answer: ['He', "doesn't", 'like', 'bananas', '.'], explain: '三单否定：主语 + doesn\'t + 动词原形 + 宾语。' },
+      { scene: '🔤 连词成句', text: '将单词排列成正确的句子：', words: ['Have', 'you', 'got', 'a', 'pen', '?'], answer: ['Have', 'you', 'got', 'a', 'pen', '?'], explain: 'have got疑问句：Have + 主语 + got + 物品?' },
+      { scene: '🔤 连词成句', text: '将单词排列成正确的句子：', words: ['is', 'This', "Tom's", 'bike', '.'], answer: ['This', 'is', "Tom's", 'bike', '.'], explain: 'This is + 名词所有格 + 物品。注意Tom\'s表示"Tom的"。' },
+      { scene: '🔤 连词成句', text: '将单词排列成正确的句子：', words: ['They', 'want', 'to', 'play', 'football', '.'], answer: ['They', 'want', 'to', 'play', 'football', '.'], explain: '主语 + want to + 动词原形 + 宾语。' },
+      { scene: '🔄 改为否定句', text: '原句：She likes cats.\n请改为否定句：', words: ["doesn't", 'like', '.', 'She', 'cats'], answer: ['She', "doesn't", 'like', 'cats', '.'], explain: '肯定→否定：三单主语加doesn\'t，likes变回like原形。' },
+      { scene: '🔄 改为否定句', text: '原句：He has got a dog.\n请改为否定句：', words: ["hasn't", 'got', 'a', 'dog', '.', 'He'], answer: ['He', "hasn't", 'got', 'a', 'dog', '.'], explain: 'has got→hasn\'t got，否定在has后加not。' },
+      { scene: '🔄 改为一般疑问句', text: '原句：They like swimming.\n请改为一般疑问句：', words: ['they', 'like', 'swimming', '?', 'Do'], answer: ['Do', 'they', 'like', 'swimming', '?'], explain: '非三单陈述→疑问：把Do提前到句首，动词用原形。' },
+      { scene: '🔄 改为一般疑问句', text: '原句：She has got a cat.\n请改为一般疑问句：', words: ['she', 'got', 'a', 'cat', '?', 'Has'], answer: ['Has', 'she', 'got', 'a', 'cat', '?'], explain: 'has got→疑问：把Has提前到句首。' },
+      { scene: '❓ 对划线部分提问', text: 'This is <u>Tom\'s</u> book.\n请对划线部分提问：', words: ['book', 'is', 'this', '?', 'Whose'], answer: ['Whose', 'book', 'is', 'this', '?'], explain: '对所属关系提问用Whose，Whose + 名词 + is + this?' },
+      { scene: '❓ 对划线部分提问', text: 'He is <u>ten</u>.\n请对划线部分提问：', words: ['old', 'is', 'he', '?', 'How'], answer: ['How', 'old', 'is', 'he', '?'], explain: '对年龄提问用How old，How old + is + 主语?' },
+      { scene: '🔤 连词成句', text: '将单词排列成正确的句子：', words: ['We', "don't", 'like', 'rainy', 'days', '.'], answer: ['We', "don't", 'like', 'rainy', 'days', '.'], explain: '非三单否定：主语 + don\'t + 动词原形 + 宾语。' },
+      { scene: '🔤 连词成句', text: '将单词排列成正确的句子：', words: ['has', 'She', 'got', 'blue', 'eyes', '.'], answer: ['She', 'has', 'got', 'blue', 'eyes', '.'], explain: '主语 + has got + 形容词 + 名词。' },
+      { scene: '🔄 改为否定句', text: '原句：They want to come.\n请改为否定句：', words: ["don't", 'want', 'to', 'come', '.', 'They'], answer: ['They', "don't", 'want', 'to', 'come', '.'], explain: '非三单否定：主语 + don\'t + want to + 动词原形。' },
+      { scene: '❓ 对划线部分提问', text: 'There are <u>five</u> books.\n请对划线部分提问：', words: ['many', 'books', 'are', 'there', '?', 'How'], answer: ['How', 'many', 'books', 'are', 'there', '?'], explain: '对数量提问用How many，How many + 名词复数 + are there?' }
+    ]
+  },
+  // ========== 第五关：综合大闯关 ==========
+  {
+    title: '第五关：综合大闯关',
+    type: 'mixed',
+    bank: [
+      // 选择填空（来自动词变变变）
+      { scene: '📝 选择填空', text: 'She ___ (like) dancing.', options: ['like', 'likes', 'liking'], answer: 1, explain: 'she是三单，like加s → likes', qType: 'choice' },
+      { scene: '📝 选择填空', text: 'I ___ got a new bag.', options: ['have', 'has', 'am'], answer: 0, explain: 'I用have got', qType: 'choice' },
+      { scene: '📝 选择填空', text: 'He ___ (not want) to leave.', options: ["don't want", "doesn't want", "isn't want"], answer: 1, explain: '三单否定用doesn\'t want', qType: 'choice' },
+      // 疑问词选择（来自疑问词大侦探）
+      { scene: '🔍 对划线部分提问', text: 'The pen is <u>red</u>.\n___ is the pen?', options: ['What colour', 'How', 'Who'], answer: 0, explain: '划线是颜色（red），用What colour提问', qType: 'choice' },
+      { scene: '🔍 对划线部分提问', text: '<u>Mrs Jones</u> is my mother.\n___ is your mother?', options: ['What', 'Whose', 'Who'], answer: 2, explain: '划线是人（Mrs Jones），用Who提问', qType: 'choice' },
+      { scene: '🔍 对划线部分提问', text: 'I have got <u>four</u> books.\n___ books have you got?', options: ['How many', 'How', 'What'], answer: 0, explain: '划线是数量（four），用How many提问', qType: 'choice' },
+      // 代词选择（来自代词小达人）
+      { scene: '📝 选择正确的代词', text: '___ is my sister.', options: ['She', 'Her', 'Hers'], answer: 0, explain: '做主语用主格She', qType: 'choice' },
+      { scene: '📝 选择正确的代词', text: 'Please give ___ the book.', options: ['I', 'me', 'my'], answer: 1, explain: 'give后面接宾格me', qType: 'choice' },
+      { scene: '📝 选择正确的代词', text: '___ school bag is very heavy.', options: ['They', 'Them', 'Their'], answer: 2, explain: '修饰名词school bag用形容词性物主代词Their', qType: 'choice' },
+      // 连词成句
+      { scene: '🔤 连词成句', text: '将单词排列成正确的句子：', words: ['My', 'mother', 'likes', 'coffee', '.'], answer: ['My', 'mother', 'likes', 'coffee', '.'], explain: '主语(My mother) + likes + 宾语。三单主语likes加s。', qType: 'arrange' },
+      { scene: '🔤 连词成句', text: '将单词排列成正确的句子：', words: ['has', 'got', 'He', 'big', 'ears', '.'], answer: ['He', 'has', 'got', 'big', 'ears', '.'], explain: '主语 + has got + 形容词 + 名词。', qType: 'arrange' },
+      { scene: '🔄 改为否定句', text: '原句：She wants to sing.\n请改为否定句：', words: ["doesn't", 'want', 'to', 'sing', '.', 'She'], answer: ['She', "doesn't", 'want', 'to', 'sing', '.'], explain: '三单肯定→否定：加doesn\'t，wants变回want原形。', qType: 'arrange' },
+      // 更多选择填空
+      { scene: '📝 选择填空', text: '___ the children ___ (like) music?', options: ['Do / like', 'Does / like', 'Do / likes'], answer: 0, explain: 'the children是复数，疑问用Do + 动词原形like', qType: 'choice' },
+      { scene: '📝 选择正确的代词', text: 'The girl is ___ friend.', options: ['he', 'his', 'him'], answer: 1, explain: '修饰名词friend用形容词性物主代词his', qType: 'choice' },
+      { scene: '🔍 对划线部分提问', text: 'She is <u>in the park</u>.\n___ is she?', options: ['Who', 'What', 'Where'], answer: 2, explain: '划线是地点（in the park），用Where提问', qType: 'choice' },
+      { scene: '📝 选择填空', text: 'We ___ got any homework today.', options: ["haven't", "hasn't", "don't"], answer: 0, explain: 'we用have got，否定用haven\'t got', qType: 'choice' },
+      { scene: '📝 选择正确的代词', text: 'Let ___ show you the way.', options: ['I', 'me', 'my'], answer: 1, explain: 'let后面接宾格me', qType: 'choice' },
+      { scene: '❓ 对划线部分提问', text: 'This is <u>my</u> coat.\n请对划线部分提问：', words: ['coat', 'is', 'this', '?', 'Whose'], answer: ['Whose', 'coat', 'is', 'this', '?'], explain: '对所属关系提问用Whose，Whose + 名词 + is + this?', qType: 'arrange' },
+      { scene: '📝 选择填空', text: 'My cat ___ (like) fish.', options: ['like', 'likes', 'is like'], answer: 1, explain: 'my cat是it（三单），like加s', qType: 'choice' },
+      { scene: '🔍 对划线部分提问', text: 'He is <u>nine years old</u>.\n___ is he?', options: ['How many', 'How old', 'How'], answer: 1, explain: '划线是年龄，用How old提问', qType: 'choice' },
+      { scene: '🔤 连词成句', text: '将单词排列成正确的句子：', words: ['Do', 'you', 'like', 'chocolate', '?'], answer: ['Do', 'you', 'like', 'chocolate', '?'], explain: '非三单疑问句：Do + 主语 + like + 宾语?', qType: 'arrange' },
+      { scene: '📝 选择正确的代词', text: '___ are very tall.', options: ['They', 'Them', 'Their'], answer: 0, explain: '做主语用主格They', qType: 'choice' }
+    ]
+  }
+];
+
+let currentLevel = 0;
+let currentQuestions = [];
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let arrangeAnswer = []; // 连词成句当前答案区
+
+// 解锁进度
+function getMaxUnlocked() {
+  const saved = localStorage.getItem('u5_grammar_unlocked');
+  return saved ? parseInt(saved) : 0;
+}
+
+function saveUnlocked(level) {
+  const current = getMaxUnlocked();
+  if (level > current) {
+    localStorage.setItem('u5_grammar_unlocked', level);
+  }
+  updateLevelLockStatus();
+}
+
+function updateLevelLockStatus() {
+  const max = getMaxUnlocked();
+  document.querySelectorAll('#homeScreen .level-item').forEach((item, i) => {
+    if (i > max) {
+      item.classList.add('locked');
+    } else {
+      item.classList.remove('locked');
+    }
+  });
+}
+
+function startLevel(levelIndex) {
+  if (levelIndex > getMaxUnlocked()) return;
+  currentLevel = levelIndex;
+  const levelData = questionBank[levelIndex];
+  const bank = levelData.bank;
+  
+  // 第四关和第五关的题数就是实际题数（15），不需要随机抽
+  if (levelData.type === 'mixed') {
+    currentQuestions = shuffle(bank).slice(0, QUESTIONS_PER_LEVEL);
+  } else if (levelData.type === 'arrange') {
+    currentQuestions = shuffle(bank).slice(0, QUESTIONS_PER_LEVEL);
+  } else {
+    currentQuestions = shuffle(bank).slice(0, QUESTIONS_PER_LEVEL);
+  }
+  
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  arrangeAnswer = [];
+
+  document.getElementById('homeScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('gameScreen').classList.remove('hidden');
+
+  document.getElementById('levelTitle').textContent = questionBank[levelIndex].title;
+  updateScoreDisplay();
+  showQuestion();
+}
+
+function backToHome() {
+  document.getElementById('gameScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('homeScreen').classList.remove('hidden');
+  updateLevelLockStatus();
+}
+
+function updateScoreDisplay() {
+  document.getElementById('scoreText').textContent = score;
+}
+
+function getQuestionType(q) {
+  // 第五关(mixed)每题有自己的qType，其他关由关卡type决定
+  if (q.qType) return q.qType;
+  return questionBank[currentLevel].type;
+}
+
+function showQuestion() {
+  const q = currentQuestions[currentQ];
+  const qType = getQuestionType(q);
+  answered = false;
+  arrangeAnswer = [];
+
+  document.getElementById('progress').textContent = `第 ${currentQ + 1} / ${currentQuestions.length} 题`;
+  document.getElementById('feedback').classList.remove('show', 'good', 'bad');
+  document.getElementById('nextBtn').classList.add('hidden');
+
+  const qEl = document.getElementById('question');
+  let html = '';
+  if (q.scene) {
+    // 检查是否有hint（如"改为否定句"等）
+    if (q.scene.includes('改为') || q.scene.includes('提问')) {
+      html += `<span class="hint">${q.scene}</span>`;
+    } else {
+      html += `<span class="scene">${q.scene}</span>`;
+    }
+  }
+  html += q.text;
+  qEl.innerHTML = html;
+
+  const optionArea = document.getElementById('optionArea');
+  const arrangeAreaEl = document.getElementById('arrangeArea');
+
+  if (qType === 'arrange') {
+    optionArea.classList.add('hidden');
+    arrangeAreaEl.classList.remove('hidden');
+    document.getElementById('checkArrangeBtn').disabled = false;
+    setupArrange(q);
+  } else {
+    arrangeAreaEl.classList.add('hidden');
+    optionArea.classList.remove('hidden');
+    optionArea.innerHTML = '';
+
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('div');
+      btn.className = 'option';
+      btn.textContent = opt;
+      btn.onclick = () => checkChoiceAnswer(i, btn);
+      optionArea.appendChild(btn);
+    });
+  }
+}
+
+// ===== 选择题答题 =====
+function checkChoiceAnswer(selectedIndex, btnElement) {
+  if (answered) return;
+  answered = true;
+
+  const q = currentQuestions[currentQ];
+  const options = document.querySelectorAll('.option');
+  
+  options.forEach(opt => opt.classList.add('disabled'));
+
+  if (selectedIndex === q.answer) {
+    btnElement.classList.add('correct');
+    score++;
+    updateScoreDisplay();
+    showFeedback('good', '✅ 答对啦！\n' + q.explain);
+  } else {
+    btnElement.classList.add('wrong');
+    options[q.answer].classList.add('correct');
+    showFeedback('bad', '❌ 不对哦～正确答案是：' + q.options[q.answer] + '\n' + q.explain);
+  }
+
+  document.getElementById('nextBtn').classList.remove('hidden');
+}
+
+// ===== 连词成句 =====
+function setupArrange(q) {
+  const answerZone = document.getElementById('answerZone');
+  const wordBank = document.getElementById('wordBank');
+  
+  answerZone.innerHTML = '<span class="placeholder-text">点击下方单词排列成句子</span>';
+  answerZone.classList.add('empty');
+  wordBank.innerHTML = '';
+  arrangeAnswer = [];
+
+  // 打乱单词显示
+  const shuffled = shuffle(q.words);
+  
+  shuffled.forEach((word, idx) => {
+    const block = document.createElement('div');
+    block.className = 'word-block in-bank';
+    block.textContent = word;
+    block.dataset.word = word;
+    block.dataset.idx = idx;
+    block.onclick = () => moveToAnswer(block);
+    wordBank.appendChild(block);
+  });
+}
+
+function moveToAnswer(block) {
+  if (answered) return;
+  const answerZone = document.getElementById('answerZone');
+  const wordBank = document.getElementById('wordBank');
+  
+  // 移除占位文字
+  const placeholder = answerZone.querySelector('.placeholder-text');
+  if (placeholder) placeholder.remove();
+  answerZone.classList.remove('empty');
+  
+  // 改变样式并移到答题区
+  block.classList.remove('in-bank');
+  block.classList.add('in-answer');
+  block.onclick = () => moveToBank(block);
+  answerZone.appendChild(block);
+  
+  arrangeAnswer.push(block.dataset.word);
+}
+
+function moveToBank(block) {
+  if (answered) return;
+  const answerZone = document.getElementById('answerZone');
+  const wordBank = document.getElementById('wordBank');
+  
+  // 移回单词库
+  block.classList.remove('in-answer');
+  block.classList.add('in-bank');
+  block.onclick = () => moveToAnswer(block);
+  wordBank.appendChild(block);
+  
+  // 从答案中移除
+  const idx = arrangeAnswer.indexOf(block.dataset.word);
+  if (idx > -1) arrangeAnswer.splice(idx, 1);
+  
+  // 如果答题区空了，显示占位文字
+  if (arrangeAnswer.length === 0) {
+    answerZone.innerHTML = '<span class="placeholder-text">点击下方单词排列成句子</span>';
+    answerZone.classList.add('empty');
+  }
+}
+
+function clearArrange() {
+  if (answered) return;
+  const answerZone = document.getElementById('answerZone');
+  const wordBank = document.getElementById('wordBank');
+  
+  // 把所有答题区的单词移回
+  const blocks = answerZone.querySelectorAll('.word-block');
+  blocks.forEach(block => {
+    block.classList.remove('in-answer', 'correct-word', 'wrong-word');
+    block.classList.add('in-bank');
+    block.onclick = () => moveToAnswer(block);
+    wordBank.appendChild(block);
+  });
+  
+  arrangeAnswer = [];
+  answerZone.innerHTML = '<span class="placeholder-text">点击下方单词排列成句子</span>';
+  answerZone.classList.add('empty');
+}
+
+function checkArrange() {
+  if (answered) return;
+  const q = currentQuestions[currentQ];
+  
+  if (arrangeAnswer.length === 0) return;
+  
+  // 检查是否所有单词都已放入答题区
+  if (arrangeAnswer.length !== q.answer.length) {
+    showFeedback('bad', '⚠️ 请把排列完所有单词再确认哦！');
+    return;
+  }
+  
+  answered = true;
+  
+  // 比较答案（忽略首字母大小写差异）
+  const isCorrect = arrangeAnswer.every((word, i) => {
+    return word.toLowerCase() === q.answer[i].toLowerCase();
+  });
+  
+  // 标记单词块颜色
+  const answerZone = document.getElementById('answerZone');
+  const blocks = answerZone.querySelectorAll('.word-block');
+  blocks.forEach((block, i) => {
+    block.classList.add('disabled');
+    if (block.dataset.word.toLowerCase() === q.answer[i].toLowerCase()) {
+      block.classList.add('correct-word');
+    } else {
+      block.classList.add('wrong-word');
+    }
+  });
+  
+  // 禁用bank中的单词
+  const bankBlocks = document.getElementById('wordBank').querySelectorAll('.word-block');
+  bankBlocks.forEach(b => b.classList.add('disabled'));
+  
+  document.getElementById('checkArrangeBtn').disabled = true;
+  
+  if (isCorrect) {
+    score++;
+    updateScoreDisplay();
+    showFeedback('good', '✅ 答对啦！\n' + q.explain);
+  } else {
+    showFeedback('bad', '❌ 不对哦～正确答案是：\n' + q.answer.join(' ') + '\n' + q.explain);
+  }
+
+  document.getElementById('nextBtn').classList.remove('hidden');
+}
+
+function showFeedback(type, text) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + type;
+  fb.textContent = text;
+}
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+  currentQ++;
+  if (currentQ >= currentQuestions.length) {
+    showResult();
+  } else {
+    showQuestion();
+  }
+});
+
+function showResult() {
+  document.getElementById('gameScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('hidden');
+
+  const total = currentQuestions.length;
+  const percentage = score / total;
+
+  document.getElementById('score').textContent = score;
+  document.getElementById('total').textContent = total;
+
+  let emoji, title, msg;
+  if (percentage >= 0.8) {
+    emoji = '🎉';
+    title = '太棒了！';
+    msg = '你掌握得非常好，继续保持！';
+    if (currentLevel < questionBank.length - 1) {
+      saveUnlocked(currentLevel + 1);
+    }
+  } else if (percentage >= 0.6) {
+    emoji = '👍';
+    title = '不错哦！';
+    msg = '大部分都掌握了，再复习一下错题吧～';
+    if (currentLevel < questionBank.length - 1) {
+      saveUnlocked(currentLevel + 1);
+    }
+  } else {
+    emoji = '💪';
+    title = '再接再厉！';
+    msg = '再多练几遍，一定可以的！';
+  }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMsg').textContent = msg;
+
+  document.getElementById('nextLevelBtn').style.display = 
+    currentLevel >= questionBank.length - 1 ? 'none' : 'inline-block';
+}
+
+function restartLevel() {
+  startLevel(currentLevel);
+}
+
+function nextLevel() {
+  if (currentLevel < questionBank.length - 1) {
+    startLevel(currentLevel + 1);
+  }
+}
+
+// 初始化
+updateLevelLockStatus();
+</script>
+</body>
+</html>
