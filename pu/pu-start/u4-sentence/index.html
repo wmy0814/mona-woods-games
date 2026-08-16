@@ -608,67 +608,208 @@ const WORDS = {
   room: '🏠'
 };
 
-const LEVELS = [
-  {
-    name: '看图判断',
-    type: 'yesno',
-    questions: [
-      { emoji: '🛏️', sentence: 'I have got a bed.', answer: true },
-      { emoji: '💻', sentence: 'You have got a clock.', answer: false },
-      { emoji: '🪞', sentence: 'We have got mirrors.', answer: true },
-      { emoji: '💡', sentence: 'They have got a lamp.', answer: true },
-      { emoji: '🏠', sentence: 'I have got a computer.', answer: false },
-      { emoji: '🕐', sentence: 'You have got a clock.', answer: true }
-    ]
-  },
-  {
-    name: '句型选择',
-    type: 'choice',
-    questions: [
-      {
-        chinese: '我有一张床。',
-        options: ['I have got a bed.', 'I has got a bed.', 'I have got bed.', 'I am got a bed.'],
-        correct: 0
-      },
-      {
-        chinese: '你有电脑吗？',
-        options: ['Have you got a computer?', 'Do you have got a computer?', 'Has you got a computer?', 'Are you have a computer?'],
-        correct: 0
-      },
-      {
-        chinese: '我们没有镜子。',
-        options: ["We haven't got mirrors.", "We hasn't got mirrors.", "We not have got mirrors.", "We don't have got mirrors."],
-        correct: 0
-      },
-      {
-        chinese: '他们有一个漂亮的房间。',
-        options: ['They have got a nice room.', 'They has got a nice room.', 'They have got nice room.', 'They are got a nice room.'],
-        correct: 0
-      },
-      {
-        chinese: '"你有台灯吗？" "是的，我有。"',
-        options: ['Have you got a lamp? Yes, I have.', 'Do you have a lamp? Yes, I do.', 'Are you have a lamp? Yes, I am.', 'Has you got a lamp? Yes, I has.'],
-        correct: 0
-      },
-      {
-        chinese: '"你们有钟吗？" "不，我们没有。"',
-        options: ["Have you got a clock? No, we haven't.", "Do you have a clock? No, we don't.", "Are you have a clock? No, we aren't.", "Has you got a clock? No, we hasn't."],
-        correct: 0
-      }
-    ]
-  },
-  {
-    name: '连词成句',
-    type: 'arrange',
-    questions: [
-      { words: ['I', 'have', 'got', 'a', 'computer', '.'], answer: 'I have got a computer.' },
-      { words: ['you', 'Have', 'got', 'a', 'bed', '?'], answer: 'Have you got a bed?' },
-      { words: ['We', 'got', "haven't", 'mirrors', '.'], answer: "We haven't got mirrors." },
-      { words: ['They', 'a', 'room', 'have', 'got', '.'], answer: 'They have got a room.' },
-      { words: ['lamp', 'got', 'a', 'Have', 'you', '?'], answer: 'Have you got a lamp?' },
-      { words: ['I', 'clock', 'a', "haven't", 'got', '.'], answer: "I haven't got a clock." }
-    ]
+// ===== 词库 =====
+const NOUNS = [
+  { word: 'bed', emoji: '🛏️', a: 'a' },
+  { word: 'clock', emoji: '🕐', a: 'a' },
+  { word: 'mirror', emoji: '🪞', a: 'a' },
+  { word: 'computer', emoji: '💻', a: 'a' },
+  { word: 'lamp', emoji: '💡', a: 'a' },
+  { word: 'room', emoji: '🏠', a: 'a' },
+  { word: 'apple', emoji: '🍎', a: 'an' },
+  { word: 'banana', emoji: '🍌', a: 'a' },
+  { word: 'watermelon', emoji: '🍉', a: 'a' },
+  { word: 'grape', emoji: '🍇', a: 'a' },
+  { word: 'burger', emoji: '🍔', a: 'a' },
+  { word: 'egg', emoji: '🥚', a: 'an' },
+  { word: 'fish', emoji: '🐟', a: 'a' },
+  { word: 'crayon', emoji: '🖍️', a: 'a' },
+  { word: 'book', emoji: '📚', a: 'a' },
+  { word: 'pencil', emoji: '✏️', a: 'a' },
+  { word: 'bag', emoji: '🎒', a: 'a' }
+];
+
+const COLORS = [
+  { word: 'red', emoji: '🔴' },
+  { word: 'yellow', emoji: '🟡' },
+  { word: 'blue', emoji: '🔵' },
+  { word: 'green', emoji: '🟢' },
+  { word: 'purple', emoji: '🟣' }
+];
+
+const PRONOUNS = ['I', 'You'];
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
   }
+  return a;
+}
+
+function pick(arr, n) {
+  return shuffle(arr).slice(0, n);
+}
+
+function buildNounPhrase(noun, color) {
+  if (color) {
+    return { phrase: noun.a + ' ' + color.word + ' ' + noun.word, colorWord: color.word };
+  }
+  return { phrase: noun.a + ' ' + noun.word, colorWord: null };
+}
+
+// ===== 生成每关题目（从词库随机抽6道）=====
+function generateLevel1() {
+  // 看图判断：展示emoji + 句子，判断对错
+  var nouns = pick(NOUNS, 6);
+  var questions = [];
+  for (var i = 0; i < 6; i++) {
+    var n = nouns[i];
+    var pronoun = PRONOUNS[Math.floor(Math.random() * 2)];
+    var isCorrect = Math.random() > 0.4; // 60%对 40%错
+    var displayNoun = n;
+    var sentenceNoun = n;
+    
+    if (!isCorrect) {
+      // 错的：换一个名词
+      var others = NOUNS.filter(function(x) { return x.word !== n.word; });
+      sentenceNoun = others[Math.floor(Math.random() * others.length)];
+    }
+    
+    var sentence = pronoun + ' have got ' + sentenceNoun.a + ' ' + sentenceNoun.word + '.';
+    questions.push({
+      emoji: displayNoun.emoji,
+      sentence: sentence,
+      answer: isCorrect
+    });
+  }
+  return questions;
+}
+
+function generateLevel2() {
+  // 句型选择：中文句子选英文
+  var questions = [];
+  var used = {};
+  var patterns = [
+    { type: 'statement', pronoun: 'I', chinese: '我有' },
+    { type: 'statement', pronoun: 'You', chinese: '你有' },
+    { type: 'question', pronoun: 'you', chinese: '你有…吗？' },
+    { type: 'question', pronoun: 'I', chinese: '我有…吗？' }
+  ];
+  
+  var patternPool = shuffle(patterns);
+  var nouns = pick(NOUNS, 6);
+  var colors = pick(COLORS, 4);
+  
+  for (var i = 0; i < 6; i++) {
+    var n = nouns[i];
+    var pat = patternPool[i % patternPool.length];
+    var useColor = Math.random() > 0.4;
+    var color = useColor ? colors[i % colors.length] : null;
+    var np = buildNounPhrase(n, color);
+    
+    var correctSentence;
+    var chineseText;
+    
+    if (pat.type === 'statement') {
+      correctSentence = pat.pronoun + ' have got ' + np.phrase + '.';
+      chineseText = pat.chinese + (color ? color.word + '色的' : '') + n.word + '。';
+    } else {
+      var subj = pat.pronoun === 'I' ? 'I' : 'you';
+      correctSentence = 'Have ' + subj + ' got ' + np.phrase + '?';
+      chineseText = (pat.pronoun === 'I' ? '我' : '你') + '有' + (color ? color.word + '色的' : '') + n.word + '吗？';
+    }
+    
+    // 生成错误选项
+    var wrongOptions = [];
+    
+    // 错误1：代词错
+    var wrongPronoun = pat.pronoun === 'I' ? 'You' : 'I';
+    if (pat.type === 'statement') {
+      wrongOptions.push(wrongPronoun + ' have got ' + np.phrase + '.');
+    } else {
+      var wp = pat.pronoun === 'I' ? 'you' : 'I';
+      wrongOptions.push('Have ' + wp + ' got ' + np.phrase + '?');
+    }
+    
+    // 错误2：缺a/an
+    var noArticle = pat.type === 'statement' 
+      ? pat.pronoun + ' have got ' + (color ? color.word + ' ' : '') + n.word + '.'
+      : 'Have ' + (pat.pronoun === 'I' ? 'I' : 'you') + ' got ' + (color ? color.word + ' ' : '') + n.word + '?';
+    wrongOptions.push(noArticle);
+    
+    // 错误3：语序错/用词错
+    wrongOptions.push((pat.type === 'statement' ? 'Got ' + pat.pronoun + ' ' : 'Got ' + (pat.pronoun === 'I' ? 'I' : 'you') + ' ') + np.phrase + (pat.type === 'statement' ? '.' : '?'));
+    
+    var allOptions = shuffle([correctSentence].concat(wrongOptions.slice(0, 3)));
+    var correctIdx = allOptions.indexOf(correctSentence);
+    
+    questions.push({
+      chinese: chineseText,
+      options: allOptions,
+      correct: correctIdx
+    });
+  }
+  return questions;
+}
+
+function generateLevel3() {
+  // 连词成句
+  var questions = [];
+  var patterns = [
+    { type: 'statement', pronoun: 'I' },
+    { type: 'statement', pronoun: 'You' },
+    { type: 'question', pronoun: 'you' },
+    { type: 'question', pronoun: 'I' }
+  ];
+  
+  var patternPool = shuffle(patterns);
+  var nouns = pick(NOUNS, 6);
+  var colors = pick(COLORS, 4);
+  
+  for (var i = 0; i < 6; i++) {
+    var n = nouns[i];
+    var pat = patternPool[i % patternPool.length];
+    var useColor = Math.random() > 0.4;
+    var color = useColor ? colors[i % colors.length] : null;
+    
+    var pronounWord = pat.type === 'question' ? (pat.pronoun === 'you' ? 'you' : 'I') : (pat.pronoun === 'I' ? 'I' : 'You');
+    var haveWord = pat.type === 'question' ? 'Have' : 'have';
+    var gotWord = 'got';
+    var articleWord = n.a;
+    
+    var wordList = [pronounWord, haveWord, gotWord, articleWord];
+    var answer;
+    
+    if (color) {
+      wordList.push(color.word);
+      wordList.push(n.word);
+    } else {
+      wordList.push(n.word);
+    }
+    
+    var punct = pat.type === 'question' ? '?' : '.';
+    wordList.push(punct);
+    
+    if (pat.type === 'question') {
+      answer = 'Have ' + (pat.pronoun === 'I' ? 'I' : 'you') + ' got ' + articleWord + (color ? ' ' + color.word : '') + ' ' + n.word + punct;
+    } else {
+      answer = pat.pronoun + ' have got ' + articleWord + (color ? ' ' + color.word : '') + ' ' + n.word + punct;
+    }
+    
+    questions.push({
+      words: shuffle(wordList),
+      answer: answer
+    });
+  }
+  return questions;
+}
+
+var LEVELS = [
+  { name: '看图判断', type: 'yesno', questions: generateLevel1() },
+  { name: '句型选择', type: 'choice', questions: generateLevel2() },
+  { name: '连词成句', type: 'arrange', questions: generateLevel3() }
 ];
 
 // ===== 状态 =====
@@ -733,6 +874,11 @@ function startGame() {
 }
 
 function startLevel(levelIdx) {
+  // 每次开始重新生成题目
+  if (levelIdx === 0) LEVELS[0].questions = generateLevel1();
+  else if (levelIdx === 1) LEVELS[1].questions = generateLevel2();
+  else if (levelIdx === 2) LEVELS[2].questions = generateLevel3();
+  
   currentLevel = levelIdx;
   currentQuestion = 0;
   score = 0;
