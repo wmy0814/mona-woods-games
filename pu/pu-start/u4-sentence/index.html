@@ -539,7 +539,7 @@ body {
       <button class="start-btn" onclick="startGame()">开始闯关 🚀</button>
       
       <div class="level-select" id="level-select">
-        <div class="level-card" onclick="startLevel(0)">
+        <div class="level-card" id="level-0-card" onclick="startLevel(0)">
           <div class="level-icon">👀</div>
           <div class="level-name">看图判断</div>
           <div class="level-num">第 1 关</div>
@@ -1029,15 +1029,15 @@ function removeWord(idx) {
   const word = answerWords[idx];
   answerWords.splice(idx, 1);
   
-  // 恢复单词池
+  // 恢复单词池（只恢复第一个匹配的）
   const pool = document.querySelectorAll('.word-chip');
-  pool.forEach(chip => {
+  for (let i = 0; i < pool.length; i++) {
+    const chip = pool[i];
     if (chip.dataset.word === word && chip.classList.contains('used')) {
       chip.classList.remove('used');
-      // 只恢复第一个匹配的
-      return false;
+      break;
     }
-  });
+  }
   
   renderAnswer();
 }
@@ -1065,7 +1065,13 @@ function checkArrange() {
   answered = true;
   
   const q = LEVELS[currentLevel].questions[currentQuestion];
-  const userAnswer = answerWords.join(' ');
+  // 拼接答案时去掉标点符号前的空格
+  const userAnswer = answerWords.map((w, i) => {
+    const next = answerWords[i + 1];
+    if (next && /^[.?!,;:]$/.test(next)) return w;
+    if (/^[.?!,;:]$/.test(w)) return w;
+    return w;
+  }).join(' ').replace(/ ([.?!,;:])/g, '$1');
   const area = document.getElementById('answer-area');
   
   if (userAnswer === q.answer) {
