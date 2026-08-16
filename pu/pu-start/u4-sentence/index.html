@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>💬 句型闯关 - Have Got 挑战</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #0F2B46;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: #0F2B46;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* 顶部状态栏 */
+.top-bar {
+  background: #0F2B46;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+  margin-bottom: 0;
+}
+
+.stars-display {
+  display: flex;
+  gap: 4px;
+  font-size: 18px;
+}
+
+.level-badge {
+  margin-left: auto;
+  padding: 6px 16px;
+  background: #2DD4BF;
+  color: #0F2B46;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.home-btn {
+  color: white;
+  font-size: 14px;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+}
+.home-btn:hover { background: rgba(255,255,255,0.2); }
+
+/* 页面通用 */
+.page {
+  display: none;
+  flex: 1;
+  animation: fadeIn 0.5s ease;
+}
+.page.active { display: flex; flex-direction: column; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo */
+.logo-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  display: block;
+  object-fit: cover;
+  box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* 页脚 */
+.page-footer {
+  text-align: center;
+  color: rgba(255,255,255,0.4);
+  font-size: 12px;
+  padding: 20px 0 10px;
+  margin-top: auto;
+}
+
+/* 首页 */
+#home-page {
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding-top: 40px;
+}
+
+.game-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.game-subtitle {
+  font-size: 16px;
+  color: #2DD4BF;
+  margin-bottom: 30px;
+  background: rgba(45, 212, 191, 0.1);
+  padding: 8px 20px;
+  border-radius: 20px;
+}
+
+.start-btn {
+  background: #2DD4BF;
+  color: #0F2B46;
+  border: none;
+  padding: 16px 50px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+  margin-bottom: 30px;
+}
+.start-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
+.start-btn:active { transform: translateY(0); }
+
+/* 关卡选择 */
+.level-select {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 600px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.level-card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 20px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .2s;
+  border: 2px solid transparent;
+}
+.level-card:hover { background: rgba(255,255,255,0.15); }
+.level-card.locked { opacity: 0.4; cursor: not-allowed; }
+.level-card.completed { border-color: #2DD4BF; }
+
+.level-icon {
+  font-size: 32px;
+  margin-bottom: 6px;
+}
+.level-name {
+  font-size: 14px;
+  color: white;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.level-num {
+  font-size: 11px;
+  color: #888;
+}
+.level-stars-mini {
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+/* 游戏区域 */
+.game-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+}
+
+.question-box {
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.question-text {
+  font-size: 20px;
+  color: white;
+  margin-bottom: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.question-hint {
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 10px;
+}
+
+.big-emoji {
+  font-size: 120px;
+  margin-bottom: 16px;
+  display: block;
+  line-height: 1.2;
+}
+
+.sound-btn {
+  background: #2DD4BF;
+  color: #0F2B46;
+  border: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all .2s;
+  margin: 8px;
+}
+.sound-btn:hover { transform: scale(1.05); }
+.sound-btn:active { transform: scale(0.95); }
+.sound-btn.playing { animation: pulse 0.5s ease infinite; }
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* 选项按钮 */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 20px;
+}
+
+.option-btn {
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 18px 15px;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+  text-align: center;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.option-btn:hover { border-color: #2DD4BF; background: rgba(45, 212, 191, 0.1); }
+.option-btn.correct { 
+  border-color: #2DD4BF; 
+  background: rgba(45, 212, 191, 0.25);
+  color: #2DD4BF;
+  animation: correctBounce 0.4s ease;
+}
+.option-btn.wrong {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff8a8a;
+  animation: shake 0.4s ease;
+}
+.option-btn:disabled { cursor: not-allowed; }
+
+@keyframes correctBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* 进度条 */
+.progress-bar {
+  width: 100%;
+  max-width: 700px;
+  height: 12px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2DD4BF, #34d399);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* Yes/No 按钮 */
+.yesno-options {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+.yesno-btn {
+  flex: 1;
+  max-width: 200px;
+  padding: 24px 20px;
+  font-size: 28px;
+  font-weight: 700;
+  border-radius: 16px;
+  border: 3px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  color: white;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+}
+.yesno-btn:hover { transform: translateY(-2px); }
+.yesno-btn.yes:hover { border-color: #2DD4BF; background: rgba(45, 212, 191, 0.2); }
+.yesno-btn.no:hover { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.15); }
+.yesno-btn.correct {
+  border-color: #2DD4BF;
+  background: rgba(45, 212, 191, 0.3);
+  color: #2DD4BF;
+  animation: correctBounce 0.4s ease;
+}
+.yesno-btn.wrong {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.3);
+  color: #ff8a8a;
+  animation: shake 0.4s ease;
+}
+
+/* 中文大字 */
+.chinese-display {
+  font-size: 42px;
+  color: white;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 12px rgba(45, 212, 191, 0.3);
+  line-height: 1.3;
+}
+.chinese-hint {
+  font-size: 15px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 16px;
+}
+
+/* 连词成句 */
+.sentence-target {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 12px;
+}
+.answer-area {
+  min-height: 80px;
+  background: rgba(255,255,255,0.06);
+  border: 2px dashed rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 16px;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+}
+.answer-area.filled {
+  border-style: solid;
+  border-color: rgba(45, 212, 191, 0.4);
+}
+.word-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 16px;
+}
+.word-chip {
+  background: rgba(45, 212, 191, 0.2);
+  border: 2px solid rgba(45, 212, 191, 0.4);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+}
+.word-chip:hover { background: rgba(45, 212, 191, 0.35); transform: translateY(-2px); }
+.word-chip.used { opacity: 0.3; cursor: not-allowed; transform: none; }
+.word-chip.in-answer {
+  background: rgba(45, 212, 191, 0.25);
+  border-color: #2DD4BF;
+}
+
+/* 结果页 */
+.result-page {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+.result-emoji {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: bounce 1s ease infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.result-title {
+  font-size: 32px;
+  color: white;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.result-stars {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+.result-desc {
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 30px;
+}
+.result-btns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.result-btn {
+  padding: 14px 30px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+}
+.result-btn.primary {
+  background: #2DD4BF;
+  color: #0F2B46;
+}
+.result-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
+.result-btn.secondary {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 2px solid rgba(255,255,255,0.2);
+}
+.result-btn.secondary:hover { background: rgba(255,255,255,0.2); }
+
+/* 下一题按钮 */
+.next-btn {
+  background: #2DD4BF;
+  color: #0F2B46;
+  border: none;
+  padding: 14px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+  opacity: 0;
+  pointer-events: none;
+}
+.next-btn.show {
+  opacity: 1;
+  pointer-events: auto;
+  animation: fadeIn 0.3s ease;
+}
+.next-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
+
+@media (max-width: 600px) {
+  .game-title { font-size: 26px; }
+  .big-emoji { font-size: 80px; }
+  .chinese-display { font-size: 32px; }
+  .option-btn { font-size: 16px; padding: 14px 10px; min-height: 60px; }
+  .question-text { font-size: 18px; }
+  .yesno-btn { font-size: 22px; padding: 18px 16px; }
+  .word-chip { font-size: 16px; padding: 8px 14px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- 首页 -->
+  <div id="home-page" class="page active">
+    <div class="top-bar">
+      <div class="stars-display" id="home-stars">⭐⭐⭐</div>
+      <div class="level-badge">句型闯关</div>
+    </div>
+    
+    <div style="padding-top: 40px; text-align: center;">
+      <img src="https://wmy0814.github.io/mona-woods-games/logo.png" alt="Mona Woods" class="logo-img" onerror="this.style.display='none'">
+      <h1 class="game-title">💬 Have Got 挑战</h1>
+      <p class="game-subtitle">句型闯关 · 我有 / 你有 / 我们有</p>
+      
+      <button class="start-btn" onclick="startGame()">开始闯关 🚀</button>
+      
+      <div class="level-select" id="level-select">
+        <div class="level-card" onclick="startLevel(0)">
+          <div class="level-icon">👀</div>
+          <div class="level-name">看图判断</div>
+          <div class="level-num">第 1 关</div>
+          <div class="level-stars-mini" id="level-0-stars"></div>
+        </div>
+        <div class="level-card" id="level-1-card" onclick="startLevel(1)">
+          <div class="level-icon">🎯</div>
+          <div class="level-name">句型选择</div>
+          <div class="level-num">第 2 关</div>
+          <div class="level-stars-mini" id="level-1-stars"></div>
+        </div>
+        <div class="level-card" id="level-2-card" onclick="startLevel(2)">
+          <div class="level-icon">🧩</div>
+          <div class="level-name">连词成句</div>
+          <div class="level-num">第 3 关</div>
+          <div class="level-stars-mini" id="level-2-stars"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="page-footer">Mona Woods English · 句型闯关</div>
+  </div>
+
+  <!-- 游戏页 -->
+  <div id="game-page" class="page">
+    <div class="top-bar">
+      <button class="home-btn" onclick="goHome()">🏠 首页</button>
+      <div class="stars-display" id="game-stars">⭐ 0</div>
+      <div class="level-badge" id="game-level-badge">第 1 关</div>
+    </div>
+    
+    <div class="game-area">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      
+      <div id="question-container"></div>
+      <div id="options-container"></div>
+      <div id="answer-container"></div>
+      <div id="wordpool-container"></div>
+      
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">下一题 →</button>
+    </div>
+  </div>
+
+  <!-- 结果页 -->
+  <div id="result-page" class="page result-page">
+    <div class="result-emoji" id="result-emoji">🎉</div>
+    <h2 class="result-title" id="result-title">太棒了！</h2>
+    <div class="result-stars" id="result-stars">⭐⭐⭐</div>
+    <p class="result-desc" id="result-desc">你完成了所有挑战！</p>
+    <div class="result-btns">
+      <button class="result-btn primary" onclick="retryLevel()">再玩一次 🔄</button>
+      <button class="result-btn secondary" onclick="goHome()">返回首页 🏠</button>
+      <button class="result-btn secondary" id="next-level-btn" onclick="nextLevel()">下一关 ➡️</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 游戏数据 =====
+const WORDS = {
+  bed: '🛏️',
+  clock: '🕐',
+  computer: '💻',
+  lamp: '💡',
+  mirrors: '🪞',
+  room: '🏠'
+};
+
+const LEVELS = [
+  {
+    name: '看图判断',
+    type: 'yesno',
+    questions: [
+      { emoji: '🛏️', sentence: 'I have got a bed.', answer: true },
+      { emoji: '💻', sentence: 'You have got a clock.', answer: false },
+      { emoji: '🪞', sentence: 'We have got mirrors.', answer: true },
+      { emoji: '💡', sentence: 'They have got a lamp.', answer: true },
+      { emoji: '🏠', sentence: 'I have got a computer.', answer: false },
+      { emoji: '🕐', sentence: 'You have got a clock.', answer: true }
+    ]
+  },
+  {
+    name: '句型选择',
+    type: 'choice',
+    questions: [
+      {
+        chinese: '我有一张床。',
+        options: ['I have got a bed.', 'I has got a bed.', 'I have got bed.', 'I am got a bed.'],
+        correct: 0
+      },
+      {
+        chinese: '你有电脑吗？',
+        options: ['Have you got a computer?', 'Do you have got a computer?', 'Has you got a computer?', 'Are you have a computer?'],
+        correct: 0
+      },
+      {
+        chinese: '我们没有镜子。',
+        options: ["We haven't got mirrors.", "We hasn't got mirrors.", "We not have got mirrors.", "We don't have got mirrors."],
+        correct: 0
+      },
+      {
+        chinese: '他们有一个漂亮的房间。',
+        options: ['They have got a nice room.', 'They has got a nice room.', 'They have got nice room.', 'They are got a nice room.'],
+        correct: 0
+      },
+      {
+        chinese: '"你有台灯吗？" "是的，我有。"',
+        options: ['Have you got a lamp? Yes, I have.', 'Do you have a lamp? Yes, I do.', 'Are you have a lamp? Yes, I am.', 'Has you got a lamp? Yes, I has.'],
+        correct: 0
+      },
+      {
+        chinese: '"你们有钟吗？" "不，我们没有。"',
+        options: ["Have you got a clock? No, we haven't.", "Do you have a clock? No, we don't.", "Are you have a clock? No, we aren't.", "Has you got a clock? No, we hasn't."],
+        correct: 0
+      }
+    ]
+  },
+  {
+    name: '连词成句',
+    type: 'arrange',
+    questions: [
+      { words: ['I', 'have', 'got', 'a', 'computer', '.'], answer: 'I have got a computer.' },
+      { words: ['you', 'Have', 'got', 'a', 'bed', '?'], answer: 'Have you got a bed?' },
+      { words: ['We', 'got', "haven't", 'mirrors', '.'], answer: "We haven't got mirrors." },
+      { words: ['They', 'a', 'room', 'have', 'got', '.'], answer: 'They have got a room.' },
+      { words: ['lamp', 'got', 'a', 'Have', 'you', '?'], answer: 'Have you got a lamp?' },
+      { words: ['I', 'clock', 'a', "haven't", 'got', '.'], answer: "I haven't got a clock." }
+    ]
+  }
+];
+
+// ===== 状态 =====
+let currentLevel = 0;
+let currentQuestion = 0;
+let score = 0;
+let levelStars = [0, 0, 0];
+let answered = false;
+let answerWords = [];
+
+// ===== localStorage =====
+const STORAGE_KEY = 'mona-woods-pu-u4-sentence';
+
+function loadProgress() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (data && data.levelStars) {
+      levelStars = data.levelStars;
+    }
+  } catch(e) {}
+  updateLevelCards();
+}
+
+function saveProgress() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    levelStars: levelStars,
+    timestamp: Date.now()
+  }));
+}
+
+function getTotalStars() {
+  return levelStars.reduce((a, b) => a + b, 0);
+}
+
+function updateLevelCards() {
+  document.getElementById('home-stars').textContent = '⭐'.repeat(Math.min(3, getTotalStars()));
+  for (let i = 0; i < 3; i++) {
+    const stars = levelStars[i];
+    const el = document.getElementById('level-' + i + '-stars');
+    if (el) el.textContent = stars > 0 ? '⭐'.repeat(stars) : '';
+    
+    const card = document.getElementById('level-' + i + '-card');
+    if (card) {
+      if (stars > 0) card.classList.add('completed');
+    }
+  }
+}
+
+// ===== 导航 =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goHome() {
+  showPage('home-page');
+  updateLevelCards();
+}
+
+function startGame() {
+  startLevel(0);
+}
+
+function startLevel(levelIdx) {
+  currentLevel = levelIdx;
+  currentQuestion = 0;
+  score = 0;
+  answered = false;
+  
+  document.getElementById('game-level-badge').textContent = '第 ' + (levelIdx + 1) + ' 关 · ' + LEVELS[levelIdx].name;
+  document.getElementById('game-stars').textContent = '⭐ 0';
+  document.getElementById('progress-fill').style.width = '0%';
+  
+  showPage('game-page');
+  loadQuestion();
+}
+
+// ===== 出题 =====
+function loadQuestion() {
+  answered = false;
+  const level = LEVELS[currentLevel];
+  const q = level.questions[currentQuestion];
+  const total = level.questions.length;
+  
+  document.getElementById('progress-fill').style.width = ((currentQuestion) / total * 100) + '%';
+  document.getElementById('next-btn').classList.remove('show');
+  
+  const qContainer = document.getElementById('question-container');
+  const optContainer = document.getElementById('options-container');
+  const ansContainer = document.getElementById('answer-container');
+  const poolContainer = document.getElementById('wordpool-container');
+  
+  optContainer.innerHTML = '';
+  ansContainer.innerHTML = '';
+  poolContainer.innerHTML = '';
+  
+  if (level.type === 'yesno') {
+    qContainer.innerHTML = `
+      <div class="question-box">
+        <div class="question-hint">句子和图片一致吗？</div>
+        <div class="big-emoji">${q.emoji}</div>
+        <div class="question-text">${q.sentence}</div>
+        <button class="sound-btn" onclick="playSound('${q.sentence.replace(/'/g, "\\'")}')">🔊</button>
+      </div>
+    `;
+    optContainer.innerHTML = `
+      <div class="yesno-options">
+        <button class="yesno-btn yes" onclick="checkYesNo(true, this)">✅ Yes</button>
+        <button class="yesno-btn no" onclick="checkYesNo(false, this)">❌ No</button>
+      </div>
+    `;
+  } else if (level.type === 'choice') {
+    qContainer.innerHTML = `
+      <div class="question-box">
+        <div class="chinese-hint">选择正确的英文句子</div>
+        <div class="chinese-display">${q.chinese}</div>
+      </div>
+    `;
+    let optionsHtml = '<div class="options-grid">';
+    q.options.forEach((opt, i) => {
+      optionsHtml += `<button class="option-btn" onclick="checkChoice(${i}, this)">${opt}</button>`;
+    });
+    optionsHtml += '</div>';
+    optContainer.innerHTML = optionsHtml;
+  } else if (level.type === 'arrange') {
+    answerWords = [];
+    qContainer.innerHTML = `
+      <div class="question-box">
+        <div class="chinese-hint">连词成句，点击下方单词组成正确句子</div>
+        <div class="question-text" style="color: rgba(255,255,255,0.4); font-size: 14px;">提示：注意大小写和标点</div>
+      </div>
+    `;
+    ansContainer.innerHTML = '<div class="answer-area" id="answer-area"></div>';
+    
+    // 打乱单词
+    const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+    let poolHtml = '<div class="word-pool">';
+    shuffled.forEach((w, i) => {
+      poolHtml += `<span class="word-chip" data-word="${w}" data-idx="${i}" onclick="addWord(this)">${w}</span>`;
+    });
+    poolHtml += '</div>';
+    poolContainer.innerHTML = poolHtml;
+  }
+}
+
+// ===== 答题判断 =====
+function checkYesNo(userAnswer, btn) {
+  if (answered) return;
+  answered = true;
+  
+  const q = LEVELS[currentLevel].questions[currentQuestion];
+  const btns = btn.parentElement.querySelectorAll('.yesno-btn');
+  
+  if (userAnswer === q.answer) {
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('game-stars').textContent = '⭐ ' + score;
+    playSound(q.sentence);
+  } else {
+    btn.classList.add('wrong');
+    btns.forEach(b => {
+      if ((b.classList.contains('yes') && q.answer === true) ||
+          (b.classList.contains('no') && q.answer === false)) {
+        b.classList.add('correct');
+      }
+    });
+  }
+  
+  setTimeout(showNextBtn, 800);
+}
+
+function checkChoice(idx, btn) {
+  if (answered) return;
+  answered = true;
+  
+  const q = LEVELS[currentLevel].questions[currentQuestion];
+  const btns = btn.parentElement.querySelectorAll('.option-btn');
+  
+  if (idx === q.correct) {
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('game-stars').textContent = '⭐ ' + score;
+    playSound(q.options[q.correct]);
+  } else {
+    btn.classList.add('wrong');
+    btns[q.correct].classList.add('correct');
+  }
+  
+  btns.forEach(b => b.disabled = true);
+  setTimeout(showNextBtn, 800);
+}
+
+// ===== 连词成句 =====
+function addWord(el) {
+  if (answered) return;
+  if (el.classList.contains('used')) return;
+  
+  const word = el.dataset.word;
+  answerWords.push(word);
+  el.classList.add('used');
+  
+  renderAnswer();
+  
+  const q = LEVELS[currentLevel].questions[currentQuestion];
+  if (answerWords.length === q.words.length) {
+    checkArrange();
+  }
+}
+
+function removeWord(idx) {
+  if (answered) return;
+  const word = answerWords[idx];
+  answerWords.splice(idx, 1);
+  
+  // 恢复单词池
+  const pool = document.querySelectorAll('.word-chip');
+  pool.forEach(chip => {
+    if (chip.dataset.word === word && chip.classList.contains('used')) {
+      chip.classList.remove('used');
+      // 只恢复第一个匹配的
+      return false;
+    }
+  });
+  
+  renderAnswer();
+}
+
+function renderAnswer() {
+  const area = document.getElementById('answer-area');
+  if (!area) return;
+  
+  area.classList.toggle('filled', answerWords.length > 0);
+  
+  if (answerWords.length === 0) {
+    area.innerHTML = '<span style="color: rgba(255,255,255,0.3); font-size: 14px;">点击下方单词开始组句...</span>';
+    return;
+  }
+  
+  let html = '';
+  answerWords.forEach((w, i) => {
+    html += `<span class="word-chip in-answer" onclick="removeWord(${i})">${w}</span>`;
+  });
+  area.innerHTML = html;
+}
+
+function checkArrange() {
+  if (answered) return;
+  answered = true;
+  
+  const q = LEVELS[currentLevel].questions[currentQuestion];
+  const userAnswer = answerWords.join(' ');
+  const area = document.getElementById('answer-area');
+  
+  if (userAnswer === q.answer) {
+    area.style.borderColor = '#2DD4BF';
+    area.style.background = 'rgba(45, 212, 191, 0.15)';
+    score++;
+    document.getElementById('game-stars').textContent = '⭐ ' + score;
+    playSound(q.answer);
+  } else {
+    area.style.borderColor = '#ff6b6b';
+    area.style.background = 'rgba(255, 107, 107, 0.1)';
+    // 显示正确答案
+    const correctDiv = document.createElement('div');
+    correctDiv.style.cssText = 'color: #2DD4BF; font-size: 18px; font-weight: 600; margin-top: 12px; text-align: center; width: 100%;';
+    correctDiv.textContent = '正确答案：' + q.answer;
+    area.appendChild(correctDiv);
+    playSound(q.answer);
+  }
+  
+  setTimeout(showNextBtn, 1200);
+}
+
+// ===== 下一题 =====
+function showNextBtn() {
+  const btn = document.getElementById('next-btn');
+  const level = LEVELS[currentLevel];
+  
+  if (currentQuestion >= level.questions.length - 1) {
+    btn.textContent = '查看结果 🎯';
+  } else {
+    btn.textContent = '下一题 →';
+  }
+  
+  btn.classList.add('show');
+}
+
+function nextQuestion() {
+  const level = LEVELS[currentLevel];
+  
+  if (currentQuestion >= level.questions.length - 1) {
+    showResult();
+    return;
+  }
+  
+  currentQuestion++;
+  loadQuestion();
+}
+
+// ===== 结果页 =====
+function showResult() {
+  const level = LEVELS[currentLevel];
+  const total = level.questions.length;
+  const stars = score >= total ? 3 : score >= total * 0.7 ? 2 : score >= total * 0.5 ? 1 : 0;
+  
+  if (stars > levelStars[currentLevel]) {
+    levelStars[currentLevel] = stars;
+    saveProgress();
+  }
+  
+  document.getElementById('result-emoji').textContent = stars === 3 ? '🏆' : stars >= 2 ? '🎉' : stars >= 1 ? '👍' : '💪';
+  document.getElementById('result-title').textContent = 
+    stars === 3 ? '完美通关！' : stars >= 2 ? '做得不错！' : stars >= 1 ? '继续加油！' : '别灰心，再试一次！';
+  document.getElementById('result-stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+  document.getElementById('result-desc').textContent = `第 ${currentLevel + 1} 关 · ${level.name} — 答对 ${score} / ${total} 题`;
+  
+  const nextBtn = document.getElementById('next-level-btn');
+  if (currentLevel < LEVELS.length - 1) {
+    nextBtn.style.display = 'inline-block';
+  } else {
+    nextBtn.style.display = 'none';
+  }
+  
+  showPage('result-page');
+}
+
+function retryLevel() {
+  startLevel(currentLevel);
+}
+
+function nextLevel() {
+  if (currentLevel < LEVELS.length - 1) {
+    startLevel(currentLevel + 1);
+  } else {
+    goHome();
+  }
+}
+
+// ===== 语音 =====
+function playSound(text) {
+  try {
+    const audio = new Audio();
+    const encoded = encodeURIComponent(text);
+    audio.src = 'https://dict.youdao.com/dictvoice?audio=' + encoded + '&type=1';
+    audio.play();
+  } catch(e) {
+    // fallback
+    if ('speechSynthesis' in window) {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = 0.9;
+      speechSynthesis.speak(u);
+    }
+  }
+}
+
+// ===== 初始化 =====
+loadProgress();
+</script>
+</body>
+</html>
