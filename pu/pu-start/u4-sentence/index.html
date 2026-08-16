@@ -1009,20 +1009,40 @@ function nextLevel() {
 
 // ===== 语音 =====
 function playSound(text) {
-  try {
-    const audio = new Audio();
-    const encoded = encodeURIComponent(text);
-    audio.src = 'https://dict.youdao.com/dictvoice?audio=' + encoded + '&type=1';
-    audio.play();
-  } catch(e) {
-    // fallback
-    if ('speechSynthesis' in window) {
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'en-US';
-      u.rate = 0.9;
-      speechSynthesis.speak(u);
+  var sources = [
+    'https://dict.youdao.com/dictvoice?audio=ENCODED&type=1',
+    'https://fanyi.baidu.com/gettts?lan=en&text=ENCODED&spd=3&source=web'
+  ];
+  var idx = 0;
+  var tryNext = function() {
+    if (idx >= sources.length) {
+      // 最后兜底：浏览器语音
+      if ('speechSynthesis' in window) {
+        try { speechSynthesis.cancel(); } catch(e) {}
+        var u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        u.rate = 0.9;
+        speechSynthesis.speak(u);
+      }
+      return;
     }
-  }
+    var url = sources[idx].replace('ENCODED', encodeURIComponent(text));
+    idx++;
+    var audio = new Audio();
+    var p;
+    try {
+      audio.src = url;
+      p = audio.play();
+    } catch(e) {
+      tryNext();
+      return;
+    }
+    audio.onerror = function() { tryNext(); };
+    if (p && p.catch) {
+      p.catch(function() { tryNext(); });
+    }
+  };
+  tryNext();
 }
 
 // ===== 初始化 =====
