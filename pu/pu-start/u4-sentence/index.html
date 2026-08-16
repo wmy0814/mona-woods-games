@@ -654,7 +654,8 @@ function pick(arr, n) {
 
 function buildNounPhrase(noun, color) {
   if (color) {
-    return { phrase: noun.a + ' ' + color.word + ' ' + noun.word, colorWord: color.word };
+    var art = /^[aeiou]/i.test(color.word) ? 'an' : 'a';
+    return { phrase: art + ' ' + color.word + ' ' + noun.word, colorWord: color.word };
   }
   return { phrase: noun.a + ' ' + noun.word, colorWord: null };
 }
@@ -777,7 +778,7 @@ function generateLevel3() {
     var pronounWord = pat.type === 'question' ? (pat.pronoun === 'you' ? 'you' : 'I') : (pat.pronoun === 'I' ? 'I' : 'You');
     var haveWord = pat.type === 'question' ? 'Have' : 'have';
     var gotWord = 'got';
-    var articleWord = n.a;
+    var articleWord = color ? (/^[aeiou]/i.test(color.word) ? 'an' : 'a') : n.a;
     
     var wordList = [pronounWord, haveWord, gotWord, articleWord];
     var answer;
