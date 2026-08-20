@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>💬 Have Got 大挑战</title>
+<title>Have Got 连词成句大闯关</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -32,14 +32,9 @@ body {
   align-items: center;
   gap: 12px;
   border-bottom: 2px solid rgba(45, 212, 191, 0.2);
-  margin-bottom: 0;
 }
 
-.stars-display {
-  display: flex;
-  gap: 4px;
-  font-size: 18px;
-}
+.stars-display { display: flex; gap: 4px; font-size: 18px; }
 
 .level-badge {
   margin-left: auto;
@@ -60,19 +55,10 @@ body {
   border: none;
   cursor: pointer;
   transition: all .2s;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   font-family: inherit;
 }
-.home-btn:hover { background: rgba(255,255,255,0.2); }
 
-.page {
-  display: none;
-  flex: 1;
-  animation: fadeIn 0.5s ease;
-}
+.page { display: none; flex: 1; animation: fadeIn 0.4s ease; }
 .page.active { display: flex; flex-direction: column; }
 
 @keyframes fadeIn {
@@ -81,12 +67,8 @@ body {
 }
 
 .logo-img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin: 0 auto 16px;
-  display: block;
-  object-fit: cover;
+  width: 100px; height: 100px; border-radius: 50%;
+  margin: 0 auto 16px; display: block; object-fit: cover;
   box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
   animation: float 3s ease-in-out infinite;
 }
@@ -96,393 +78,166 @@ body {
 }
 
 .page-footer {
-  text-align: center;
-  color: rgba(255,255,255,0.4);
-  font-size: 12px;
-  padding: 20px 0 10px;
-  margin-top: auto;
+  text-align: center; color: rgba(255,255,255,0.4);
+  font-size: 12px; padding: 20px 0 10px; margin-top: auto;
 }
 
-#home-page {
-  align-items: center;
-  justify-content: flex-start;
-  text-align: center;
-  padding-top: 40px;
-}
+#home-page { align-items: center; justify-content: flex-start; text-align: center; padding-top: 40px; }
 
-.game-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 8px;
-  line-height: 1.3;
-}
+.game-title { font-size: 30px; font-weight: 700; color: white; margin-bottom: 8px; line-height: 1.3; }
 
 .game-subtitle {
-  font-size: 16px;
-  color: #2DD4BF;
-  margin-bottom: 30px;
-  background: rgba(45, 212, 191, 0.1);
-  padding: 8px 20px;
-  border-radius: 20px;
+  font-size: 15px; color: #2DD4BF; margin-bottom: 26px;
+  background: rgba(45, 212, 191, 0.1); padding: 8px 20px; border-radius: 20px;
 }
 
 .start-btn {
-  background: #2DD4BF;
-  color: #0F2B46;
-  border: none;
-  padding: 16px 50px;
-  font-size: 18px;
-  font-weight: 600;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all .2s;
-  font-family: inherit;
-  margin-bottom: 30px;
+  background: #2DD4BF; color: #0F2B46; border: none;
+  padding: 14px 46px; font-size: 17px; font-weight: 600; border-radius: 30px;
+  cursor: pointer; font-family: inherit; margin-bottom: 26px; transition: all .2s;
 }
-.start-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
-.start-btn:active { transform: translateY(0); }
+.start-btn:active { transform: scale(0.96); }
 
 .level-select {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  width: 100%;
-  max-width: 600px;
-  padding: 0 20px;
-  margin-bottom: 20px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  width: 100%; max-width: 620px; padding: 0 20px; margin-bottom: 20px;
 }
 
 .level-card {
-  background: rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 20px 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: all .2s;
-  border: 2px solid transparent;
+  background: rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 10px;
+  text-align: center; cursor: pointer; transition: all .2s; border: 2px solid transparent;
 }
-.level-card:hover { background: rgba(255,255,255,0.15); }
-.level-card.locked { opacity: 0.4; cursor: not-allowed; }
-.level-card.completed { border-color: #2DD4BF; }
+.level-card.playing { border-color: #2DD4BF; }
+.level-card.locked { opacity: 0.35; cursor: not-allowed; }
+.level-card.completed { border-color: rgba(45,212,191,0.5); }
 
-.level-icon { font-size: 32px; margin-bottom: 6px; }
+.level-icon { font-size: 30px; margin-bottom: 6px; }
 .level-name { font-size: 14px; color: white; font-weight: 600; margin-bottom: 4px; }
-.level-num { font-size: 11px; color: #888; }
+.level-num { font-size: 11px; color: #8aa; }
 .level-stars-mini { font-size: 12px; margin-top: 3px; }
 
 .game-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 20px;
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: flex-start; padding: 18px;
 }
 
 .question-box {
-  background: rgba(255,255,255,0.08);
-  border-radius: 16px;
-  padding: 24px;
-  width: 100%;
-  max-width: 700px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.question-text {
-  font-size: 20px;
-  color: white;
-  margin-bottom: 12px;
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-.question-hint {
-  font-size: 15px;
-  color: rgba(255,255,255,0.6);
-  margin-bottom: 10px;
-}
-
-.big-emoji {
-  font-size: 120px;
-  margin-bottom: 16px;
-  display: block;
-  line-height: 1.2;
-}
-
-.sound-btn {
-  background: #2DD4BF;
-  color: #0F2B46;
-  border: none;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  font-size: 24px;
-  cursor: pointer;
-  transition: all .2s;
-  margin: 8px;
-}
-.sound-btn:hover { transform: scale(1.05); }
-.sound-btn:active { transform: scale(0.95); }
-.sound-btn.playing { animation: pulse 0.5s ease infinite; }
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-.options-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  width: 100%;
-  max-width: 700px;
-  margin-bottom: 20px;
-}
-
-.option-btn {
-  background: rgba(255,255,255,0.08);
-  border: 2px solid rgba(255,255,255,0.15);
-  border-radius: 12px;
-  padding: 18px 15px;
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  transition: all .2s;
-  font-family: inherit;
-  text-align: center;
-  min-height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.option-btn:hover { border-color: #2DD4BF; background: rgba(45, 212, 191, 0.1); }
-.option-btn.correct { 
-  border-color: #2DD4BF; 
-  background: rgba(45, 212, 191, 0.25);
-  color: #2DD4BF;
-  animation: correctBounce 0.4s ease;
-}
-.option-btn.wrong {
-  border-color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.2);
-  color: #ff8a8a;
-  animation: shake 0.4s ease;
-}
-.option-btn:disabled { cursor: not-allowed; }
-
-@keyframes correctBounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
-}
-
-.progress-bar {
-  width: 100%;
-  max-width: 700px;
-  height: 12px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 6px;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #2DD4BF, #34d399);
-  border-radius: 6px;
-  transition: width 0.3s ease;
-  width: 0%;
-}
-
-.yesno-options {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  width: 100%;
-  max-width: 500px;
-  margin-bottom: 20px;
-}
-.yesno-btn {
-  flex: 1;
-  max-width: 200px;
-  padding: 24px 20px;
-  font-size: 28px;
-  font-weight: 700;
-  border-radius: 16px;
-  border: 3px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.08);
-  color: white;
-  cursor: pointer;
-  transition: all .2s;
-  font-family: inherit;
-}
-.yesno-btn:hover { transform: translateY(-2px); }
-.yesno-btn.yes:hover { border-color: #2DD4BF; background: rgba(45, 212, 191, 0.2); }
-.yesno-btn.no:hover { border-color: #ff6b6b; background: rgba(255, 107, 107, 0.15); }
-.yesno-btn.correct {
-  border-color: #2DD4BF;
-  background: rgba(45, 212, 191, 0.3);
-  color: #2DD4BF;
-  animation: correctBounce 0.4s ease;
-}
-.yesno-btn.wrong {
-  border-color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.3);
-  color: #ff8a8a;
-  animation: shake 0.4s ease;
+  background: rgba(255,255,255,0.08); border-radius: 16px; padding: 20px;
+  width: 100%; max-width: 700px; text-align: center; margin-bottom: 16px;
 }
 
 .chinese-display {
-  font-size: 42px;
-  color: white;
-  font-weight: 700;
-  margin-bottom: 8px;
-  text-shadow: 0 2px 12px rgba(45, 212, 191, 0.3);
-  line-height: 1.3;
+  font-size: 34px; color: white; font-weight: 700; margin-bottom: 8px;
+  text-shadow: 0 2px 12px rgba(45, 212, 191, 0.3); line-height: 1.3;
 }
-.chinese-hint {
-  font-size: 15px;
-  color: rgba(255,255,255,0.5);
-  margin-bottom: 16px;
+.chinese-hint { font-size: 14px; color: rgba(255,255,255,0.55); margin-bottom: 12px; }
+
+.sound-btn {
+  background: #2DD4BF; color: #0F2B46; border: none;
+  width: 54px; height: 54px; border-radius: 50%; font-size: 22px; cursor: pointer; margin: 6px;
 }
+.sound-btn:active { transform: scale(0.9); }
+
+.options-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+  width: 100%; max-width: 700px; margin-bottom: 14px;
+}
+
+.option-btn {
+  background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 12px; padding: 16px 12px; font-size: 17px; font-weight: 600;
+  color: white; cursor: pointer; font-family: inherit; text-align: center; min-height: 62px;
+  display: flex; align-items: center; justify-content: center; transition: all .2s;
+}
+.option-btn.correct { border-color: #2DD4BF; background: rgba(45,212,191,0.25); color: #2DD4BF; }
+.option-btn.wrong { border-color: #ff6b6b; background: rgba(255,107,107,0.2); color: #ff8a8a; }
+.option-btn:disabled { cursor: not-allowed; }
+
+.progress-bar {
+  width: 100%; max-width: 700px; height: 12px; background: rgba(255,255,255,0.1);
+  border-radius: 6px; margin-bottom: 14px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, #2DD4BF, #34d399);
+  border-radius: 6px; transition: width 0.3s ease; width: 0%;
+}
+
+.yesno-options { display: flex; gap: 18px; justify-content: center; width: 100%; max-width: 500px; margin-bottom: 16px; }
+.yesno-btn {
+  flex: 1; max-width: 190px; padding: 22px 18px; font-size: 40px; font-weight: 700;
+  border-radius: 16px; border: 3px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08); color: white; cursor: pointer; font-family: inherit; transition: all .2s;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.yesno-btn .yn-label { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); }
+.yesno-btn.correct { border-color: #2DD4BF; background: rgba(45,212,191,0.28); }
+.yesno-btn.wrong { border-color: #ff6b6b; background: rgba(255,107,107,0.28); }
 
 .answer-area {
-  min-height: 80px;
-  background: rgba(255,255,255,0.06);
-  border: 2px dashed rgba(255,255,255,0.2);
-  border-radius: 12px;
-  padding: 16px;
-  width: 100%;
-  max-width: 700px;
-  margin-bottom: 16px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-content: flex-start;
+  min-height: 70px; background: rgba(255,255,255,0.06); border: 2px dashed rgba(255,255,255,0.22);
+  border-radius: 12px; padding: 14px; width: 100%; max-width: 700px; margin-bottom: 14px;
+  display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; align-items: center;
 }
-.answer-area.filled {
-  border-style: solid;
-  border-color: rgba(45, 212, 191, 0.4);
-}
+.answer-area.filled { border-style: solid; border-color: rgba(45,212,191,0.4); }
+.answer-area.right { border-color: #2DD4BF; background: rgba(45,212,191,0.14); }
+.answer-area.wrong { border-color: #ff6b6b; background: rgba(255,107,107,0.1); }
+
 .word-pool {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  width: 100%;
-  max-width: 700px;
-  margin-bottom: 16px;
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  width: 100%; max-width: 700px; margin-bottom: 14px;
 }
 .word-chip {
-  background: rgba(45, 212, 191, 0.2);
-  border: 2px solid rgba(45, 212, 191, 0.4);
-  color: white;
-  padding: 10px 18px;
-  border-radius: 20px;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .2s;
-  font-family: inherit;
+  background: rgba(45,212,191,0.2); border: 2px solid rgba(45,212,191,0.4); color: white;
+  padding: 9px 16px; border-radius: 20px; font-size: 17px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all .15s;
 }
-.word-chip:hover { background: rgba(45, 212, 191, 0.35); transform: translateY(-2px); }
-.word-chip.used { opacity: 0.3; cursor: not-allowed; transform: none; }
-.word-chip.in-answer {
-  background: rgba(45, 212, 191, 0.25);
-  border-color: #2DD4BF;
-}
+.word-chip:hover { background: rgba(45,212,191,0.35); }
+.word-chip.used { opacity: 0.25; cursor: not-allowed; }
+.word-chip.in-answer { background: rgba(45,212,191,0.28); border-color: #2DD4BF; }
 
-.result-page {
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 40px 20px;
+.fill-slot {
+  display: inline-flex; min-width: 70px; min-height: 44px; align-items: center; justify-content: center;
+  background: rgba(45,212,191,0.15); border: 2px dashed #2DD4BF; border-radius: 10px;
+  font-size: 18px; font-weight: 700; color: #2DD4BF; cursor: pointer; margin: 0 4px; padding: 4px 10px;
+  transition: all .15s; vertical-align: middle;
 }
-.result-emoji {
-  font-size: 80px;
-  margin-bottom: 20px;
-  animation: bounce 1s ease infinite;
-}
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-.result-title { font-size: 32px; color: white; font-weight: 700; margin-bottom: 12px; }
-.result-stars { font-size: 40px; margin-bottom: 16px; }
-.result-desc { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 30px; }
-.result-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-.result-btn {
-  padding: 14px 30px;
-  border-radius: 25px;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all .2s;
-  font-family: inherit;
-}
-.result-btn.primary { background: #2DD4BF; color: #0F2B46; }
-.result-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
-.result-btn.secondary {
-  background: rgba(255,255,255,0.1);
-  color: white;
-  border: 2px solid rgba(255,255,255,0.2);
-}
-.result-btn.secondary:hover { background: rgba(255,255,255,0.2); }
+.fill-slot.filled { border-style: solid; background: rgba(45,212,191,0.25); }
+.fill-slot.right { border-color: #2DD4BF; background: rgba(45,212,191,0.3); }
+.fill-slot.wrong { border-color: #ff6b6b; background: rgba(255,107,107,0.25); color: #ff8a8a; }
+
+.sentence-line { font-size: 20px; color: white; font-weight: 600; line-height: 2.4; }
 
 .next-btn {
-  background: #2DD4BF;
-  color: #0F2B46;
-  border: none;
-  padding: 14px 40px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: all .2s;
-  font-family: inherit;
-  opacity: 0;
-  pointer-events: none;
+  background: #2DD4BF; color: #0F2B46; border: none; padding: 13px 40px;
+  font-size: 16px; font-weight: 600; border-radius: 25px; cursor: pointer; font-family: inherit;
+  opacity: 0; pointer-events: none; transition: all .2s; margin-top: 4px;
 }
-.next-btn.show {
-  opacity: 1;
-  pointer-events: auto;
-  animation: fadeIn 0.3s ease;
-}
-.next-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
+.next-btn.show { opacity: 1; pointer-events: auto; }
+.next-btn:active { transform: scale(0.96); }
 
-.check-btn {
-  background: #2DD4BF;
-  color: #0F2B46;
-  border: none;
-  padding: 14px 40px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: all .2s;
-  font-family: inherit;
-  margin-top: 10px;
+.feedback-tip { font-size: 16px; font-weight: 600; margin-top: 6px; min-height: 22px; }
+
+.result-page { align-items: center; justify-content: center; text-align: center; padding: 40px 20px; }
+.result-emoji { font-size: 70px; margin-bottom: 16px; }
+.result-title { font-size: 30px; color: white; font-weight: 700; margin-bottom: 10px; }
+.result-stars { font-size: 38px; margin-bottom: 14px; }
+.result-desc { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 26px; }
+.result-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.result-btn {
+  padding: 13px 28px; border-radius: 25px; font-size: 15px; font-weight: 600;
+  border: none; cursor: pointer; font-family: inherit; transition: all .2s;
 }
-.check-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3); }
-.check-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.result-btn.primary { background: #2DD4BF; color: #0F2B46; }
+.result-btn.secondary { background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.2); }
+.result-btn:active { transform: scale(0.96); }
 
 @media (max-width: 600px) {
-  .game-title { font-size: 26px; }
-  .big-emoji { font-size: 80px; }
+  .game-title { font-size: 25px; }
   .chinese-display { font-size: 28px; }
-  .option-btn { font-size: 15px; padding: 14px 10px; min-height: 60px; }
-  .question-text { font-size: 18px; }
-  .yesno-btn { font-size: 22px; padding: 18px 16px; }
-  .word-chip { font-size: 16px; padding: 8px 14px; }
-  .level-select { grid-template-columns: repeat(2, 1fr); }
+  .option-btn { font-size: 15px; padding: 13px 10px; min-height: 56px; }
+  .yesno-btn { font-size: 34px; }
+  .word-chip { font-size: 16px; padding: 8px 13px; }
+  .sentence-line { font-size: 18px; }
 }
 </style>
 </head>
@@ -492,51 +247,16 @@ body {
   <div id="home-page" class="page active">
     <div class="top-bar">
       <div class="stars-display" id="home-stars">⭐⭐⭐</div>
-      <div class="level-badge">句型综合</div>
+      <div class="level-badge">连词成句闯关</div>
     </div>
-    
-    <div style="padding-top: 40px; text-align: center;">
-      <img src="../../logo.png" alt="Mona Woods" class="logo-img" onerror="this.style.display='none'">
-      <h1 class="game-title">💬 Have Got 大挑战</h1>
-      <p class="game-subtitle">肯定句 · 否定句 · 疑问句 综合练习</p>
-      
+    <div style="padding-top: 36px; text-align: center;">
+      <img src="https://wmy0814.github.io/mona-woods-games/logo.png" alt="Mona Woods" class="logo-img" onerror="this.style.display='none'">
+      <h1 class="game-title">💬 Have Got 连词成句大闯关</h1>
+      <p class="game-subtitle">肯定 · 否定 · 疑问 · 填空 综合练习</p>
       <button class="start-btn" onclick="startGame()">开始闯关 🚀</button>
-      
-      <div class="level-select" id="level-select">
-        <div class="level-card" id="level-0-card" onclick="startLevel(0)">
-          <div class="level-icon">👍</div>
-          <div class="level-name">我有/我没有</div>
-          <div class="level-num">第 1 关</div>
-          <div class="level-stars-mini" id="level-0-stars"></div>
-        </div>
-        <div class="level-card" id="level-1-card" onclick="startLevel(1)">
-          <div class="level-icon">❓</div>
-          <div class="level-name">你有…吗？</div>
-          <div class="level-num">第 2 关</div>
-          <div class="level-stars-mini" id="level-1-stars"></div>
-        </div>
-        <div class="level-card" id="level-2-card" onclick="startLevel(2)">
-          <div class="level-icon">🎯</div>
-          <div class="level-name">句型选择</div>
-          <div class="level-num">第 3 关</div>
-          <div class="level-stars-mini" id="level-2-stars"></div>
-        </div>
-        <div class="level-card" id="level-3-card" onclick="startLevel(3)">
-          <div class="level-icon">🧩</div>
-          <div class="level-name">连词成句</div>
-          <div class="level-num">第 4 关</div>
-          <div class="level-stars-mini" id="level-3-stars"></div>
-        </div>
-        <div class="level-card" id="level-4-card" onclick="startLevel(4)">
-          <div class="level-icon">🏠</div>
-          <div class="level-name">房间大挑战</div>
-          <div class="level-num">第 5 关</div>
-          <div class="level-stars-mini" id="level-4-stars"></div>
-        </div>
-      </div>
+      <div class="level-select" id="level-select"></div>
     </div>
-    
-    <div class="page-footer">Mona Woods English · Have Got 综合闯关</div>
+    <div class="page-footer">Mona Woods English · Have Got 连词成句大闯关</div>
   </div>
 
   <!-- 游戏页 -->
@@ -546,15 +266,12 @@ body {
       <div class="stars-display" id="game-stars">⭐ 0</div>
       <div class="level-badge" id="game-level-badge">第 1 关</div>
     </div>
-    
     <div class="game-area">
       <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-      
       <div id="question-container"></div>
       <div id="options-container"></div>
       <div id="answer-container"></div>
       <div id="wordpool-container"></div>
-      
       <button class="next-btn" id="next-btn" onclick="nextQuestion()">下一题 →</button>
     </div>
   </div>
@@ -564,7 +281,7 @@ body {
     <div class="result-emoji" id="result-emoji">🎉</div>
     <h2 class="result-title" id="result-title">太棒了！</h2>
     <div class="result-stars" id="result-stars">⭐⭐⭐</div>
-    <p class="result-desc" id="result-desc">你完成了所有挑战！</p>
+    <p class="result-desc" id="result-desc"></p>
     <div class="result-btns">
       <button class="result-btn primary" onclick="retryLevel()">再玩一次 🔄</button>
       <button class="result-btn secondary" onclick="goHome()">返回首页 🏠</button>
@@ -574,42 +291,97 @@ body {
 </div>
 
 <script>
-// ============ 词库 ============
-const NOUNS = [
-  { word: 'bird', emoji: '🐦', a: 'a' },
-  { word: 'bag', emoji: '🎒', a: 'a' },
-  { word: 'pencil', emoji: '✏️', a: 'a' },
-  { word: 'apple', emoji: '🍎', a: 'an' },
-  { word: 'carrot', emoji: '🥕', a: 'a' },
-  { word: 'watermelon', emoji: '🍉', a: 'a' },
-  { word: 'banana', emoji: '🍌', a: 'a' },
-  { word: 'grapes', emoji: '🍇', a: '' },
-  { word: 'beans', emoji: '🫘', a: '' },
-  { word: 'burger', emoji: '🍔', a: 'a' },
-  { word: 'egg', emoji: '🥚', a: 'an' },
-  { word: 'chair', emoji: '🪑', a: 'a' },
-  { word: 'bookcase', emoji: '📚', a: 'a' },
-  { word: 'cupboard', emoji: '🗄️', a: 'a' },
-  { word: 'table', emoji: '🪑', a: 'a' },
-  { word: 'orange', emoji: '🍊', a: 'an' },
-  { word: 'bed', emoji: '🛏️', a: 'a' },
-  { word: 'clock', emoji: '🕐', a: 'a' },
-  { word: 'computer', emoji: '💻', a: 'a' },
-  { word: 'lamp', emoji: '💡', a: 'a' },
-  { word: 'mirror', emoji: '🪞', a: 'a' },
-  { word: 'book', emoji: '📖', a: 'a' }
+// ==================== 题库 ====================
+// 第1关：肯定句连词成句
+const L1_RAW = [
+  "I have got a bird.", "I have got a red bag.", "I have got a blue pencil.",
+  "I have got a green apple.", "I have got a yellow chair.", "I have got a pink lamp.",
+  "You have got a banana.", "You have got a watermelon.", "You have got some grapes.",
+  "You have got a burger.", "You have got an egg.", "You have got an orange.",
+  "We have got a bookcase.", "We have got a blue cupboard.", "We have got a red table.",
+  "We have got a computer.", "We have got a green lamp.", "We have got a purple mirror.",
+  "They have got a bedroom.", "They have got a bathroom.", "They have got a kitchen.",
+  "They have got a living room.", "They have got a dining room.", "They have got some beans.",
+  "They have got a red bed.", "We have got a yellow bird.", "They have got a book.",
+  "I have got a purple bag."
+];
+const L1_ZH = {
+  "I have got a bird.": "我有一只鸟。", "I have got a red bag.": "我有一个红色的书包。",
+  "I have got a blue pencil.": "我有一支蓝色的铅笔。", "I have got a green apple.": "我有一个绿色的苹果。",
+  "I have got a yellow chair.": "我有一把黄色的椅子。", "I have got a pink lamp.": "我有一盏粉色的台灯。",
+  "You have got a banana.": "你有一根香蕉。", "You have got a watermelon.": "你有一个西瓜。",
+  "You have got some grapes.": "你有一些葡萄。", "You have got a burger.": "你有一个汉堡。",
+  "You have got an egg.": "你有一个鸡蛋。", "You have got an orange.": "你有一个橙子。",
+  "We have got a bookcase.": "我们有一个书柜。", "We have got a blue cupboard.": "我们有一个蓝色的橱柜。",
+  "We have got a red table.": "我们有一张红色的桌子。", "We have got a computer.": "我们有一台电脑。",
+  "We have got a green lamp.": "我们有一盏绿色的台灯。", "We have got a purple mirror.": "我们有一面紫色的镜子。",
+  "They have got a bedroom.": "他们有一间卧室。", "They have got a bathroom.": "他们有一间浴室。",
+  "They have got a kitchen.": "他们有一间厨房。", "They have got a living room.": "他们有一间客厅。",
+  "They have got a dining room.": "他们有一间餐厅。", "They have got some beans.": "他们有一些豆子。",
+  "They have got a red bed.": "他们有一张红色的床。", "We have got a yellow bird.": "我们有一只黄色的鸟。",
+  "They have got a book.": "他们有一本书。", "I have got a purple bag.": "我有一个紫色的书包。"
+};
+
+// 第2关：否定句连词成句
+const L2_RAW = [
+  "I haven't got a bird.", "I haven't got a green apple.", "I haven't got a burger.",
+  "I haven't got a clock.", "You haven't got a blue pencil.", "You haven't got an egg.",
+  "You haven't got a watermelon.", "You haven't got some grapes.", "We haven't got a bookcase.",
+  "We haven't got a computer.", "We haven't got a red table.", "We haven't got a purple mirror.",
+  "They haven't got a bedroom.", "They haven't got a kitchen.", "They haven't got a dining room.",
+  "They haven't got a pink lamp.", "I haven't got a blue cupboard.", "You haven't got a yellow chair.",
+  "We haven't got an orange.", "They haven't got a red bed.", "I haven't got a red bag.",
+  "We haven't got some beans."
+];
+const L2_ZH = {
+  "I haven't got a bird.": "我没有鸟。", "I haven't got a green apple.": "我没有绿苹果。",
+  "I haven't got a burger.": "我没有汉堡。", "I haven't got a clock.": "我没有钟。",
+  "You haven't got a blue pencil.": "你没有蓝色的铅笔。", "You haven't got an egg.": "你没有鸡蛋。",
+  "You haven't got a watermelon.": "你没有西瓜。", "You haven't got some grapes.": "你没有葡萄。",
+  "We haven't got a bookcase.": "我们没有书柜。", "We haven't got a computer.": "我们没有电脑。",
+  "We haven't got a red table.": "我们没有红色的桌子。", "We haven't got a purple mirror.": "我们没有紫色的镜子。",
+  "They haven't got a bedroom.": "他们没有卧室。", "They haven't got a kitchen.": "他们没有厨房。",
+  "They haven't got a dining room.": "他们没有餐厅。", "They haven't got a pink lamp.": "他们没有粉色的台灯。",
+  "I haven't got a blue cupboard.": "我没有蓝色的橱柜。", "You haven't got a yellow chair.": "你没有黄色的椅子。",
+  "We haven't got an orange.": "我们没有橙子。", "They haven't got a red bed.": "他们没有红色的床。",
+  "I haven't got a red bag.": "我没有红色的书包。", "We haven't got some beans.": "我们没有豆子。"
+};
+
+// 第3关：疑问句连词成句 + ✅❌回答
+const L3_RAW = [
+  "Have I got a bird?", "Have I got a green apple?", "Have you got a banana?",
+  "Have you got an egg?", "Have we got a bookcase?", "Have we got a computer?",
+  "Have we got a green lamp?", "Have they got a bedroom?", "Have they got a kitchen?",
+  "Have they got a dining room?", "Have I got a clock?", "Have you got a yellow chair?",
+  "Have we got a red table?", "Have they got a purple mirror?"
+];
+const L3_ZH = {
+  "Have I got a bird?": "我有一只鸟吗？", "Have I got a green apple?": "我有一个绿苹果吗？",
+  "Have you got a banana?": "你有一根香蕉吗？", "Have you got an egg?": "你有一个鸡蛋吗？",
+  "Have we got a bookcase?": "我们有一个书柜吗？", "Have we got a computer?": "我们有一台电脑吗？",
+  "Have we got a green lamp?": "我们有一盏绿色的台灯吗？", "Have they got a bedroom?": "他们有一间卧室吗？",
+  "Have they got a kitchen?": "他们有一间厨房吗？", "Have they got a dining room?": "他们有一间餐厅吗？",
+  "Have I got a clock?": "我有一个钟吗？", "Have you got a yellow chair?": "你有一把黄色的椅子吗？",
+  "Have we got a red table?": "我们有一张红色的桌子吗？", "Have they got a purple mirror?": "他们有一面紫色的镜子吗？"
+};
+
+// 第4关：选词填空
+const L4_DATA = [
+  { seg: ["I", "have", "got", "a", "red", "bag", "."], blanks: [1, 3], opts: ["have", "a", "an", "has", "haven't"], zh: "我有一个红色的书包。" },
+  { seg: ["You", "have", "got", "an", "egg", "."], blanks: [1, 3], opts: ["have", "a", "an", "has", "haven't"], zh: "你有一个鸡蛋。" },
+  { seg: ["We", "have", "got", "a", "blue", "cupboard", "."], blanks: [1, 3], opts: ["have", "a", "an", "has", "haven't"], zh: "我们有一个蓝色的橱柜。" },
+  { seg: ["They", "have", "got", "a", "bedroom", "."], blanks: [1, 3], opts: ["have", "a", "an", "has", "haven't"], zh: "他们有一间卧室。" },
+  { seg: ["I", "haven't", "got", "a", "bird", "."], blanks: [1, 3], opts: ["haven't", "a", "an", "have", "has"], zh: "我没有鸟。" },
+  { seg: ["You", "haven't", "got", "an", "orange", "."], blanks: [1, 3], opts: ["haven't", "a", "an", "have", "has"], zh: "你没有橙子。" },
+  { seg: ["We", "haven't", "got", "a", "computer", "."], blanks: [1, 3], opts: ["haven't", "a", "an", "have", "has"], zh: "我们没有电脑。" },
+  { seg: ["Have", "I", "got", "a", "green", "apple", "?"], blanks: [0, 3], opts: ["Have", "a", "an", "Has", "Hasn't"], zh: "我有一个绿苹果吗？" },
+  { seg: ["Have", "you", "got", "a", "banana", "?"], blanks: [0, 3], opts: ["Have", "a", "an", "Has", "Haven't"], zh: "你有一根香蕉吗？" },
+  { seg: ["Have", "they", "got", "a", "kitchen", "?"], blanks: [0, 3], opts: ["Have", "a", "an", "Has", "Hasn't"], zh: "他们有一间厨房吗？" },
+  { seg: ["Have", "we", "got", "a", "red", "table", "?"], blanks: [0, 3], opts: ["Have", "a", "an", "Has", "Haven't"], zh: "我们有一张红色的桌子吗？" },
+  { seg: ["They", "have", "got", "some", "grapes", "."], blanks: [1, 3], opts: ["have", "some", "a", "an", "hasn't"], zh: "他们有一些葡萄。" }
 ];
 
-const ROOMS = [
-  { word: 'bedroom', emoji: '🛏️', a: 'a' },
-  { word: 'bathroom', emoji: '🛁', a: 'a' },
-  { word: 'kitchen', emoji: '🍳', a: 'a' },
-  { word: 'living room', emoji: '🛋️', a: 'a' },
-  { word: 'dining room', emoji: '🍽️', a: 'a' }
-];
-
-const PRONOUNS = ['I', 'You'];
-
+// ==================== 工具函数 ====================
 function shuffle(arr) {
   var a = arr.slice();
   for (var i = a.length - 1; i > 0; i--) {
@@ -618,752 +390,467 @@ function shuffle(arr) {
   }
   return a;
 }
+function pick(arr, n) { return shuffle(arr).slice(0, n); }
 
-function pick(arr, n) {
-  return shuffle(arr).slice(0, n);
+function tokenize(sentence) {
+  return sentence.split(' ').reduce(function(acc, w) {
+    var m = w.match(/^([^.!?]+)([.!?])$/);
+    if (m) { acc.push(m[1]); acc.push(m[2]); }
+    else acc.push(w);
+    return acc;
+  }, []);
 }
 
-function articleFor(noun) {
-  // 复数名词(grapes/beans)不加a/an
-  if (noun.a === '') return '';
-  return noun.a + ' ';
+function buildArrange(en, zh, type) {
+  return { type: type, en: en, zh: zh, words: shuffle(tokenize(en)) };
 }
 
-// ============ 发音（三级兜底） ============
-let audioEngine = 'youdao'; // youdao / baidu / browser
-
-function playSound(text) {
-  text = text.replace(/[.?!]/g, '').trim();
-  var btn = event ? event.target : null;
-  if (btn) {
-    btn.classList.add('playing');
-    setTimeout(function(){ btn.classList.remove('playing'); }, 500);
-  }
-  
-  if (audioEngine === 'youdao') {
-    playYoudao(text, function() {
-      audioEngine = 'baidu';
-      playBaidu(text, function() {
-        audioEngine = 'browser';
-        playBrowser(text);
-      });
-    });
-  } else if (audioEngine === 'baidu') {
-    playBaidu(text, function() {
-      audioEngine = 'browser';
-      playBrowser(text);
-    });
-  } else {
-    playBrowser(text);
-  }
+function buildQuestion(en, zh) {
+  var ans = (Math.random() < 0.5);
+  return { type: 'question', en: en, zh: zh, words: shuffle(tokenize(en)), yesAnswer: ans };
 }
 
-function playYoudao(text, onFail) {
-  try {
-    var audio = new Audio('https://dict.youdao.com/dictvoice?type=2&audio=' + encodeURIComponent(text));
-    audio.onerror = function() { if (onFail) onFail(); };
-    audio.play().catch(function() { if (onFail) onFail(); });
-  } catch(e) { if (onFail) onFail(); }
-}
-
-function playBaidu(text, onFail) {
-  try {
-    var audio = new Audio('https://fanyi.baidu.com/gettts?lan=en&text=' + encodeURIComponent(text) + '&spd=4&source=web');
-    audio.onerror = function() { if (onFail) onFail(); };
-    audio.play().catch(function() { if (onFail) onFail(); });
-  } catch(e) { if (onFail) onFail(); }
-}
-
-function playBrowser(text) {
-  if ('speechSynthesis' in window) {
-    var u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US';
-    u.rate = 0.9;
-    speechSynthesis.speak(u);
-  }
-}
-
-// ============ 生成各关题目 ============
-
-// 第1关：看图判断 have got / haven't got
-function generateLevel1() {
-  var nouns = pick(NOUNS, 8);
-  var questions = [];
-  for (var i = 0; i < 8; i++) {
-    var n = nouns[i];
-    var isPositive = Math.random() > 0.5;
-    var pronoun = PRONOUNS[Math.floor(Math.random() * 2)];
-    var article = articleFor(n);
-    
-    // 图片展示的内容（有/没有）
-    var showHas = Math.random() > 0.5;
-    var displayEmoji = showHas ? n.emoji : '❌';
-    var displayLabel = showHas ? '' : '没有';
-    
-    var sentence;
-    if (isPositive) {
-      sentence = pronoun + ' have got ' + article + n.word + '.';
-    } else {
-      sentence = pronoun + " haven't got " + article + n.word + '.';
-    }
-    
-    // 正确与否：图里有+肯定句 = 对；图里没有+否定句 = 对
-    var isCorrect = (showHas === isPositive);
-    
-    questions.push({
-      emoji: n.emoji,
-      showHas: showHas,
-      sentence: sentence,
-      answer: isCorrect
-    });
-  }
-  return questions;
-}
-
-// 第2关：Have you got...? 问答 Yes/No
-function generateLevel2() {
-  var nouns = pick(NOUNS, 8);
-  var questions = [];
-  for (var i = 0; i < 8; i++) {
-    var n = nouns[i];
-    var article = articleFor(n);
-    var question = 'Have you got ' + article + n.word + '?';
-    var answerYes = Math.random() > 0.5;
-    var answerText = answerYes ? 'Yes, I have.' : "No, I haven't.";
-    
-    questions.push({
-      emoji: n.emoji,
-      question: question,
-      answer: answerText
-    });
-  }
-  return questions;
-}
-
-// 第3关：句型选择（中文→英文，覆盖肯定/否定/疑问）
-function generateLevel3() {
-  var questions = [];
-  var patterns = [
-    { type: 'pos', pronoun: 'I', chinese: '我有…', structure: 'positive' },
-    { type: 'pos', pronoun: 'You', chinese: '你有…', structure: 'positive' },
-    { type: 'neg', pronoun: 'I', chinese: '我没有…', structure: 'negative' },
-    { type: 'neg', pronoun: 'You', chinese: '你没有…', structure: 'negative' },
-    { type: 'q', pronoun: 'you', chinese: '你有…吗？', structure: 'question' },
-    { type: 'q', pronoun: 'I', chinese: '我有…吗？', structure: 'question' }
-  ];
-  
-  var shuffledPatterns = shuffle(patterns);
-  var nouns = pick(NOUNS, 8);
-  
-  for (var i = 0; i < 8; i++) {
-    var n = nouns[i];
-    var pat = shuffledPatterns[i % shuffledPatterns.length];
-    var article = articleFor(n);
-    var chineseText = pat.chinese.replace('…', n.word);
-    var correctSentence;
-    
-    if (pat.structure === 'positive') {
-      correctSentence = pat.pronoun + ' have got ' + article + n.word + '.';
-    } else if (pat.structure === 'negative') {
-      correctSentence = pat.pronoun + " haven't got " + article + n.word + '.';
-    } else {
-      var subj = pat.pronoun;
-      correctSentence = 'Have ' + subj + ' got ' + article + n.word + '?';
-    }
-    
-    // 生成3个错误选项
-    var wrongOptions = [];
-    
-    // 错1：肯定/否定搞反
-    if (pat.structure === 'positive') {
-      wrongOptions.push(pat.pronoun + " haven't got " + article + n.word + '.');
-    } else if (pat.structure === 'negative') {
-      wrongOptions.push(pat.pronoun + ' have got ' + article + n.word + '.');
-    } else {
-      // 疑问句错成肯定句
-      wrongOptions.push((pat.pronoun === 'I' ? 'I' : 'You') + ' have got ' + article + n.word + '.');
-    }
-    
-    // 错2：代词错
-    if (pat.structure === 'question') {
-      var wp = pat.pronoun === 'I' ? 'you' : 'I';
-      wrongOptions.push('Have ' + wp + ' got ' + article + n.word + '?');
-    } else {
-      var wp = pat.pronoun === 'I' ? 'You' : 'I';
-      if (pat.structure === 'positive') {
-        wrongOptions.push(wp + ' have got ' + article + n.word + '.');
-      } else {
-        wrongOptions.push(wp + " haven't got " + article + n.word + '.');
-      }
-    }
-    
-    // 错3：haven't 写成 not have / 语序错
-    if (pat.structure === 'negative') {
-      wrongOptions.push(pat.pronoun + ' not have got ' + article + n.word + '.');
-    } else if (pat.structure === 'positive') {
-      wrongOptions.push('Got ' + pat.pronoun + ' ' + article + n.word + '.');
-    } else {
-      wrongOptions.push('You have got ' + article + n.word + '?');
-    }
-    
-    var allOptions = shuffle([correctSentence].concat(wrongOptions.slice(0, 3)));
-    var correctIdx = allOptions.indexOf(correctSentence);
-    
-    questions.push({
-      chinese: chineseText,
-      options: allOptions,
-      correct: correctIdx
-    });
-  }
-  return questions;
-}
-
-// 第4关：连词成句（覆盖肯定/否定/疑问）
-function generateLevel4() {
-  var questions = [];
-  var patterns = [
-    { type: 'pos', pronoun: 'I' },
-    { type: 'pos', pronoun: 'You' },
-    { type: 'neg', pronoun: 'I' },
-    { type: 'neg', pronoun: 'You' },
-    { type: 'q', pronoun: 'you' },
-    { type: 'q', pronoun: 'I' }
-  ];
-  
-  var shuffledPatterns = shuffle(patterns);
-  var nouns = pick(NOUNS, 8);
-  
-  for (var i = 0; i < 8; i++) {
-    var n = nouns[i];
-    var pat = shuffledPatterns[i % shuffledPatterns.length];
-    var article = articleFor(n);
-    
-    var wordList = [];
-    var answer;
-    
-    if (pat.type === 'pos') {
-      wordList = [pat.pronoun, 'have', 'got', article.trim(), n.word, '.'];
-      answer = pat.pronoun + ' have got ' + article + n.word + '.';
-    } else if (pat.type === 'neg') {
-      wordList = [pat.pronoun, "haven't", 'got', article.trim(), n.word, '.'];
-      answer = pat.pronoun + " haven't got " + article + n.word + '.';
-    } else {
-      // 疑问句
-      wordList = ['Have', pat.pronoun === 'I' ? 'I' : 'you', 'got', article.trim(), n.word, '?'];
-      answer = 'Have ' + (pat.pronoun === 'I' ? 'I' : 'you') + ' got ' + article + n.word + '?';
-    }
-    
-    // 去掉空字符串（复数名词没有article）
-    wordList = wordList.filter(function(w) { return w !== ''; });
-    
-    questions.push({
-      words: shuffle(wordList),
-      answer: answer
-    });
-  }
-  return questions;
-}
-
-// 第5关：房间大挑战（房间词汇混合 have/haven't）
+// ==================== 关卡生成 ====================
+function generateLevel1() { return pick(L1_RAW, 8).map(function(s){ return buildArrange(s, L1_ZH[s], 'arrange'); }); }
+function generateLevel2() { return pick(L2_RAW, 8).map(function(s){ return buildArrange(s, L2_ZH[s], 'arrange'); }); }
+function generateLevel3() { return pick(L3_RAW, 8).map(function(s){ return buildQuestion(s, L3_ZH[s]); }); }
+function generateLevel4() { return pick(L4_DATA, 8).map(function(d){
+  var q = { type: 'fill', zh: d.zh, seg: d.seg, blanks: d.blanks, opts: shuffle(d.opts),
+    answers: d.blanks.map(function(i){ return d.seg[i]; }) };
+  return q;
+}); }
 function generateLevel5() {
-  var questions = [];
-  var allItems = NOUNS.concat(ROOMS.map(function(r) {
-    return { word: r.word, emoji: r.emoji, a: r.a };
+  var pool = [];
+  pool = pool.concat(pick(L1_RAW, 2).map(function(s){ return buildArrange(s, L1_ZH[s], 'arrange'); }));
+  pool = pool.concat(pick(L2_RAW, 2).map(function(s){ return buildArrange(s, L2_ZH[s], 'arrange'); }));
+  pool = pool.concat(pick(L3_RAW, 2).map(function(s){ return buildQuestion(s, L3_ZH[s]); }));
+  pool = pool.concat(pick(L4_DATA, 2).map(function(d){
+    return { type: 'fill', zh: d.zh, seg: d.seg, blanks: d.blanks, opts: shuffle(d.opts),
+      answers: d.blanks.map(function(i){ return d.seg[i]; }) };
   }));
-  
-  var patterns = [
-    { type: 'pos', chinese: '我有一个…' },
-    { type: 'neg', chinese: '我没有…' },
-    { type: 'q', chinese: '你有一个…吗？' },
-    { type: 'yesno', chinese: '看图判断' }
-  ];
-  
-  var itemsPool = pick(allItems, 8);
-  
-  for (var i = 0; i < 8; i++) {
-    var item = itemsPool[i];
-    var pat = patterns[i % patterns.length];
-    var article = item.a ? item.a + ' ' : '';
-    
-    if (pat.type === 'yesno') {
-      // 看图判断
-      var showHas = Math.random() > 0.5;
-      var isPos = Math.random() > 0.5;
-      var sentence = isPos 
-        ? "I have got " + article + item.word + "."
-        : "I haven't got " + article + item.word + ".";
-      questions.push({
-        subtype: 'yesno',
-        emoji: item.emoji,
-        showHas: showHas,
-        sentence: sentence,
-        answer: (showHas === isPos)
-      });
-    } else {
-      // 选择正确句型
-      var chineseText = pat.chinese.replace('…', item.word);
-      var correct;
-      
-      if (pat.type === 'pos') {
-        correct = 'I have got ' + article + item.word + '.';
-      } else if (pat.type === 'neg') {
-        correct = "I haven't got " + article + item.word + '.';
-      } else {
-        correct = 'Have you got ' + article + item.word + '?';
-      }
-      
-      var wrongs = [];
-      if (pat.type === 'pos') {
-        wrongs.push("I haven't got " + article + item.word + '.');
-        wrongs.push('You have got ' + article + item.word + '.');
-        wrongs.push('Have I got ' + article + item.word + '?');
-      } else if (pat.type === 'neg') {
-        wrongs.push('I have got ' + article + item.word + '.');
-        wrongs.push("You haven't got " + article + item.word + '.');
-        wrongs.push('I not have got ' + article + item.word + '.');
-      } else {
-        wrongs.push('You have got ' + article + item.word + '?');
-        wrongs.push('Have I got ' + article + item.word + '?');
-        wrongs.push('Have you get ' + article + item.word + '?');
-      }
-      
-      var opts = shuffle([correct].concat(wrongs));
-      questions.push({
-        subtype: 'choice',
-        chinese: chineseText,
-        options: opts,
-        correct: opts.indexOf(correct)
-      });
-    }
-  }
-  return questions;
+  return shuffle(pool);
 }
 
-// ============ 关卡配置 ============
-var LEVELS = [
-  { name: '我有/我没有', type: 'yesno2', gen: generateLevel1, questions: [] },
-  { name: '你有…吗？', type: 'yesno_answer', gen: generateLevel2, questions: [] },
-  { name: '句型选择', type: 'choice', gen: generateLevel3, questions: [] },
-  { name: '连词成句', type: 'arrange', gen: generateLevel4, questions: [] },
-  { name: '房间大挑战', type: 'mixed', gen: generateLevel5, questions: [] }
+var LEVEL_META = [
+  { key: 'l1', name: '肯定句连词成句', icon: '✅', gen: generateLevel1 },
+  { key: 'l2', name: '否定句连词成句', icon: '❌', gen: generateLevel2 },
+  { key: 'l3', name: '疑问句+回答', icon: '❓', gen: generateLevel3 },
+  { key: 'l4', name: '选词填空', icon: '✏️', gen: generateLevel4 },
+  { key: 'l5', name: '综合大挑战', icon: '🏆', gen: generateLevel5 }
 ];
 
-// ============ 状态 ============
+var LEVELS = LEVEL_META.map(function(m){ return { meta: m, questions: m.gen() }; });
+
+// ==================== 状态 ====================
 var currentLevel = 0;
 var currentQuestion = 0;
 var score = 0;
-var levelStars = [0, 0, 0, 0, 0];
+var totalPoints = 0;
 var answered = false;
 var answerWords = [];
-
-// ============ localStorage ============
-var STORAGE_KEY = 'mona-woods-pu-u4-havegot';
+var fillSlots = [];
+var STORAGE_KEY = 'pu_start_u4_havegot_v2';
 
 function loadProgress() {
   try {
     var data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (data && data.levelStars) {
-      levelStars = data.levelStars;
+    if (data && data.best) {
+      for (var i = 0; i < data.best.length && i < LEVELS.length; i++) {
+        if (data.best[i] != null) LEVELS[i].best = data.best[i];
+      }
     }
   } catch(e) {}
-  updateLevelCards();
+  renderLevelSelect();
 }
-
 function saveProgress() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      levelStars: levelStars,
-      timestamp: Date.now()
-    }));
-  } catch(e) {}
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    best: LEVELS.map(function(l){ return l.best != null ? l.best : null; })
+  }));
 }
 
-function getTotalStars() {
-  return levelStars.reduce(function(a, b) { return a + b; }, 0);
+function isUnlocked(idx) {
+  if (idx === 0) return true;
+  var prev = LEVELS[idx - 1];
+  return prev.best != null && prev.best.stars > 0;
+}
+function isCompleted(idx) {
+  return LEVELS[idx].best != null;
 }
 
-function updateLevelCards() {
-  document.getElementById('home-stars').textContent = '⭐'.repeat(Math.min(5, getTotalStars()));
-  for (var i = 0; i < 5; i++) {
-    var stars = levelStars[i];
-    var el = document.getElementById('level-' + i + '-stars');
-    if (el) el.textContent = stars > 0 ? '⭐'.repeat(stars) : '';
-    
-    var card = document.getElementById('level-' + i + '-card');
-    if (card) {
-      if (stars > 0) card.classList.add('completed');
-      if (i > 0 && levelStars[i-1] === 0) card.classList.add('locked');
-      else card.classList.remove('locked');
-    }
-  }
+function renderLevelSelect() {
+  var el = document.getElementById('level-select');
+  var html = '';
+  LEVELS.forEach(function(l, i) {
+    var unlocked = isUnlocked(i);
+    var completed = isCompleted(i);
+    var stars = completed ? l.best.stars : 0;
+    html += '<div class="level-card' + (unlocked ? '' : ' locked') + (completed ? ' completed' : '') + '"' +
+      (unlocked ? ' onclick="startLevel(' + i + ')"' : '') + '>' +
+      '<div class="level-icon">' + l.meta.icon + '</div>' +
+      '<div class="level-name">' + l.meta.name + '</div>' +
+      '<div class="level-num">第 ' + (i + 1) + ' 关</div>' +
+      '<div class="level-stars-mini">' + (stars ? '⭐'.repeat(stars) : (unlocked ? '·' : '🔒')) + '</div>' +
+      '</div>';
+  });
+  el.innerHTML = html;
+  var total = LEVELS.reduce(function(s, l){ return s + (l.best ? l.best.stars : 0); }, 0);
+  document.getElementById('home-stars').textContent = '⭐'.repeat(Math.min(3, Math.ceil(total / LEVELS.length)));
 }
 
-// ============ 导航 ============
 function showPage(id) {
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
 }
+function goHome() { showPage('home-page'); renderLevelSelect(); }
+function startGame() { startLevel(0); }
 
-function goHome() {
-  showPage('home-page');
-  updateLevelCards();
-}
-
-function startGame() {
-  startLevel(0);
-}
-
-function startLevel(levelIdx) {
-  if (levelIdx > 0 && levelStars[levelIdx-1] === 0 && levelIdx < 5) {
-    // 上一关没通关，提示
-    alert('先通过上一关再来挑战吧！💪');
-    return;
-  }
-  
-  // 重新生成题目
-  LEVELS[levelIdx].questions = LEVELS[levelIdx].gen();
-  
-  currentLevel = levelIdx;
+function startLevel(idx) {
+  LEVELS[idx].questions = LEVELS[idx].meta.gen();
+  currentLevel = idx;
   currentQuestion = 0;
   score = 0;
+  totalPoints = 0;
   answered = false;
-  
-  document.getElementById('game-level-badge').textContent = '第 ' + (levelIdx + 1) + ' 关 · ' + LEVELS[levelIdx].name;
+  document.getElementById('game-level-badge').textContent = '第 ' + (idx + 1) + ' 关 · ' + LEVELS[idx].meta.name;
   document.getElementById('game-stars').textContent = '⭐ 0';
-  document.getElementById('progress-fill').style.width = '0%';
-  
   showPage('game-page');
   loadQuestion();
 }
 
-// ============ 出题 ============
+function questionMaxScore(q) {
+  if (q.type === 'question') return 2; // 拼问句1 + 回答1
+  return 1;
+}
+
+// ==================== 出题 ====================
 function loadQuestion() {
-  answered = false;
   var level = LEVELS[currentLevel];
-  var total = level.questions.length;
-  
-  document.getElementById('progress-fill').style.width = ((currentQuestion) / total * 100) + '%';
-  document.getElementById('next-btn').classList.remove('show');
-  
-  var qContainer = document.getElementById('question-container');
-  var optContainer = document.getElementById('options-container');
-  var ansContainer = document.getElementById('answer-container');
-  var poolContainer = document.getElementById('wordpool-container');
-  
-  optContainer.innerHTML = '';
-  ansContainer.innerHTML = '';
-  poolContainer.innerHTML = '';
-  
   var q = level.questions[currentQuestion];
-  
-  // 第5关混合题型
-  var qtype = level.type;
-  if (level.type === 'mixed') {
-    qtype = q.subtype === 'yesno' ? 'yesno2' : 'choice';
-  }
-  
-  if (qtype === 'yesno2') {
-    // 看图判断 have/haven't
-    var displayHtml = q.showHas 
-      ? '<div class="big-emoji">' + q.emoji + '</div>'
-      : '<div style="position:relative;display:inline-block;"><div class="big-emoji">' + q.emoji + '</div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:100px;opacity:0.7;">🚫</div></div>';
-    
-    qContainer.innerHTML = `
-      <div class="question-box">
-        <div class="question-hint">句子和图片一致吗？</div>
-        ${displayHtml}
-        <div class="question-text">${q.sentence}</div>
-        <button class="sound-btn" onclick="playSound('${q.sentence.replace(/'/g, "\\'")}')">🔊</button>
-      </div>
-    `;
-    optContainer.innerHTML = `
-      <div class="yesno-options">
-        <button class="yesno-btn yes" onclick="checkYesNo(true, this)">✅ Yes</button>
-        <button class="yesno-btn no" onclick="checkYesNo(false, this)">❌ No</button>
-      </div>
-    `;
-  } else if (qtype === 'yesno_answer') {
-    // Have you got...? 选 Yes/No 回答
-    qContainer.innerHTML = `
-      <div class="question-box">
-        <div class="question-hint">看图回答问题</div>
-        <div class="big-emoji">${q.emoji}</div>
-        <div class="question-text">${q.question}</div>
-        <button class="sound-btn" onclick="playSound('${q.question.replace(/'/g, "\\'")}')">🔊</button>
-      </div>
-    `;
-    optContainer.innerHTML = `
-      <div class="yesno-options">
-        <button class="yesno-btn yes" onclick="checkAnswer('Yes, I have.', this)">✅ Yes</button>
-        <button class="yesno-btn no" onclick="checkAnswer(\"No, I haven't.\", this)">❌ No</button>
-      </div>
-    `;
-  } else if (qtype === 'choice') {
-    qContainer.innerHTML = `
-      <div class="question-box">
-        <div class="chinese-hint">选择正确的英文句子</div>
-        <div class="chinese-display">${q.chinese}</div>
-      </div>
-    `;
-    var optionsHtml = '<div class="options-grid">';
-    q.options.forEach(function(opt, i) {
-      optionsHtml += '<button class="option-btn" onclick="checkChoice(' + i + ', this)">' + opt + '</button>';
-    });
-    optionsHtml += '</div>';
-    optContainer.innerHTML = optionsHtml;
-  } else if (qtype === 'arrange') {
-    answerWords = [];
-    qContainer.innerHTML = `
-      <div class="question-box">
-        <div class="chinese-hint">连词成句，点击下方单词组成正确句子</div>
-        <div class="question-text" style="color: rgba(255,255,255,0.4); font-size: 14px;">提示：注意大小写和标点</div>
-      </div>
-    `;
-    ansContainer.innerHTML = '<div class="answer-area" id="answer-area" onclick="answerAreaClick(event)"></div>';
-    
-    var shuffled = shuffle(q.words.slice());
-    var poolHtml = '<div class="word-pool">';
-    shuffled.forEach(function(w, i) {
-      poolHtml += '<span class="word-chip" data-word="' + w + '" data-idx="' + i + '" onclick="addWord(this)">' + w + '</span>';
-    });
-    poolHtml += '</div>';
-    poolHtml += '<button class="check-btn" id="check-btn" onclick="checkArrange()" disabled>确认 ✓</button>';
-    poolContainer.innerHTML = poolHtml;
+  answered = false;
+  answerWords = [];
+  fillSlots = [];
+  document.getElementById('progress-fill').style.width = (currentQuestion / level.questions.length * 100) + '%';
+  document.getElementById('next-btn').classList.remove('show');
+  document.getElementById('next-btn').textContent = '下一题 →';
+
+  var qc = document.getElementById('question-container');
+  var oc = document.getElementById('options-container');
+  var ac = document.getElementById('answer-container');
+  var pc = document.getElementById('wordpool-container');
+  oc.innerHTML = ''; ac.innerHTML = ''; pc.innerHTML = '';
+
+  if (q.type === 'arrange') {
+    renderArrangeQuestion(q);
+  } else if (q.type === 'question') {
+    renderArrangeQuestion(q);
+  } else if (q.type === 'fill') {
+    renderFillQuestion(q);
   }
 }
 
-// ============ 答题判断 ============
-function checkYesNo(userAnswer, btn) {
-  if (answered) return;
-  answered = true;
-  
-  var q = LEVELS[currentLevel].questions[currentQuestion];
-  var btns = btn.parentElement.querySelectorAll('.yesno-btn');
-  
-  if (userAnswer === q.answer) {
-    btn.classList.add('correct');
-    score++;
-    document.getElementById('game-stars').textContent = '⭐ ' + score;
-    playSound(q.sentence);
-  } else {
-    btn.classList.add('wrong');
-    btns.forEach(function(b) {
-      if ((b.classList.contains('yes') && q.answer === true) ||
-          (b.classList.contains('no') && q.answer === false)) {
-        b.classList.add('correct');
-      }
-    });
-  }
-  
-  setTimeout(showNextBtn, 900);
+function renderArrangeQuestion(q) {
+  var qc = document.getElementById('question-container');
+  var ac = document.getElementById('answer-container');
+  var pc = document.getElementById('wordpool-container');
+  var hint = q.type === 'question' ? '先连词成句拼出问句' : '看中文提示，点击单词拼出正确句子';
+  qc.innerHTML = '<div class="question-box">' +
+    '<div class="chinese-hint">' + hint + '</div>' +
+    '<div class="chinese-display">' + q.zh + '</div>' +
+    '<button class="sound-btn" onclick="playCurrentSound()">🔊</button>' +
+    '</div>';
+  ac.innerHTML = '<div class="answer-area" id="answer-area"><span style="color: rgba(255,255,255,0.3); font-size: 14px;">点击下方单词开始组句...</span></div>';
+  var poolHtml = '<div class="word-pool">';
+  q.words.forEach(function(w, i) {
+    poolHtml += '<span class="word-chip" data-word="' + w + '" data-idx="' + i + '" onclick="addWord(this)">' + w + '</span>';
+  });
+  poolHtml += '</div>';
+  pc.innerHTML = poolHtml;
 }
 
-function checkAnswer(userAnswer, btn) {
-  if (answered) return;
-  answered = true;
-  
-  var q = LEVELS[currentLevel].questions[currentQuestion];
-  var btns = btn.parentElement.querySelectorAll('.yesno-btn');
-  
-  if (userAnswer === q.answer) {
-    btn.classList.add('correct');
-    score++;
-    document.getElementById('game-stars').textContent = '⭐ ' + score;
-    playSound(q.answer);
-  } else {
-    btn.classList.add('wrong');
-    btns.forEach(function(b) {
-      var val = b.classList.contains('yes') ? 'Yes, I have.' : "No, I haven't.";
-      if (val === q.answer) b.classList.add('correct');
-    });
-  }
-  
-  setTimeout(showNextBtn, 900);
-}
-
-function checkChoice(idx, btn) {
-  if (answered) return;
-  answered = true;
-  
-  var q = LEVELS[currentLevel].questions[currentQuestion];
-  var btns = btn.parentElement.querySelectorAll('.option-btn');
-  
-  if (idx === q.correct) {
-    btn.classList.add('correct');
-    score++;
-    document.getElementById('game-stars').textContent = '⭐ ' + score;
-    playSound(q.options[idx]);
-  } else {
-    btn.classList.add('wrong');
-    btns[q.correct].classList.add('correct');
-  }
-  
-  setTimeout(showNextBtn, 900);
-}
-
-// 连词成句
-function addWord(chip) {
-  if (chip.classList.contains('used')) return;
-  
-  var word = chip.getAttribute('data-word');
-  var idx = chip.getAttribute('data-idx');
-  answerWords.push({ word: word, idx: idx, chip: chip });
-  
-  chip.classList.add('used');
-  
-  var answerArea = document.getElementById('answer-area');
-  var span = document.createElement('span');
-  span.className = 'word-chip in-answer';
-  span.textContent = word;
-  span.setAttribute('data-pool-idx', idx);
-  span.onclick = function(e) {
-    e.stopPropagation();
-    removeWordFromAnswer(idx, span);
-  };
-  answerArea.appendChild(span);
-  answerArea.classList.add('filled');
-  
-  var q = LEVELS[currentLevel].questions[currentQuestion];
-  var totalWords = q.words.length;
-  var checkBtn = document.getElementById('check-btn');
-  if (answerWords.length === totalWords) {
-    checkBtn.disabled = false;
-  }
-}
-
-function removeWordFromAnswer(poolIdx, spanEl) {
-  if (answered) return;
-  
-  // 从 answerWords 移除
-  answerWords = answerWords.filter(function(w) { return w.idx !== poolIdx; });
-  
-  // 移除答题区的chip
-  spanEl.remove();
-  
-  // 恢复词池里的chip
-  var poolChips = document.querySelectorAll('.word-chip.used');
-  poolChips.forEach(function(c) {
-    if (c.getAttribute('data-idx') === poolIdx) {
-      c.classList.remove('used');
+function renderFillQuestion(q) {
+  var qc = document.getElementById('question-container');
+  var ac = document.getElementById('answer-container');
+  var pc = document.getElementById('wordpool-container');
+  fillSlots = q.answers.map(function(){ return null; });
+  var line = '';
+  q.seg.forEach(function(seg, i) {
+    if (q.blanks.indexOf(i) !== -1) {
+      var bi = q.blanks.indexOf(i);
+      line += '<span class="fill-slot" id="fill-slot-' + bi + '" onclick="clearFill(' + bi + ')">' + (bi + 1) + '</span>';
+    } else if (/^[.!?]$/.test(seg)) {
+      line += seg;
+    } else {
+      line += '<span style="margin:0 4px;">' + seg + '</span>';
     }
   });
-  
-  if (answerWords.length === 0) {
-    document.getElementById('answer-area').classList.remove('filled');
-  }
-  
-  var checkBtn = document.getElementById('check-btn');
-  if (checkBtn) checkBtn.disabled = true;
+  qc.innerHTML = '<div class="question-box">' +
+    '<div class="chinese-hint">选择合适的单词填进方框，补全句子</div>' +
+    '<div class="chinese-display" style="font-size:24px; margin-bottom:16px;">' + q.zh + '</div>' +
+    '<div class="sentence-line">' + line + '</div>' +
+    '<button class="sound-btn" onclick="playSoundFull()">🔊</button>' +
+    '</div>';
+  ac.innerHTML = '';
+  var poolHtml = '<div class="word-pool">';
+  q.opts.forEach(function(w, i) {
+    poolHtml += '<span class="word-chip" data-w="' + w + '" data-idx="' + i + '" onclick="fillIn(this)">' + w + '</span>';
+  });
+  poolHtml += '</div>';
+  pc.innerHTML = poolHtml;
 }
 
-function answerAreaClick(e) {
-  // 点击空白处不做什么
+function escapeHtmlAttr(s) { return s; }
+
+// ==================== 连词成句 ====================
+function addWord(el) {
+  if (answered) return;
+  if (el.classList.contains('used')) return;
+  var word = el.dataset.word;
+  if (!word) word = el.getAttribute('data-word');
+  answerWords.push(word);
+  el.classList.add('used');
+  renderAnswer();
+  var q = LEVELS[currentLevel].questions[currentQuestion];
+  if (answerWords.length === q.words.length) checkArrange();
+}
+
+function removeWord(el) {
+  if (answered) return;
+  var idx = parseInt(el.dataset.i);
+  var word = answerWords[idx];
+  answerWords.splice(idx, 1);
+  var chips = document.querySelectorAll('#wordpool-container .word-chip');
+  for (var i = 0; i < chips.length; i++) {
+    if (chips[i].getAttribute('data-word') === word && chips[i].classList.contains('used')) {
+      chips[i].classList.remove('used');
+      break;
+    }
+  }
+  renderAnswer();
+}
+
+function renderAnswer() {
+  var area = document.getElementById('answer-area');
+  if (!area) return;
+  area.classList.toggle('filled', answerWords.length > 0);
+  if (answerWords.length === 0) {
+    area.innerHTML = '<span style="color: rgba(255,255,255,0.3); font-size: 14px;">点击下方单词开始组句...</span>';
+    return;
+  }
+  var html = '';
+  answerWords.forEach(function(w, i) {
+    html += '<span class="word-chip in-answer" data-i="' + i + '" onclick="removeWord(this)">' + w + '</span>';
+  });
+  area.innerHTML = html;
+}
+
+function normalize(str) {
+  return str.replace(/\s+([.!?])/g, '$1').trim();
 }
 
 function checkArrange() {
   if (answered) return;
-  answered = true;
-  
-  var userAnswer = answerWords.map(function(w) { return w.word; }).join(' ');
   var q = LEVELS[currentLevel].questions[currentQuestion];
-  var correct = q.answer;
-  
-  // 去除多余空格比较
-  var userClean = userAnswer.replace(/\s+/g, ' ').trim();
-  var correctClean = correct.replace(/\s+/g, ' ').trim();
-  
-  var answerArea = document.getElementById('answer-area');
-  var checkBtn = document.getElementById('check-btn');
-  
-  if (userClean === correctClean) {
-    answerArea.style.borderColor = '#2DD4BF';
-    answerArea.style.background = 'rgba(45, 212, 191, 0.15)';
-    score++;
+  var area = document.getElementById('answer-area');
+  var user = normalize(answerWords.join(' '));
+  var correct = (user === q.en);
+
+  if (correct) {
+    score += 1;
+    area.classList.add('right');
     document.getElementById('game-stars').textContent = '⭐ ' + score;
-    playSound(correctClean);
   } else {
-    answerArea.style.borderColor = '#ff6b6b';
-    answerArea.style.background = 'rgba(255, 107, 107, 0.1)';
-    // 显示正确答案
-    var correctDiv = document.createElement('div');
-    correctDiv.style.cssText = 'width:100%;max-width:700px;margin-top:10px;padding:12px;background:rgba(45,212,191,0.15);border:2px solid #2DD4BF;border-radius:12px;color:#2DD4BF;font-size:16px;font-weight:600;text-align:center;';
-    correctDiv.textContent = '正确答案：' + correctClean;
-    checkBtn.parentElement.appendChild(correctDiv);
+    area.classList.add('wrong');
+    var tip = document.createElement('div');
+    tip.style.cssText = 'color:#2DD4BF; font-size:16px; font-weight:600; margin-top:10px; width:100%;';
+    tip.textContent = '正确答案：' + q.en;
+    area.appendChild(tip);
   }
-  
-  checkBtn.style.display = 'none';
-  setTimeout(showNextBtn, 1200);
+
+  if (q.type === 'question') {
+    // 进入回答阶段
+    setTimeout(function(){ showYesNoStage(q, correct); }, correct ? 400 : 1200);
+  } else if (q.type === 'arrange') {
+    totalPoints += 1;
+    answered = true;
+    playSound(q.en);
+    setTimeout(showNextBtn, 1000);
+  }
 }
 
+function showYesNoStage(q, arrangeCorrect) {
+  answered = true;
+  var oc = document.getElementById('options-container');
+  var stageLabel = q.yesAnswer ? '是的，我有 / 你是 / 有' : '不，我没有 / 你不是 / 没有';
+  var ynHtml =
+    '<div class="question-box" style="background: rgba(45,212,191,0.1);">' +
+    '<div class="chinese-hint">根据上面问句，选择肯定或否定回答</div>' +
+    '<div class="chinese-display" style="font-size:26px;">' + (q.yesAnswer ? '✅ 肯定' : '❌ 否定') + '</div>' +
+    '</div>' +
+    '<div class="yesno-options">' +
+    '<button class="yesno-btn" onclick="checkYesNo(true, this)">✅<span class="yn-label">Yes</span></button>' +
+    '<button class="yesno-btn" onclick="checkYesNo(false, this)">❌<span class="yn-label">No</span></button>' +
+    '</div>';
+  oc.innerHTML = ynHtml;
+  totalPoints += 2; // 拼问句已计1分（在checkArrange里score+1），回答再加1分机会
+  playSound(q.en);
+}
+
+function checkYesNo(userYes, btn) {
+  var q = LEVELS[currentLevel].questions[currentQuestion];
+  var btns = document.querySelectorAll('.yesno-btn');
+  btns.forEach(function(b){ b.disabled = true; });
+  if (userYes === q.yesAnswer) {
+    btn.classList.add('correct');
+    score += 1;
+    document.getElementById('game-stars').textContent = '⭐ ' + score;
+  } else {
+    btn.classList.add('wrong');
+    btns.forEach(function(b){
+      var isYes = b.querySelector('.yn-label').textContent === 'Yes';
+      if (isYes === q.yesAnswer) b.classList.add('correct');
+    });
+  }
+  setTimeout(showNextBtn, 800);
+}
+
+// ==================== 选词填空 ====================
+function fillIn(el) {
+  if (answered) return;
+  if (el.classList.contains('used')) return;
+  var w = el.getAttribute('data-w');
+  var emptySlot = fillSlots.indexOf(null);
+  if (emptySlot === -1) return;
+  fillSlots[emptySlot] = w;
+  el.classList.add('used');
+  var slotEl = document.getElementById('fill-slot-' + emptySlot);
+  slotEl.textContent = w;
+  slotEl.classList.add('filled');
+  if (fillSlots.indexOf(null) === -1) checkFill();
+}
+
+function clearFill(idx) {
+  if (answered) return;
+  var w = fillSlots[idx];
+  if (!w) return;
+  fillSlots[idx] = null;
+  var chips = document.querySelectorAll('#wordpool-container .word-chip');
+  for (var i = 0; i < chips.length; i++) {
+    if (chips[i].getAttribute('data-w') === w && chips[i].classList.contains('used')) {
+      chips[i].classList.remove('used');
+      break;
+    }
+  }
+  var slotEl = document.getElementById('fill-slot-' + idx);
+  slotEl.textContent = (idx + 1);
+  slotEl.classList.remove('filled');
+}
+
+function checkFill() {
+  if (answered) return;
+  var q = LEVELS[currentLevel].questions[currentQuestion];
+  var allRight = true;
+  q.answers.forEach(function(ans, i) {
+    var slotEl = document.getElementById('fill-slot-' + i);
+    if (fillSlots[i] === ans) slotEl.classList.add('right');
+    else { slotEl.classList.add('wrong'); allRight = false; }
+  });
+  totalPoints += 1;
+  answered = true;
+  if (allRight) {
+    score += 1;
+    document.getElementById('game-stars').textContent = '⭐ ' + score;
+  } else {
+    var qc = document.getElementById('question-container');
+    var tip = document.createElement('div');
+    tip.style.cssText = 'color:#2DD4BF; font-size:16px; font-weight:600; margin-top:8px;';
+    tip.textContent = '正确答案：' + q.seg.join(' ');
+    qc.appendChild(tip);
+  }
+  playSoundFull();
+  setTimeout(showNextBtn, 1000);
+}
+
+function playSoundFull() {
+  var q = LEVELS[currentLevel].questions[currentQuestion];
+  playSound(q.seg.join(' '));
+}
+
+function playCurrentSound() {
+  var q = LEVELS[currentLevel].questions[currentQuestion];
+  playSound(q.en);
+}
+
+// ==================== 下一题 ====================
 function showNextBtn() {
-  document.getElementById('next-btn').classList.add('show');
+  var level = LEVELS[currentLevel];
+  var btn = document.getElementById('next-btn');
+  if (currentQuestion >= level.questions.length - 1) btn.textContent = '查看结果 🎯';
+  else btn.textContent = '下一题 →';
+  btn.classList.add('show');
 }
 
 function nextQuestion() {
   var level = LEVELS[currentLevel];
+  if (currentQuestion >= level.questions.length - 1) { showResult(); return; }
   currentQuestion++;
-  
-  if (currentQuestion >= level.questions.length) {
-    showResult();
-    return;
-  }
-  
   loadQuestion();
 }
 
-// ============ 结果页 ============
+// ==================== 结果页 ====================
 function showResult() {
   var level = LEVELS[currentLevel];
-  var total = level.questions.length;
-  var ratio = score / total;
-  
-  var stars;
-  if (ratio >= 0.9) stars = 3;
-  else if (ratio >= 0.7) stars = 2;
-  else if (ratio >= 0.5) stars = 1;
-  else stars = 0;
-  
-  if (stars > levelStars[currentLevel]) {
-    levelStars[currentLevel] = stars;
+  var rate = totalPoints > 0 ? score / totalPoints : 0;
+  var stars = rate >= 0.95 ? 3 : rate >= 0.7 ? 2 : rate >= 0.5 ? 1 : 0;
+  if (!level.best || stars > level.best.stars) {
+    level.best = { stars: stars, rate: Math.round(rate * 100) };
     saveProgress();
   }
-  
-  var emojis = ['😢', '😊', '🎉', '🏆'];
-  var titles = ['再接再厉！', '不错哦～', '太棒了！', '完美通关！'];
-  var descs = [
-    '别灰心，再试一次一定可以的！',
-    '离三星只差一点点啦！',
-    '你掌握得很不错，继续加油！',
-    '你是 Have Got 小能手！🌟'
-  ];
-  
-  document.getElementById('result-emoji').textContent = emojis[stars];
-  document.getElementById('result-title').textContent = titles[stars];
+  document.getElementById('result-emoji').textContent = stars === 3 ? '🏆' : stars >= 2 ? '🎉' : stars >= 1 ? '👍' : '💪';
+  document.getElementById('result-title').textContent = stars === 3 ? '完美通关！' : stars >= 2 ? '做得不错！' : stars >= 1 ? '继续加油！' : '别灰心，再试一次！';
   document.getElementById('result-stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
-  document.getElementById('result-desc').textContent = descs[stars] + ' （' + score + '/' + total + '题）';
-  
-  var nextBtn = document.getElementById('next-level-btn');
-  if (currentLevel < 4) {
-    nextBtn.style.display = 'inline-block';
-  } else {
-    nextBtn.style.display = 'none';
-  }
-  
+  document.getElementById('result-desc').textContent = '第 ' + (currentLevel + 1) + ' 关 · ' + level.meta.name + ' — 得分 ' + score + ' / ' + totalPoints;
+  var nb = document.getElementById('next-level-btn');
+  if (currentLevel < LEVELS.length - 1) nb.style.display = 'inline-block';
+  else nb.style.display = 'none';
   showPage('result-page');
 }
 
-function retryLevel() {
-  startLevel(currentLevel);
-}
-
+function retryLevel() { startLevel(currentLevel); }
 function nextLevel() {
-  if (currentLevel < 4) {
-    startLevel(currentLevel + 1);
-  }
+  if (currentLevel < LEVELS.length - 1) startLevel(currentLevel + 1);
+  else goHome();
 }
 
-// ============ 初始化 ============
+// ==================== 语音 ====================
+function playSound(text) {
+  var sources = [
+    'https://dict.youdao.com/dictvoice?audio=ENCODED&type=1',
+    'https://fanyi.baidu.com/gettts?lan=en&text=ENCODED&spd=3&source=web'
+  ];
+  var idx = 0;
+  var tryNext = function() {
+    if (idx >= sources.length) {
+      if ('speechSynthesis' in window) {
+        try { speechSynthesis.cancel(); } catch(e) {}
+        var u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US'; u.rate = 0.9;
+        speechSynthesis.speak(u);
+      }
+      return;
+    }
+    var url = sources[idx].replace('ENCODED', encodeURIComponent(text));
+    idx++;
+    var audio = new Audio();
+    var p;
+    try { audio.src = url; p = audio.play(); }
+    catch(e) { tryNext(); return; }
+    if (p && p.catch) p.catch(function(){ tryNext(); });
+    audio.onerror = function(){ tryNext(); };
+  };
+  tryNext();
+}
+
+// ==================== 初始化 ====================
 loadProgress();
 </script>
-</body>
-</html>
+</body></html>
