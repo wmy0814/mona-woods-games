@@ -529,11 +529,10 @@ function shuffle(arr) {
 
 function isPunct(t) { return t === '?' || t === '.' || t === '!'; }
 
-// 分词：按空格切分，去逗号，句末标点独立成块（isn't / haven't 整块不拆）
+// 分词：按空格切分，Yes,/No, 带逗号整块保留，句末标点独立成块（isn't / haven't 整块不拆）
 function tokenize(sentence) {
   var out = [];
   sentence.split(' ').forEach(function(p){
-    p = p.replace(/,/g, '');
     if (!p) return;
     var m = p.match(/^(.+?)([?.!])$/);
     if (m) { out.push(m[1]); out.push(m[2]); }
