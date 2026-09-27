@@ -1312,6 +1312,7 @@ function renderLevel5() {
 
   sentenceAnswer = [];
   sentenceWordStatus = allWords.map(() => false);
+  window._currentSentenceWords = allWords;
 
   const gameArea = document.getElementById('gameArea');
   gameArea.innerHTML = `
@@ -1325,7 +1326,7 @@ function renderLevel5() {
           <span class="placeholder">点击单词开始组句</span>
         </div>
         <div class="sentence-words" id="sentenceWords">
-          ${allWords.map((w, i) => `<div class="word" data-index="${i}" onclick="selectSentenceWord(${i}, '${w.replace(/'/g, "\'")}')">${w}</div>`).join('')}
+          ${allWords.map((w, i) => `<div class="word" data-index="${i}" onclick="selectSentenceWord(${i})">${w}</div>`).join('')}
         </div>
       </div>
       <div class="feedback" id="feedback"></div>
@@ -1341,8 +1342,9 @@ function renderLevel5() {
   window._currentSentenceItem = item;
 }
 
-function selectSentenceWord(index, word) {
+function selectSentenceWord(index) {
   if (sentenceWordStatus[index]) return;
+  const word = window._currentSentenceWords[index];
   sentenceWordStatus[index] = true;
   sentenceAnswer.push({ index, word });
 
