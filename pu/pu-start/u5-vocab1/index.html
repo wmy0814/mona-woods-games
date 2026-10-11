@@ -881,12 +881,12 @@ function handleWordResult(word, isCorrect) {
   answeredCount++;
   if (isCorrect) {
     mastery[word.en] = (mastery[word.en] || 0) + 1;
-    if (mastery[word.en] < 2 && !pendingQueue.some(w => w.en === word.en)) {
+    if (mastery[word.en] < 2 && !pendingQueue.slice(1).some(w => w.en === word.en)) {
       pendingQueue.push(word);
     }
   } else {
     wrongItems.push({ type: 'word', en: word.en, cn: word.cn });
-    if (!pendingQueue.some(w => w.en === word.en)) {
+    if (!pendingQueue.slice(1).some(w => w.en === word.en)) {
       pendingQueue.push(word);
     }
   }
@@ -896,7 +896,7 @@ function handleSentenceResult(item, isCorrect) {
   answeredCount++;
   if (!isCorrect) {
     wrongItems.push({ type: 'sentence', answer: item.answer, chinese: item.chinese });
-    if (!pendingQueue.some(s => s.answer === item.answer)) {
+    if (!pendingQueue.slice(1).some(s => s.answer === item.answer)) {
       pendingQueue.push(item);
     }
   }
