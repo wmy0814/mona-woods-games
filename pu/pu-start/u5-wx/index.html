@@ -693,7 +693,7 @@
         <div class="icon-logo"><img id="logoIcon" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Mona Woods"></div>
         <h2>Power Up Start U5</h2>
         <p>🖼️ 我的朋友 · 文学闯关</p>
-        <div class="word-count">5 个单词 · 18 个句子 · 四大关卡</div>
+        <div class="word-count">15 个单词 · 18 个句子 · 四大关卡</div>
         <div class="level-select-title">🎯 选择关卡开始</div>
         <div class="level-buttons">
           <button class="level-btn l1" onclick="startGame(1)">
@@ -775,11 +775,23 @@
 
 // ====== 单词数据 ======
 const words = [
-  { en: 'friend',  cn: '朋友', emoji: '👫' },
-  { en: 'picture', cn: '图画', emoji: '🖼️' },
-  { en: 'pet',     cn: '宠物', emoji: '🐾' },
-  { en: 'dog',     cn: '狗',   emoji: '🐶' },
-  { en: 'paint',   cn: '画画', emoji: '🎨' }
+  // ===== 身体部位（10）· 取自 u5-vocab1 与 U5 课堂 =====
+  { en: 'eyes',      cn: '眼睛', emoji: '👀' },
+  { en: 'ears',      cn: '耳朵', emoji: '👂' },
+  { en: 'nose',      cn: '鼻子', emoji: '👃' },
+  { en: 'mouth',     cn: '嘴巴', emoji: '👄' },
+  { en: 'teeth',     cn: '牙齿', emoji: '🦷' },
+  { en: 'hair',      cn: '头发', emoji: '💇' },
+  { en: 'face',      cn: '脸',   emoji: '😊' },
+  { en: 'hands',     cn: '手',   emoji: '✋' },
+  { en: 'legs',      cn: '腿',   emoji: '🦵' },
+  { en: 'feet',      cn: '脚',   emoji: '🦶' },
+  // ===== 大小长短形容词（5）· 与 u5-vocab2 完全一致 =====
+  { en: 'big',       cn: '大的',   emoji: '🐘' },
+  { en: 'small',     cn: '小的',   emoji: '🐜' },
+  { en: 'long',      cn: '长的',   emoji: '🦒' },
+  { en: 'short',     cn: '短的',   emoji: '🐢' },
+  { en: 'beautiful', cn: '美丽的', emoji: '🦚' }
 ];
 
 // ====== 连词成句数据（18句）======
@@ -815,7 +827,8 @@ const sentenceData = [
 let currentLevel = 1;
 let wrongItems = [];
 let answered = false;
-let mastery = {};          // 单词掌握计数：答对2次才算过
+let missedKeys = new Set();   // 本关答错过的题（每题最多重出一次）
+let newAnswered = 0;          // 本关已答的新题数（不含重出）
 let pendingQueue = [];     // 动态出题队列
 let answeredCount = 0;     // 实际答题数（含错题重出）
 let sentenceAnswer = [];
@@ -875,29 +888,24 @@ function shuffle(arr) {
   return a;
 }
 
-// ====== 掌握度处理：每词答对2次才算过，答错关内重出 ======
+// ====== 出题处理：每题只出一次；答错的排到本关最后再出一次（最多一次）======
 function handleWordResult(word, isCorrect) {
   answeredCount++;
-  if (isCorrect) {
-    mastery[word.en] = (mastery[word.en] || 0) + 1;
-    if (mastery[word.en] < 2 && !pendingQueue.slice(1).some(w => w.en === word.en)) {
-      pendingQueue.push(word);
-    }
-  } else {
+  if (!word.__retry) newAnswered++;
+  if (!isCorrect && !missedKeys.has(word.en)) {
+    missedKeys.add(word.en);
     wrongItems.push({ type: 'word', en: word.en, cn: word.cn });
-    if (!pendingQueue.slice(1).some(w => w.en === word.en)) {
-      pendingQueue.push(word);
-    }
+    pendingQueue.push({ ...word, __retry: true });
   }
 }
 
 function handleSentenceResult(item, isCorrect) {
   answeredCount++;
-  if (!isCorrect) {
+  if (!item.__retry) newAnswered++;
+  if (!isCorrect && !missedKeys.has(item.answer)) {
+    missedKeys.add(item.answer);
     wrongItems.push({ type: 'sentence', answer: item.answer, chinese: item.chinese });
-    if (!pendingQueue.slice(1).some(s => s.answer === item.answer)) {
-      pendingQueue.push(item);
-    }
+    pendingQueue.push({ ...item, __retry: true });
   }
 }
 
@@ -906,7 +914,6 @@ function startGame(level) {
   currentLevel = level;
   wrongItems = [];
   answered = false;
-  mastery = {};
   answeredCount = 0;
 
   document.getElementById('startScreen').style.display = 'none';
@@ -933,12 +940,14 @@ function updateLevelProgress() {
 
 // ====== 加载关卡 ======
 function loadLevel() {
+  missedKeys = new Set();
+  newAnswered = 0;
+  answeredCount = 0;
   if (currentLevel <= 3) {
-    // 前4关：单词题，每词答对2次才过关
-    mastery = {};
+    // 第 1-3 关：单词题，每词只出一次（顺序随机）
     pendingQueue = shuffle([...words]);
   } else {
-    // 第5关：连词成句，18句全部打乱，答错的句子关内重出
+    // 第 4 关：连词成句，全部打乱，答错排到本关最后再出一次
     pendingQueue = shuffle([...sentenceData]);
   }
   renderQuestion();
@@ -969,11 +978,8 @@ function renderQuestion() {
 
 // ====== 进度文案 ======
 function progressText() {
-  if (currentLevel <= 3) {
-    const done = words.filter(w => (mastery[w.en] || 0) >= 2).length;
-    return '已掌握 ' + done + ' / 5 词';
-  }
-  return '已完成 ' + answeredCount + ' 题';
+  const total = currentLevel <= 3 ? words.length : sentenceData.length;
+  return '第 ' + Math.min(newAnswered + 1, total) + ' / ' + total + ' 题';
 }
 
 // ========== 第一关：听音指认 ==========
@@ -981,7 +987,10 @@ function renderLevel1() {
   const word = pendingQueue[0];
   const gameArea = document.getElementById('gameArea');
 
-  const allOptions = shuffle([...words]);
+  // 词多时只随机取 6 张（含正确答案），避免一次铺出十几张卡片刷屏
+  const distractorCount = Math.min(words.length - 1, 5);
+  const distractors = shuffle(words.filter(w => w.en !== word.en)).slice(0, distractorCount);
+  const allOptions = shuffle([word, ...distractors]);
 
   gameArea.innerHTML = `
     <div class="fade-in">
@@ -1039,7 +1048,7 @@ function checkLevel1(index, answer) {
     feedback.className = 'feedback show wrong';
     feedback.innerHTML = `<div class="title">❌ 回答错误</div><div class="detail">正确答案：${word.en} — ${word.cn}</div>`;
     btnRow.style.display = 'flex';
-    btnRow.querySelector('.btn-secondary').style.display = 'block';
+    btnRow.querySelector('.btn-secondary').style.display = 'none';
   }
 
   handleWordResult(word, isCorrect);
@@ -1105,7 +1114,7 @@ function checkLevel2(index, answer) {
     feedback.className = 'feedback show wrong';
     feedback.innerHTML = `<div class="title">❌ 回答错误</div><div class="detail">正确答案：${word.cn}（${word.en} — ${word.cn}）</div>`;
     btnRow.style.display = 'flex';
-    btnRow.querySelector('.btn-secondary').style.display = 'block';
+    btnRow.querySelector('.btn-secondary').style.display = 'none';
   }
 
   handleWordResult(word, isCorrect);
@@ -1176,7 +1185,7 @@ function checkLevel3(index, answer) {
     feedback.className = 'feedback show wrong';
     feedback.innerHTML = `<div class="title">❌ 回答错误</div><div class="detail">正确答案：${word.en}（${word.cn}）</div>`;
     btnRow.style.display = 'flex';
-    btnRow.querySelector('.btn-secondary').style.display = 'block';
+    btnRow.querySelector('.btn-secondary').style.display = 'none';
   }
 
   handleWordResult(word, isCorrect);
@@ -1291,7 +1300,6 @@ function checkSentence() {
     feedback.className = 'feedback show wrong';
     feedback.innerHTML = `<div class="title">❌ 顺序不对哦</div><div class="detail">正确答案：${spoken}</div>`;
     btnRow.innerHTML = `
-      <button class="btn btn-secondary" onclick="retryQuestion()">再试一次</button>
       <button class="btn btn-primary" onclick="nextQuestion()">下一题 →</button>
     `;
     handleSentenceResult(item, false);
