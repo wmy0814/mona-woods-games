@@ -1255,7 +1255,7 @@ function removeLetter(pos) {
     spellAnswer.forEach((item, i) => {
       const letterEl = document.createElement('div');
       letterEl.className = 'letter';
-      letterEl.textContent = item.letter === ' ' ? '⎵' : letter;
+      letterEl.textContent = item.letter === ' ' ? '⎵' : item.letter;
       letterEl.onclick = () => removeLetter(i);
       answerEl.appendChild(letterEl);
     });
